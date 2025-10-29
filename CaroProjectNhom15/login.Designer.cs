@@ -1,6 +1,6 @@
 ﻿namespace CaroProjectNhom15
 {
-    partial class login
+    partial class Frm_LogIn
     {
         /// <summary>
         ///  Required designer variable.
@@ -117,7 +117,7 @@
             Lbl_CreateNewAccount.TabIndex = 6;
             Lbl_CreateNewAccount.Text = "Don't have an account yet?";
             // 
-            // login
+            // Frm_LogIn
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -129,9 +129,9 @@
             Controls.Add(Tb_Email);
             Controls.Add(LnkL_ForgotPassword);
             Controls.Add(Lbl_LogIn);
-            Name = "login";
+            Name = "Frm_LogIn";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "LOGIN";
             ResumeLayout(false);
             PerformLayout();
         }

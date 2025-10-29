@@ -1,8 +1,8 @@
 namespace CaroProjectNhom15
 {
-    public partial class login : Form
+    public partial class Frm_LogIn : Form
     {
-        public login()
+        public Frm_LogIn()
         {
             InitializeComponent();
         }
