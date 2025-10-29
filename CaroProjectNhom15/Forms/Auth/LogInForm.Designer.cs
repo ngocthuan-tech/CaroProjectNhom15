@@ -1,6 +1,9 @@
-﻿namespace CaroProjectNhom15
+﻿using System.Windows.Forms;
+using System.Drawing;
+
+namespace CaroProjectNhom15.Forms.Auth
 {
-    partial class Frm_LogIn
+    partial class LoginForm: System.Windows.Forms.Form
     {
         /// <summary>
         ///  Required designer variable.
@@ -11,7 +14,7 @@
         ///  Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {

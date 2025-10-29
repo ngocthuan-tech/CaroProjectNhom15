@@ -1,3 +1,5 @@
+using CaroProjectNhom15.Forms.Auth;
+
 namespace CaroProjectNhom15
 {
     internal static class Program
@@ -11,7 +13,7 @@ namespace CaroProjectNhom15
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Frm_LogIn());
+            Application.Run(new LoginForm());
         }
     }
 }
