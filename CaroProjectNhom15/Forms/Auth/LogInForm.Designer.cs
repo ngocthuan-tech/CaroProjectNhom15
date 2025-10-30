@@ -109,6 +109,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Tb_Password.PlaceholderText = "Password";
             Tb_Password.Size = new Size(424, 41);
             Tb_Password.TabIndex = 5;
+            Tb_Password.UseSystemPasswordChar = true;
             // 
             // Lbl_CreateNewAccount
             // 
@@ -120,7 +121,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Lbl_CreateNewAccount.TabIndex = 6;
             Lbl_CreateNewAccount.Text = "Don't have an account yet?";
             // 
-            // Frm_LogIn
+            // LoginForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -132,7 +133,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Controls.Add(Tb_Email);
             Controls.Add(LnkL_ForgotPassword);
             Controls.Add(Lbl_LogIn);
-            Name = "Frm_LogIn";
+            Name = "LoginForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LOGIN";
             ResumeLayout(false);
