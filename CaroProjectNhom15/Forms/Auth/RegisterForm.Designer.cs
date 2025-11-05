@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using CaroProjectNhom15.Forms.Auth;
 
 namespace CaroProjectNhom15.Forms.Auth
 {
@@ -44,7 +45,7 @@ namespace CaroProjectNhom15.Forms.Auth
             this.Lbl_Password = new Label();
             this.Lbl_ConfirmPassword = new Label();
             this.Tb_ConfirmPassword = new TextBox();
-            Lbl_AlreadyHaveAnAccount = new Label();
+            Lbl_AlreadyHaveAnAccount = new Label(); 
             SuspendLayout();
             // 
             // Lbl_Email
@@ -216,7 +217,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Controls.Add(this.Btn_Continue);
             Controls.Add(this.Btn_BackToLogIn);
             Controls.Add(Tb_Email);
-            Controls.Add(this.Lbl_Register);
+            Controls.Add(this.Lbl_Register); 
             Name = "RegisterForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RegisterForm";
@@ -225,21 +226,19 @@ namespace CaroProjectNhom15.Forms.Auth
         }
 
         #endregion
-
-        private Label Lbl_CreateNewAccount;
+        private Label Lbl_Email;
         private TextBox Tb_Password;
-        private Button Btn_CreateNewAccount;
-        private Button Btn_LogIn;
+        private Button Btn_Continue;
+        private Button Btn_BackToLogIn;
         private TextBox Tb_Email;
-        private LinkLabel LnkL_ForgotPassword;
-        private Label Lbl_LogIn;
-        private Label label1;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private Label label2;
-        private Label label3;
-        private Label label4;
-        private TextBox textBox3;
+        private Label Lbl_Register;
+        private Label Lbl_Name;
+        private TextBox Tb_Name;
+        private TextBox Tb_Username;
+        private Label Lbl_Username;
+        private Label Lbl_Password;
+        private Label Lbl_ConfirmPassword;
+        private TextBox Tb_ConfirmPassword;
         private Label Lbl_AlreadyHaveAnAccount;
     }
 }
