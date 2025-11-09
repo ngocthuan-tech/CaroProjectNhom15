@@ -1,0 +1,91 @@
+csharp CaroProjectNhom15\Forms\Auth\LogInForm.cs
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using CaroProjectNhom15.Services;
+
+namespace CaroProjectNhom15.Forms.Auth
+{
+    public partial class LoginForm : Form
+    {
+        private readonly FirebaseAuthService _auth = new();
+
+        public LoginForm()
+        {
+            InitializeComponent();
+            Btn_LogIn.Click += Btn_LogIn_Click;
+            Btn_CreateNewAccount.Click += Btn_CreateNewAccount_Click;
+            LnkL_ForgotPassword.LinkClicked += LnkL_ForgotPassword_LinkClicked;
+        }
+
+        private async void Btn_LogIn_Click(object? sender, EventArgs e)
+        {
+            var email = Tb_Email.Text.Trim();
+            var password = Tb_Password.Text;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Nhập email và mật khẩu.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Btn_LogIn.Enabled = false;
+                var auth = await _auth.LoginAsync(email, password);
+
+                // Check emailVerified
+                var users = await _auth.LookupByIdTokenAsync(auth.IdToken);
+                var user = users.FirstOrDefault();
+                if (user is null)
+                {
+                    MessageBox.Show("Không tìm thấy thông tin user.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (!user.EmailVerified)
+                {
+                    var r = MessageBox.Show("Email chưa được xác thực. Gửi lại email xác thực?", "Email not verified",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (r == DialogResult.Yes)
+                    {
+                        await _auth.SendEmailVerificationAsync(auth.IdToken);
+                        MessageBox.Show("Email xác thực đã được gửi. Vui lòng kiểm tra hộp thư.", "Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Vui lòng xác thực email trước khi đăng nhập.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    return;
+                }
+
+                // Successful login
+                MessageBox.Show($"Đăng nhập thành công. Xin chào {user.Email}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // TODO: mở form chính của ứng dụng, lưu idToken nếu cần, v.v.
+                // Example: new MainForm(auth.IdToken).Show(); Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi đăng nhập: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Btn_LogIn.Enabled = true;
+            }
+        }
+
+        private void Btn_CreateNewAccount_Click(object? sender, EventArgs e)
+        {
+            using var frm = new RegisterForm();
+            frm.ShowDialog(this);
+        }
+
+        private void LnkL_ForgotPassword_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using var frm = new ResetPasswordForm();
+            frm.ShowDialog(this);
+        }
+    }
+}

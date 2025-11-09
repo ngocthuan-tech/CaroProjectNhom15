@@ -43,7 +43,7 @@
             Lbl_ConfirmPassword.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_ConfirmPassword.Location = new Point(186, 224);
             Lbl_ConfirmPassword.Name = "Lbl_ConfirmPassword";
-            Lbl_ConfirmPassword.Size = new Size(248, 31);
+            Lbl_ConfirmPassword.Size = new Size(207, 25);
             Lbl_ConfirmPassword.TabIndex = 25;
             Lbl_ConfirmPassword.Text = "Confirm your Password";
             // 
@@ -54,7 +54,7 @@
             Tb_ConfirmPassword.Location = new Point(186, 268);
             Tb_ConfirmPassword.Name = "Tb_ConfirmPassword";
             Tb_ConfirmPassword.PlaceholderText = "Password";
-            Tb_ConfirmPassword.Size = new Size(424, 41);
+            Tb_ConfirmPassword.Size = new Size(424, 34);
             Tb_ConfirmPassword.TabIndex = 24;
             Tb_ConfirmPassword.UseSystemPasswordChar = true;
             // 
@@ -64,7 +64,7 @@
             Lbl_Password.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_Password.Location = new Point(186, 116);
             Lbl_Password.Name = "Lbl_Password";
-            Lbl_Password.Size = new Size(220, 31);
+            Lbl_Password.Size = new Size(183, 25);
             Lbl_Password.TabIndex = 23;
             Lbl_Password.Text = "Enter your Password";
             // 
@@ -75,7 +75,7 @@
             Tb_Password.Location = new Point(186, 160);
             Tb_Password.Name = "Tb_Password";
             Tb_Password.PlaceholderText = "Password";
-            Tb_Password.Size = new Size(424, 41);
+            Tb_Password.Size = new Size(424, 34);
             Tb_Password.TabIndex = 22;
             Tb_Password.UseSystemPasswordChar = true;
             // 
@@ -84,9 +84,9 @@
             Lbl_Register.AutoSize = true;
             Lbl_Register.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Lbl_Register.ForeColor = Color.DimGray;
-            Lbl_Register.Location = new Point(158, 33);
+            Lbl_Register.Location = new Point(197, 28);
             Lbl_Register.Name = "Lbl_Register";
-            Lbl_Register.Size = new Size(487, 54);
+            Lbl_Register.Size = new Size(394, 45);
             Lbl_Register.TabIndex = 21;
             Lbl_Register.Text = "RESET YOUR PASSWORD";
             // 
@@ -110,7 +110,7 @@
             LnkL_BackToLogIn.Font = new Font("Segoe UI", 13.8F);
             LnkL_BackToLogIn.Location = new Point(311, 435);
             LnkL_BackToLogIn.Name = "LnkL_BackToLogIn";
-            LnkL_BackToLogIn.Size = new Size(167, 31);
+            LnkL_BackToLogIn.Size = new Size(139, 25);
             LnkL_BackToLogIn.TabIndex = 27;
             LnkL_BackToLogIn.TabStop = true;
             LnkL_BackToLogIn.Text = "Back to Log in?";

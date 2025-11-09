@@ -47,7 +47,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Lbl_LogIn.ForeColor = Color.DimGray;
             Lbl_LogIn.Location = new Point(205, 21);
             Lbl_LogIn.Name = "Lbl_LogIn";
-            Lbl_LogIn.Size = new Size(145, 54);
+            Lbl_LogIn.Size = new Size(117, 45);
             Lbl_LogIn.TabIndex = 0;
             Lbl_LogIn.Text = "LOGIN";
             // 
@@ -57,7 +57,7 @@ namespace CaroProjectNhom15.Forms.Auth
             LnkL_ForgotPassword.Font = new Font("Segoe UI", 13.8F);
             LnkL_ForgotPassword.Location = new Point(172, 298);
             LnkL_ForgotPassword.Name = "LnkL_ForgotPassword";
-            LnkL_ForgotPassword.Size = new Size(228, 31);
+            LnkL_ForgotPassword.Size = new Size(188, 25);
             LnkL_ForgotPassword.TabIndex = 1;
             LnkL_ForgotPassword.TabStop = true;
             LnkL_ForgotPassword.Text = "Forgotten password?";
@@ -69,7 +69,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Tb_Email.Location = new Point(62, 90);
             Tb_Email.Name = "Tb_Email";
             Tb_Email.PlaceholderText = "Email addresss";
-            Tb_Email.Size = new Size(424, 41);
+            Tb_Email.Size = new Size(424, 34);
             Tb_Email.TabIndex = 2;
             // 
             // Btn_LogIn
@@ -99,6 +99,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Btn_CreateNewAccount.TabIndex = 4;
             Btn_CreateNewAccount.Text = "Create new account";
             Btn_CreateNewAccount.UseVisualStyleBackColor = false;
+            Btn_CreateNewAccount.Click += Btn_CreateNewAccount_Click;
             // 
             // Tb_Password
             // 
@@ -107,7 +108,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Tb_Password.Location = new Point(62, 149);
             Tb_Password.Name = "Tb_Password";
             Tb_Password.PlaceholderText = "Password";
-            Tb_Password.Size = new Size(424, 41);
+            Tb_Password.Size = new Size(424, 34);
             Tb_Password.TabIndex = 5;
             Tb_Password.UseSystemPasswordChar = true;
             // 
@@ -117,7 +118,7 @@ namespace CaroProjectNhom15.Forms.Auth
             Lbl_CreateNewAccount.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_CreateNewAccount.Location = new Point(62, 375);
             Lbl_CreateNewAccount.Name = "Lbl_CreateNewAccount";
-            Lbl_CreateNewAccount.Size = new Size(288, 31);
+            Lbl_CreateNewAccount.Size = new Size(239, 25);
             Lbl_CreateNewAccount.TabIndex = 6;
             Lbl_CreateNewAccount.Text = "Don't have an account yet?";
             // 
