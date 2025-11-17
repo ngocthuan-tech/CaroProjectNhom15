@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using CaroProjectNhom15.Forms.Auth;
+using CaroProjectNhom15.Forms.Forms.Gameplay;
 
 namespace CaroProjectNhom15
 {
@@ -37,7 +37,7 @@ namespace CaroProjectNhom15
 #endif
 
                 // Khởi chạy form login (không thay đổi Designer)
-                Application.Run(new LoginForm());
+                Application.Run(new TicTacToe());
             }
             catch (Exception ex)
             {
