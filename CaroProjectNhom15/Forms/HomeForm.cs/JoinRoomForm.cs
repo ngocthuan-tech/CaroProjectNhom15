@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CaroProjectNhom15.Forms
+namespace CaroProjectNhom15.Forms.HomeForm.cs
 {
-    public partial class UC_JoinRoom : UserControl
+    public partial class JoinRoomForm : Form
     {
-        public UC_JoinRoom()
+        public JoinRoomForm()
         {
             InitializeComponent();
         }

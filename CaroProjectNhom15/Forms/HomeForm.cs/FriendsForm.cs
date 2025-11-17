@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CaroProjectNhom15.Forms
+namespace CaroProjectNhom15.Forms.HomeForm.cs
 {
-    public partial class UC_Friends : UserControl
+    public partial class FriendsForm : Form
     {
-        public UC_Friends()
+        public FriendsForm()
         {
             InitializeComponent();
         }

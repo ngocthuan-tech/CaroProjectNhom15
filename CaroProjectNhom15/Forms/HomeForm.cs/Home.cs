@@ -16,5 +16,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         {
             InitializeComponent();
         }
+
+        
     }
 }

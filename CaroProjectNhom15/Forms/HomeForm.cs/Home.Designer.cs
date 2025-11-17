@@ -28,79 +28,130 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
-            label1 = new Label();
-            panel1 = new Panel();
-            button2 = new Button();
-            button3 = new Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Home));
+            pictureBox1 = new PictureBox();
+            Btn_TaoPhong = new Button();
+            Btn_TimPhong = new Button();
+            Btn_Friends = new Button();
+            Tb_tenUser = new TextBox();
+            Pb_anhUser = new PictureBox();
+            Btn_user = new Button();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Pb_anhUser).BeginInit();
             SuspendLayout();
             // 
-            // button1
+            // pictureBox1
             // 
-            button1.Location = new Point(37, 124);
-            button1.Name = "button1";
-            button1.Size = new Size(124, 37);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            pictureBox1.BackgroundImageLayout = ImageLayout.Center;
+            pictureBox1.Dock = DockStyle.Fill;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(798, 489);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
             // 
-            // label1
+            // Btn_TaoPhong
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(313, 28);
-            label1.Name = "label1";
-            label1.Size = new Size(108, 37);
-            label1.TabIndex = 1;
-            label1.Text = "CAPRO";
+            Btn_TaoPhong.BackColor = SystemColors.ActiveCaption;
+            Btn_TaoPhong.BackgroundImageLayout = ImageLayout.Center;
+            Btn_TaoPhong.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_TaoPhong.ForeColor = Color.Goldenrod;
+            Btn_TaoPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
+            Btn_TaoPhong.Location = new Point(493, 328);
+            Btn_TaoPhong.Name = "Btn_TaoPhong";
+            Btn_TaoPhong.Size = new Size(125, 41);
+            Btn_TaoPhong.TabIndex = 1;
+            Btn_TaoPhong.Text = "Tạo phòng";
+            Btn_TaoPhong.UseVisualStyleBackColor = false;
             // 
-            // panel1
+            // Btn_TimPhong
             // 
-            panel1.Location = new Point(194, 68);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(594, 370);
-            panel1.TabIndex = 2;
+            Btn_TimPhong.BackColor = SystemColors.ActiveCaption;
+            Btn_TimPhong.BackgroundImageLayout = ImageLayout.Center;
+            Btn_TimPhong.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_TimPhong.ForeColor = Color.Goldenrod;
+            Btn_TimPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
+            Btn_TimPhong.Location = new Point(326, 328);
+            Btn_TimPhong.Name = "Btn_TimPhong";
+            Btn_TimPhong.Size = new Size(125, 41);
+            Btn_TimPhong.TabIndex = 2;
+            Btn_TimPhong.Text = "Tìm phòng";
+            Btn_TimPhong.UseVisualStyleBackColor = false;
             // 
-            // button2
+            // Btn_Friends
             // 
-            button2.Location = new Point(37, 195);
-            button2.Name = "button2";
-            button2.Size = new Size(124, 37);
-            button2.TabIndex = 3;
-            button2.Text = "button2";
-            button2.UseVisualStyleBackColor = true;
+            Btn_Friends.BackColor = SystemColors.ActiveCaption;
+            Btn_Friends.BackgroundImageLayout = ImageLayout.Center;
+            Btn_Friends.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_Friends.ForeColor = Color.Goldenrod;
+            Btn_Friends.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
+            Btn_Friends.Location = new Point(157, 328);
+            Btn_Friends.Name = "Btn_Friends";
+            Btn_Friends.Size = new Size(125, 41);
+            Btn_Friends.TabIndex = 3;
+            Btn_Friends.Text = "Bạn bè";
+            Btn_Friends.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // Tb_tenUser
             // 
-            button3.Location = new Point(37, 258);
-            button3.Name = "button3";
-            button3.Size = new Size(124, 37);
-            button3.TabIndex = 4;
-            button3.Text = "button3";
-            button3.UseVisualStyleBackColor = true;
+            Tb_tenUser.Location = new Point(66, 30);
+            Tb_tenUser.Name = "Tb_tenUser";
+            Tb_tenUser.ReadOnly = true;
+            Tb_tenUser.Size = new Size(136, 27);
+            Tb_tenUser.TabIndex = 4;
+            // 
+            // Pb_anhUser
+            // 
+            Pb_anhUser.Location = new Point(12, 12);
+            Pb_anhUser.Name = "Pb_anhUser";
+            Pb_anhUser.Size = new Size(48, 45);
+            Pb_anhUser.TabIndex = 5;
+            Pb_anhUser.TabStop = false;
+            // 
+            // Btn_user
+            // 
+            Btn_user.BackColor = SystemColors.ActiveCaption;
+            Btn_user.BackgroundImageLayout = ImageLayout.Center;
+            Btn_user.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_user.ForeColor = Color.Goldenrod;
+            Btn_user.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
+            Btn_user.Location = new Point(13, 63);
+            Btn_user.Name = "Btn_user";
+            Btn_user.Size = new Size(60, 35);
+            Btn_user.TabIndex = 6;
+            Btn_user.Text = "User";
+            Btn_user.UseVisualStyleBackColor = false;
             // 
             // Home
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(button3);
-            Controls.Add(button2);
-            Controls.Add(panel1);
-            Controls.Add(label1);
-            Controls.Add(button1);
+            ClientSize = new Size(798, 489);
+            Controls.Add(Btn_user);
+            Controls.Add(Pb_anhUser);
+            Controls.Add(Tb_tenUser);
+            Controls.Add(Btn_Friends);
+            Controls.Add(Btn_TimPhong);
+            Controls.Add(Btn_TaoPhong);
+            Controls.Add(pictureBox1);
             Name = "Home";
             Text = "Home";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Pb_anhUser).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Button button1;
-        private Label label1;
-        private Panel panel1;
-        private Button button2;
-        private Button button3;
+        private PictureBox pictureBox1;
+        private Button Btn_TaoPhong;
+        private Button Btn_TimPhong;
+        private Button Btn_Friends;
+        private TextBox Tb_tenUser;
+        private PictureBox Pb_anhUser;
+        private Button Btn_user;
     }
 }
