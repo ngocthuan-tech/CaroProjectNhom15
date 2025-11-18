@@ -34,18 +34,7 @@ namespace CaroProjectNhom15.Forms.Auth
                 bool ok = await _authService.TrySendPasswordResetEmailAsync(email);
                 if (ok)
                 {
-                    MessageBox.Show("Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư.", "Đã gửi", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Mở VerificationForm để người dùng paste oobCode và reset mật khẩu tại chỗ nếu muốn
-                    var ask = MessageBox.Show("Bạn có muốn nhập mã (oobCode) và mật khẩu mới ngay bây giờ không?", "Reset mật khẩu", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (ask == DialogResult.Yes)
-                    {
-                        using var vf = new VerificationForm();
-                        vf.ShowDialog(this);
-                        // Nếu reset thành công, VerificationForm sẽ đóng lại
-                    }
-
-                    Close();
+                    MessageBox.Show("Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư.", "Đã gửi", MessageBoxButtons.OK, MessageBoxIcon.Information);                            
                 }
                 else
                 {

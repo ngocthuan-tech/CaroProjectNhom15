@@ -82,12 +82,7 @@ namespace CaroProjectNhom15.Forms.Auth
                         MessageBox.Show("Đã gửi email xác thực. Vui lòng kiểm tra hộp thư.", "Đã gửi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-                    var ask = MessageBox.Show("Bạn có muốn nhập mã xác thực (oobCode) thủ công không?", "Xác thực", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (ask == DialogResult.Yes)
-                    {
-                        using var vf = new VerificationForm();
-                        vf.ShowDialog(this);
-                    }
+          
                     return;
                 }
 
