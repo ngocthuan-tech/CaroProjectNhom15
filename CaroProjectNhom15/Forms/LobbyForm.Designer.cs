@@ -35,7 +35,7 @@
             pictureBox4 = new PictureBox();
             Lb_UserName2 = new Label();
             label1 = new Label();
-            Btn_Exit = new Button();
+            Btn_ExitRoom = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
@@ -109,24 +109,24 @@
             label1.TabIndex = 7;
             label1.Text = "VS";
             // 
-            // Btn_Exit
+            // Btn_ExitRoom
             // 
-            Btn_Exit.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            Btn_Exit.ForeColor = Color.Yellow;
-            Btn_Exit.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
-            Btn_Exit.Location = new Point(12, 12);
-            Btn_Exit.Name = "Btn_Exit";
-            Btn_Exit.Size = new Size(103, 44);
-            Btn_Exit.TabIndex = 9;
-            Btn_Exit.Text = "Exit";
-            Btn_Exit.UseVisualStyleBackColor = true;
+            Btn_ExitRoom.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_ExitRoom.ForeColor = Color.Yellow;
+            Btn_ExitRoom.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Btn_ExitRoom.Location = new Point(12, 12);
+            Btn_ExitRoom.Name = "Btn_ExitRoom";
+            Btn_ExitRoom.Size = new Size(215, 44);
+            Btn_ExitRoom.TabIndex = 9;
+            Btn_ExitRoom.Text = "Exit Room";
+            Btn_ExitRoom.UseVisualStyleBackColor = true;
             // 
             // LobbyForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(806, 454);
-            Controls.Add(Btn_Exit);
+            Controls.Add(Btn_ExitRoom);
             Controls.Add(label1);
             Controls.Add(Lb_UserName2);
             Controls.Add(pictureBox4);
@@ -152,6 +152,6 @@
         private PictureBox pictureBox4;
         private Label Lb_UserName2;
         private Label label1;
-        private Button Btn_Exit;
+        private Button Btn_ExitRoom;
     }
 }
