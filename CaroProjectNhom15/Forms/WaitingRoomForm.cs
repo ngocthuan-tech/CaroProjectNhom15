@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace CaroProjectNhom15.Forms
 {
-    public partial class LobbyForm : Form
+    public partial class WaitingRoomForm : Form
     {
-        public LobbyForm()
+        public WaitingRoomForm()
         {
             InitializeComponent();
         }
