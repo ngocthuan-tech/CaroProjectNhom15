@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Forms\" />
+    <Folder Include="UserControls\" />
   </ItemGroup>
 
 </Project>
