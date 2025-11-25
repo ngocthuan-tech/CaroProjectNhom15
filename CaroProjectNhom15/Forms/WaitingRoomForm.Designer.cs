@@ -1,6 +1,6 @@
 ﻿namespace CaroProjectNhom15.Forms
 {
-    partial class WaitingRoomForm
+    partial class Frm_WaitingRoomForm
     {
         /// <summary>
         /// Required designer variable.
@@ -149,7 +149,7 @@
             Lbl_Player02.TabIndex = 11;
             Lbl_Player02.Text = "Player 2";
             // 
-            // LobbyForm
+            // Frm_WaitingRoomForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -164,7 +164,7 @@
             Controls.Add(Lb_UserName1);
             Controls.Add(Btn_Start);
             Controls.Add(Pb_Background);
-            Name = "LobbyForm";
+            Name = "Frm_WaitingRoomForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";
             ((System.ComponentModel.ISupportInitialize)Pb_Background).EndInit();

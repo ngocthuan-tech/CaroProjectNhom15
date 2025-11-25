@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CaroProjectNhom15.Forms
+namespace CaroProjectNhom15.UserControls
 {
-    public partial class Frm_WaitingRoomForm : Form
+    public partial class UC_RoomItem : UserControl
     {
-        public Frm_WaitingRoomForm()
+        public UC_RoomItem()
         {
             InitializeComponent();
         }
