@@ -2,6 +2,8 @@
 using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Utils;
 using Firebase.Database;
+using Firebase.Database.Query;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace CaroProjectNhom15.Services
     {
         private FirebaseClient Database => FirebaseProvider.Instance.Database;
 
-        //create room, join room, exit room, start game, leave game
+        //create room, join room, exit room, start game, leave game, get all room
         public async Task<RoomModel> CreateRoomAsync(UserModel currentUser)
         {
             return await TryHelper.TryAsync<RoomModel>(async Task<RoomModel> () =>
@@ -28,20 +30,54 @@ namespace CaroProjectNhom15.Services
                     Status = "Waiting",
                 };
 
-                string roomData = JsonConvert.SerializeObject(newRoom);
-                var result = await Database.Child("rooms").PostAsync(roomData);
+                
+                var result = await Database.Child("rooms").
+                PostAsync(newRoom).ConfigureAwait(false);
 
                 string roomID = result.Key;
-
                 newRoom.ID = roomID;
 
+                await Database.Child("rooms").Child(roomID).Child("ID").
+                PutAsync(newRoom).ConfigureAwait(false);
+
                 return newRoom;
+
             }, "tạo phòng");
         }
 
-        public async Task JoinRoomAsync(string roomID, UserModel user)
+        //vào phòng qua id hoặc qua chọn danh sách phòng
+        public async Task<RoomModel> JoinRoomAsync(RoomModel room, UserModel currentUser)
         {
-            
+            return await TryHelper.TryAsync(async Task<RoomModel> () =>
+            {
+                if (room == null)
+                {
+                    throw new Exception("Phòng không tồn tại");
+                }
+
+                if (room.Guest != null)
+                {
+                    throw new Exception("Phòng này đã đủ 2 người chơi");
+                }
+
+                room.Guest = currentUser;
+                room.Status = "Ready";
+
+                await Database.Child("rooms").Child(room.ID).
+                PatchAsync(new 
+                {
+                    Guest = currentUser,
+                    Status = "Ready"
+                }).ConfigureAwait(false);
+
+                return room;
+
+            }, "join phòng");
+        }
+
+        public async Task ExitRoomAsync()
+        {
+
         }
     }
 }
