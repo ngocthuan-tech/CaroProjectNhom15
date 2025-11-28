@@ -16,8 +16,38 @@ namespace CaroProjectNhom15.Services
     public class RoomService
     {
         private FirebaseClient Database => FirebaseProvider.Instance.Database;
+        
+        public async Task<RoomModel> GetRoomById (string roomId)
+        {
+            return await TryHelper.TryAsync<RoomModel>(async Task<RoomModel> () =>
+            {
+                var newRoom = await Database.Child("rooms").Child(roomId).
+                OnceSingleAsync<RoomModel>().ConfigureAwait(false);
 
-        //create room, join room, exit room, start game, leave game, get all room
+                return newRoom;
+
+            }, "tìm phòng qua id");
+
+        }
+
+        public async Task<List<RoomModel>> GetAllRoom(string roomId)
+        {
+            return await TryHelper.TryAsync<List<RoomModel>>(async Task<List<RoomModel>> () =>
+            {
+                var roomList = await Database.Child("rooms").
+                OnceAsync<RoomModel>().ConfigureAwait(false);
+
+                return roomList.Select(r =>
+                {
+                    var room = r.Object;
+                    room.ID = r.Key;
+                    return room;
+                }).ToList();
+
+            }, "lấy toàn bộ phòng");
+
+        }
+
         public async Task<RoomModel> CreateRoomAsync(UserModel currentUser)
         {
             return await TryHelper.TryAsync<RoomModel>(async Task<RoomModel> () =>
@@ -38,7 +68,7 @@ namespace CaroProjectNhom15.Services
                 newRoom.ID = roomID;
 
                 await Database.Child("rooms").Child(roomID).Child("ID").
-                PutAsync(newRoom).ConfigureAwait(false);
+                PutAsync(roomID).ConfigureAwait(false);
 
                 return newRoom;
 
@@ -75,9 +105,47 @@ namespace CaroProjectNhom15.Services
             }, "join phòng");
         }
 
-        public async Task ExitRoomAsync()
+        public async Task LeaveRoomAsync(RoomModel currentRoom)
         {
+            await TryHelper.TryAsync(async () =>
+            {
+                currentRoom.Guest = null;
+                currentRoom.Status = "Waiting";
 
+                await Database.Child("rooms").Child(currentRoom.ID).
+                PatchAsync(new
+                {
+                    Guest = (UserModel)null, 
+                    Status = "Waiting"
+                }).ConfigureAwait(false);
+
+            }, "rời phòng");
         }
+
+        public async Task DeleteRoomAsync(RoomModel myRoom)
+        {
+            await TryHelper.TryAsync(async () =>
+            {
+                await Database.Child("rooms").Child(myRoom.ID).
+                DeleteAsync().ConfigureAwait(false);
+
+            }, "xóa phòng");
+        }
+
+        public async Task StartGameAsync(RoomModel myRoom)
+        {
+            await TryHelper.TryAsync(async () =>
+            {
+                await Database.Child("rooms").Child(myRoom.ID).
+                PatchAsync(new
+                {
+                    Status = "Playing"
+                })
+                .ConfigureAwait(false);
+
+            }, "bắt đầu game");
+        }
+
+
     }
 }
