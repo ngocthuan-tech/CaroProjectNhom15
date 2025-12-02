@@ -10,7 +10,7 @@ namespace CaroProjectNhom15.Models
     {
         public string SenderName { get; set; } // tên người gửi 
         public string Content { get; set; }  // Nội dung chat
-        public DateTime Time { get; set; }
+        public DateTime Time { get; set; } //thòi gian gửi
 
         public MessageModel() { }
     }

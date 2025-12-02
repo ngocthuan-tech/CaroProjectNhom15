@@ -38,6 +38,7 @@
             Btn_ExitRoom = new Button();
             Lbl_Player01 = new Label();
             Lbl_Player02 = new Label();
+            uC_Chat1 = new CaroProjectNhom15.UserControls.UC_Chat();
             ((System.ComponentModel.ISupportInitialize)Pb_Background).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player01).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player02).BeginInit();
@@ -46,9 +47,9 @@
             // Pb_Background
             // 
             Pb_Background.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
-            Pb_Background.Location = new Point(-1, -2);
+            Pb_Background.Location = new Point(-6, 1);
             Pb_Background.Name = "Pb_Background";
-            Pb_Background.Size = new Size(806, 454);
+            Pb_Background.Size = new Size(1246, 454);
             Pb_Background.TabIndex = 0;
             Pb_Background.TabStop = false;
             // 
@@ -149,11 +150,19 @@
             Lbl_Player02.TabIndex = 11;
             Lbl_Player02.Text = "Player 2";
             // 
+            // uC_Chat1
+            // 
+            uC_Chat1.Location = new Point(819, 1);
+            uC_Chat1.Name = "uC_Chat1";
+            uC_Chat1.Size = new Size(429, 454);
+            uC_Chat1.TabIndex = 12;
+            // 
             // Frm_WaitingRoomForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(806, 454);
+            ClientSize = new Size(1237, 452);
+            Controls.Add(uC_Chat1);
             Controls.Add(Lbl_Player02);
             Controls.Add(Lbl_Player01);
             Controls.Add(Btn_ExitRoom);
@@ -186,5 +195,6 @@
         private Button Btn_ExitRoom;
         private Label Lbl_Player01;
         private Label Lbl_Player02;
+        private UserControls.UC_Chat uC_Chat1;
     }
 }

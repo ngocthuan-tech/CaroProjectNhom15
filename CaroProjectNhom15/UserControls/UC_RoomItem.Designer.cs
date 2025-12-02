@@ -28,10 +28,72 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            Lbl_RoomName = new Label();
+            Lbl_Status = new Label();
+            Lbl_HostName = new Label();
+            Btn_Join = new Button();
+            SuspendLayout();
+            // 
+            // Lbl_RoomName
+            // 
+            Lbl_RoomName.AutoSize = true;
+            Lbl_RoomName.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Lbl_RoomName.Location = new Point(34, 19);
+            Lbl_RoomName.Name = "Lbl_RoomName";
+            Lbl_RoomName.Size = new Size(117, 41);
+            Lbl_RoomName.TabIndex = 0;
+            Lbl_RoomName.Text = "Name: ";
+            // 
+            // Lbl_Status
+            // 
+            Lbl_Status.AutoSize = true;
+            Lbl_Status.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Lbl_Status.Location = new Point(34, 91);
+            Lbl_Status.Name = "Lbl_Status";
+            Lbl_Status.Size = new Size(121, 41);
+            Lbl_Status.TabIndex = 1;
+            Lbl_Status.Text = "Status: ";
+            // 
+            // Lbl_HostName
+            // 
+            Lbl_HostName.AutoSize = true;
+            Lbl_HostName.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Lbl_HostName.Location = new Point(34, 172);
+            Lbl_HostName.Name = "Lbl_HostName";
+            Lbl_HostName.Size = new Size(100, 41);
+            Lbl_HostName.TabIndex = 4;
+            Lbl_HostName.Text = "Host: ";
+            // 
+            // Btn_Join
+            // 
+            Btn_Join.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_Join.Location = new Point(304, 243);
+            Btn_Join.Name = "Btn_Join";
+            Btn_Join.Size = new Size(123, 51);
+            Btn_Join.TabIndex = 6;
+            Btn_Join.Text = "Join";
+            Btn_Join.UseVisualStyleBackColor = true;
+            Btn_Join.Click += Btn_Join_Click;
+            // 
+            // UC_RoomItem
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(Btn_Join);
+            Controls.Add(Lbl_HostName);
+            Controls.Add(Lbl_Status);
+            Controls.Add(Lbl_RoomName);
+            Name = "UC_RoomItem";
+            Size = new Size(750, 314);
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Label Lbl_RoomName;
+        private Label Lbl_Status;
+        private Label Lbl_HostName;
+        private Button Btn_Join;
     }
 }
