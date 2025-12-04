@@ -8,14 +8,18 @@ namespace Auth.Models
         public string UserName { get; set; }
         public string FullName { get; set; }
 
+        // New: store avatar as URL or data URI (data:image/png;base64,...)
+        public string AvatarUrl { get; set; }
+
         public UserModel() { }
 
-        public UserModel(string uid, string email, string userName, string fullName)
+        public UserModel(string uid, string email, string userName, string fullName, string avatarUrl = null)
         {
             Uid = uid;
             Email = email;
             UserName = userName;
             FullName = fullName;
+            AvatarUrl = avatarUrl;
         }
     }
 }
