@@ -1,66 +1,68 @@
 ﻿using CaroProjectNhom15.Models;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CaroProjectNhom15.UserControls
 {
     public partial class UC_RoomItem : UserControl
     {
-        // Biến này để lưu dữ liệu phòng, sau này nút Join sẽ cần dùng
         public RoomModel RoomData { get; private set; }
 
-        // Sự kiện để báo ra ngoài LobbyForm
         public event EventHandler<RoomModel> OnJoinClicked;
 
         public UC_RoomItem(RoomModel room)
         {
             InitializeComponent();
-            this.RoomData = room;
+            UpdateData(room);
+        }
 
-            // --- GÁN DỮ LIỆU VÀO LABEL (APPEND STRING) ---
+        public void UpdateData(RoomModel room)
+        {
+            RoomData = room;
+            RefreshUI();
+        }
 
-            // 1. Tên phòng
-            Lbl_RoomName.Text = "Name: " + room.Name;
+        private void RefreshUI()
+        {
+            if (RoomData == null) return;
 
-            // 2. Trạng thái
-            Lbl_Status.Text = "Status: " + room.Status;
+            Lbl_RoomName.Text = $"Name: {RoomData.Name ?? "Unknown"}";
+            Lbl_HostName.Text = $"Host: {RoomData.Host?.UserName ?? "(None)"}";
+            Lbl_Status.Text = $"Status: {RoomData.Status ?? "Unknown"}";
 
-            // Đổi màu trạng thái cho dễ nhìn
-            if (room.Status == "Playing")
+            // Xử lý màu + trạng thái nút Join
+            switch (RoomData.Status)
             {
-                Lbl_Status.ForeColor = Color.Red;
-                Btn_Join.Enabled = false; // Đang chơi thì khóa nút Join
-                Btn_Join.Text = "Full";
-            }
-            else
-            {
-                Lbl_Status.ForeColor = Color.Green;
-                Btn_Join.Enabled = true;
-                Btn_Join.Text = "Join";
-            }
+                case "Waiting":
+                    Lbl_Status.ForeColor = Color.Green;
+                    Btn_Join.Enabled = true;
+                    Btn_Join.Text = "Join";
+                    break;
 
-            // 3. Chủ phòng (Cần check null để không bị lỗi)
-            if (room.Host != null)
-            {
-                Lbl_HostName.Text = "Host: " + room.Host.UserName;
-            }
-            else
-            {
-                Lbl_HostName.Text = "Host: (Trống)";
+                case "Ready":
+                    Lbl_Status.ForeColor = Color.Orange;
+                    Btn_Join.Enabled = true;
+                    Btn_Join.Text = "Join";
+                    break;
+
+                case "Playing":
+                case "Full":
+                    Lbl_Status.ForeColor = Color.Red;
+                    Btn_Join.Enabled = false;
+                    Btn_Join.Text = "Full";
+                    break;
+
+                default:
+                    Lbl_Status.ForeColor = Color.Gray;
+                    Btn_Join.Enabled = false;
+                    Btn_Join.Text = "N/A";
+                    break;
             }
         }
 
-        // Sự kiện khi bấm nút Join
         private void Btn_Join_Click(object sender, EventArgs e)
         {
-            // Bắn tín hiệu ra ngoài LobbyForm kèm theo dữ liệu phòng
             OnJoinClicked?.Invoke(this, RoomData);
         }
     }

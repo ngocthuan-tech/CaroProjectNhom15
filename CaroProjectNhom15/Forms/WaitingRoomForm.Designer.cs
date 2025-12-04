@@ -64,6 +64,7 @@
             Btn_Start.TabIndex = 1;
             Btn_Start.Text = "Start";
             Btn_Start.UseVisualStyleBackColor = true;
+            Btn_Start.Click += Btn_Start_Click;
             // 
             // Lb_UserName1
             // 
@@ -123,6 +124,7 @@
             Btn_ExitRoom.TabIndex = 9;
             Btn_ExitRoom.Text = "Exit Room";
             Btn_ExitRoom.UseVisualStyleBackColor = true;
+            Btn_ExitRoom.Click += Btn_ExitRoom_Click;
             // 
             // Lbl_Player01
             // 
@@ -176,12 +178,15 @@
             Name = "Frm_WaitingRoomForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";
+            Load += Frm_WaitingRoomForm_Load;
+            FormClosing += Frm_WaitingRoomForm_FormClosing;
             ((System.ComponentModel.ISupportInitialize)Pb_Background).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player01).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player02).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
