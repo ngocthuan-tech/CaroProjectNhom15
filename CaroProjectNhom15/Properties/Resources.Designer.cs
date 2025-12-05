@@ -59,5 +59,36 @@ namespace CaroProjectNhom15.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Capro_Game {
+            get {
+                object obj = ResourceManager.GetObject("Capro Game", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ {
+            get {
+                object obj = ResourceManager.GetObject("giờ hãy tạo một nền màu nâu đất, đồ hoạ 2đ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí {
+            get {
+                object obj = ResourceManager.GetObject("tạo cho tôi một cái nền trò chơi, kiểu cổ điển gạch rêu này kia á, nhìn nó đồ hoạ" +
+                        " 2d thôi hoạt tình tí", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
