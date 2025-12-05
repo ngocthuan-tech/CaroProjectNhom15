@@ -46,8 +46,9 @@
             pictureBox1.Dock = DockStyle.Fill;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Margin = new Padding(4, 4, 4, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(798, 489);
+            pictureBox1.Size = new Size(998, 611);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
@@ -56,12 +57,13 @@
             // 
             Btn_TaoPhong.BackColor = SystemColors.ActiveCaption;
             Btn_TaoPhong.BackgroundImageLayout = ImageLayout.Center;
-            Btn_TaoPhong.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_TaoPhong.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
             Btn_TaoPhong.ForeColor = Color.Goldenrod;
             Btn_TaoPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_TaoPhong.Location = new Point(493, 328);
+            Btn_TaoPhong.Location = new Point(630, 410);
+            Btn_TaoPhong.Margin = new Padding(4, 4, 4, 4);
             Btn_TaoPhong.Name = "Btn_TaoPhong";
-            Btn_TaoPhong.Size = new Size(125, 41);
+            Btn_TaoPhong.Size = new Size(178, 51);
             Btn_TaoPhong.TabIndex = 1;
             Btn_TaoPhong.Text = "Tạo phòng";
             Btn_TaoPhong.UseVisualStyleBackColor = false;
@@ -70,12 +72,13 @@
             // 
             Btn_TimPhong.BackColor = SystemColors.ActiveCaption;
             Btn_TimPhong.BackgroundImageLayout = ImageLayout.Center;
-            Btn_TimPhong.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_TimPhong.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
             Btn_TimPhong.ForeColor = Color.Goldenrod;
             Btn_TimPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_TimPhong.Location = new Point(326, 328);
+            Btn_TimPhong.Location = new Point(408, 410);
+            Btn_TimPhong.Margin = new Padding(4, 4, 4, 4);
             Btn_TimPhong.Name = "Btn_TimPhong";
-            Btn_TimPhong.Size = new Size(125, 41);
+            Btn_TimPhong.Size = new Size(181, 51);
             Btn_TimPhong.TabIndex = 2;
             Btn_TimPhong.Text = "Tìm phòng";
             Btn_TimPhong.UseVisualStyleBackColor = false;
@@ -84,29 +87,32 @@
             // 
             Btn_Friends.BackColor = SystemColors.ActiveCaption;
             Btn_Friends.BackgroundImageLayout = ImageLayout.Center;
-            Btn_Friends.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_Friends.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
             Btn_Friends.ForeColor = Color.Goldenrod;
             Btn_Friends.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_Friends.Location = new Point(157, 328);
+            Btn_Friends.Location = new Point(196, 410);
+            Btn_Friends.Margin = new Padding(4, 4, 4, 4);
             Btn_Friends.Name = "Btn_Friends";
-            Btn_Friends.Size = new Size(125, 41);
+            Btn_Friends.Size = new Size(182, 51);
             Btn_Friends.TabIndex = 3;
             Btn_Friends.Text = "Bạn bè";
             Btn_Friends.UseVisualStyleBackColor = false;
             // 
             // Tb_tenUser
             // 
-            Tb_tenUser.Location = new Point(66, 30);
+            Tb_tenUser.Location = new Point(82, 38);
+            Tb_tenUser.Margin = new Padding(4, 4, 4, 4);
             Tb_tenUser.Name = "Tb_tenUser";
             Tb_tenUser.ReadOnly = true;
-            Tb_tenUser.Size = new Size(136, 27);
+            Tb_tenUser.Size = new Size(169, 31);
             Tb_tenUser.TabIndex = 4;
             // 
             // Pb_anhUser
             // 
-            Pb_anhUser.Location = new Point(12, 12);
+            Pb_anhUser.Location = new Point(15, 15);
+            Pb_anhUser.Margin = new Padding(4, 4, 4, 4);
             Pb_anhUser.Name = "Pb_anhUser";
-            Pb_anhUser.Size = new Size(48, 45);
+            Pb_anhUser.Size = new Size(60, 56);
             Pb_anhUser.TabIndex = 5;
             Pb_anhUser.TabStop = false;
             // 
@@ -114,21 +120,22 @@
             // 
             Btn_user.BackColor = SystemColors.ActiveCaption;
             Btn_user.BackgroundImageLayout = ImageLayout.Center;
-            Btn_user.Font = new Font("Adobe Gothic Std B", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_user.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
             Btn_user.ForeColor = Color.Goldenrod;
             Btn_user.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_user.Location = new Point(13, 63);
+            Btn_user.Location = new Point(16, 79);
+            Btn_user.Margin = new Padding(4, 4, 4, 4);
             Btn_user.Name = "Btn_user";
-            Btn_user.Size = new Size(60, 35);
+            Btn_user.Size = new Size(93, 44);
             Btn_user.TabIndex = 6;
             Btn_user.Text = "User";
             Btn_user.UseVisualStyleBackColor = false;
             // 
             // Home
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(798, 489);
+            ClientSize = new Size(998, 611);
             Controls.Add(Btn_user);
             Controls.Add(Pb_anhUser);
             Controls.Add(Tb_tenUser);
@@ -136,6 +143,7 @@
             Controls.Add(Btn_TimPhong);
             Controls.Add(Btn_TaoPhong);
             Controls.Add(pictureBox1);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "Home";
             Text = "Home";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CaroProjectNhom15.Utils;
 using AuthTest01.Services;
+using Auth.Models;
 
 namespace CaroProjectNhom15.Forms.Auth
 {
@@ -109,8 +110,41 @@ namespace CaroProjectNhom15.Forms.Auth
 
                 // 5) Thành công
                 MessageBox.Show($"Đăng nhập thành công: {email}", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
 
                 // TODO: mở MainForm, truyền idToken/userId nếu cần
+                try
+                {
+                    FirebaseProvider.Instance.InitDatabase(idToken);
+                }
+                catch { /* ignore */ }
+                UserModel user = null;
+                try
+                {
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        user = await _userService.GetUserAsync(userId);
+                    }
+                }
+                catch { user = null; }
+
+                if (user == null)
+                {
+                    var username = string.IsNullOrEmpty(email) ? "unknown" : email.Split('@')[0];
+                    user = new UserModel(userId ?? string.Empty, email, username, username, null);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(user.Uid))
+                            await _userService.CreateUserAsync(user);
+                    }
+                    catch { /* ignore */ }
+                }
+
+                // Always open Home once we have a UserModel
+                var home = new global::CaroProjectNhom15.Forms.HomeForm.cs.Home(user);
+                home.FormClosed += (s, args) => this.Close();
+                home.Show();
+                this.Hide();
             }
             catch (Exception ex)
             {
