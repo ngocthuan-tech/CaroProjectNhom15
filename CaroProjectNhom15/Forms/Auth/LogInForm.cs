@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CaroProjectNhom15.Utils;
 using AuthTest01.Services;
+using Auth.Models;
 
 namespace CaroProjectNhom15.Forms.Auth
 {
@@ -111,6 +112,12 @@ namespace CaroProjectNhom15.Forms.Auth
                 MessageBox.Show($"Đăng nhập thành công: {email}", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // TODO: mở MainForm, truyền idToken/userId nếu cần
+                UserService userService = new UserService();
+
+                var user = await userService.GetUserAsync(idToken);
+                var lobby = new LobbyForm(user);
+                lobby.Show();
+
             }
             catch (Exception ex)
             {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using Auth.Models;
-using CaroProjectNhom15.Forms;
-using CaroProjectNhom15.Utils; 
+using CaroProjectNhom15.Forms.Auth;
 
 namespace CaroProjectNhom15
 {
@@ -11,50 +9,74 @@ namespace CaroProjectNhom15
         [STAThread]
         static void Main()
         {
+            // UI initialization (hiện đại, .NET 8)
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Application.ThreadException += (s, e) => ShowError(e.Exception);
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-                ShowError(e.ExceptionObject as Exception);
+            // Global exception handlers (hiển thị thông báo và log ra console)
+            Application.ThreadException += (s, e) => HandleUiException(e.Exception);
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => HandleDomainException(e.ExceptionObject as Exception);
 
             try
             {
-                // ==============================================================
-                // BƯỚC 1: BẬT CẦU DAO DATABASE (QUAN TRỌNG NHẤT)
-                // ==============================================================
-                // Nếu không có dòng này, biến 'Database' trong Service sẽ bị NULL -> Lỗi Crash
-                // Truyền null vì đang test chế độ không cần đăng nhập
-                FirebaseProvider.Instance.InitDatabase(null);
-
-                // ==============================================================
-                // BƯỚC 2: TẠO USER GIẢ ĐỂ TEST
-                // ==============================================================
-                var mockUser = new UserModel
+                // Kiểm tra biến môi trường FIREBASE_API_KEY — cảnh báo trong DEBUG để bạn dễ cấu hình
+#if DEBUG
+                var apiKey = Environment.GetEnvironmentVariable("FIREBASE_API_KEY");
+                if (string.IsNullOrWhiteSpace(apiKey))
                 {
-                    // Random ID để mỗi lần chạy là 1 người khác nhau, đỡ trùng
-                    Uid = "test_user_" + new Random().Next(1000, 9999),
-                    UserName = "TesterPro",
-                    Email = "test@gmail.com",
-                    FullName = "Người Kiểm Thử"
-                };
+                    MessageBox.Show(
+                        "Biến môi trường 'FIREBASE_API_KEY' chưa thiết lập.\n" +
+                        "Bạn có thể thêm trong __Project Properties__ → __Debug__ → __Environment variables__\n" +
+                        "hoặc thiết lập biến hệ thống (setx / PowerShell).",
+                        "Cấu hình Firebase",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                }
+#endif
 
-                // ==============================================================
-                // BƯỚC 3: MỞ LOBBY
-                // ==============================================================
-                Application.Run(new LobbyForm(mockUser));
+                // Khởi chạy form login (không thay đổi Designer)
+                Application.Run(new LoginForm());
             }
             catch (Exception ex)
             {
-                ShowError(ex);
+                // Log + hiển thị lỗi khởi động
+                Console.WriteLine($"[App Error] Lỗi khởi tạo: {ex}");
+                try
+                {
+                    MessageBox.Show(
+                        $"Lỗi khởi động ứng dụng:\n{ex.Message}\n\nXem console để biết chi tiết.",
+                        "Lỗi khởi động",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
+                catch { }
+
+                Environment.Exit(1);
             }
         }
 
-        private static void ShowError(Exception ex)
+        private static void HandleUiException(Exception ex)
         {
-            if (ex == null) return;
-            MessageBox.Show(ex.Message, "Lỗi hệ thống", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Console.WriteLine($"[UI Exception] {ex}");
+            try
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch { }
+        }
+
+        private static void HandleDomainException(Exception? ex)
+        {
+            Console.WriteLine($"[Unhandled Exception] {ex}");
+            try
+            {
+                MessageBox.Show($"Lỗi không xác định: {ex?.Message}", "Lỗi nghiêm trọng", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch { }
         }
     }
 }
+
