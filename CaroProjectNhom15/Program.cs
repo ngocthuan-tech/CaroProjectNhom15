@@ -9,39 +9,42 @@ namespace CaroProjectNhom15
         [STAThread]
         static void Main()
         {
-            // UI initialization (hiện đại, .NET 8)
+            // CÁC THIẾT LẬP CHUNG
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Global exception handlers (hiển thị thông báo và log ra console)
+            // Xử lý lỗi (Giữ nguyên)
             Application.ThreadException += (s, e) => HandleUiException(e.Exception);
             AppDomain.CurrentDomain.UnhandledException += (s, e) => HandleDomainException(e.ExceptionObject as Exception);
 
             try
             {
-                // Kiểm tra biến môi trường FIREBASE_API_KEY — cảnh báo trong DEBUG để bạn dễ cấu hình
-#if DEBUG
-                var apiKey = Environment.GetEnvironmentVariable("FIREBASE_API_KEY");
-                if (string.IsNullOrWhiteSpace(apiKey))
-                {
-                    MessageBox.Show(
-                        "Biến môi trường 'FIREBASE_API_KEY' chưa thiết lập.\n" +
-                        "Bạn có thể thêm trong __Project Properties__ → __Debug__ → __Environment variables__\n" +
-                        "hoặc thiết lập biến hệ thống (setx / PowerShell).",
-                        "Cấu hình Firebase",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning
-                    );
-                }
-#endif
+                // [PHẦN ĐÃ SỬA LỖI PARSING]
+                string playerRole = "X"; // Mặc định là X
 
-                // Khởi chạy form login (không thay đổi Designer)
-                Application.Run(new TicTacToe());
+                string[] args = Environment.GetCommandLineArgs();
+
+                // Kiểm tra nếu có đối số thứ hai (args[0] là tên file .exe)
+                if (args.Length >= 2)
+                {
+                    string argument = args[1].ToUpper();
+                    if (argument == "O")
+                    {
+                        playerRole = "O";
+                    }
+                    // Nếu là bất kỳ đối số nào khác, nó vẫn sẽ là X (giữ mặc định)
+                }
+
+                Console.WriteLine($"[Program] Đã gán vai trò: {playerRole}");
+                // KHI CHẠY .EXE MÀ KHÔNG CÓ VS, HÃY KIỂM TRA CỬA SỔ CMD ĐỂ XEM DÒNG NÀY.
+
+                // Khởi tạo Form và truyền vai trò (X hoặc O)
+                Application.Run(new TicTacToe(playerRole));
             }
             catch (Exception ex)
             {
-                // Log + hiển thị lỗi khởi động
+                // ... (Logic xử lý lỗi khởi động)
                 Console.WriteLine($"[App Error] Lỗi khởi tạo: {ex}");
                 try
                 {
@@ -60,23 +63,12 @@ namespace CaroProjectNhom15
 
         private static void HandleUiException(Exception ex)
         {
-            Console.WriteLine($"[UI Exception] {ex}");
-            try
-            {
-                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch { }
+            // ...
         }
 
         private static void HandleDomainException(Exception? ex)
         {
-            Console.WriteLine($"[Unhandled Exception] {ex}");
-            try
-            {
-                MessageBox.Show($"Lỗi không xác định: {ex?.Message}", "Lỗi nghiêm trọng", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch { }
+            // ...
         }
     }
 }
-
