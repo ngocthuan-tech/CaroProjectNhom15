@@ -54,12 +54,15 @@
             // 
             // pb_avatar
             // 
-            pb_avatar.Location = new Point(244, 170);
+            pb_avatar.Image = Properties.Resources.avatar1;
+            pb_avatar.Location = new Point(237, 171);
             pb_avatar.Margin = new Padding(4);
             pb_avatar.Name = "pb_avatar";
-            pb_avatar.Size = new Size(228, 210);
+            pb_avatar.Size = new Size(234, 207);
+            pb_avatar.SizeMode = PictureBoxSizeMode.StretchImage;
             pb_avatar.TabIndex = 4;
             pb_avatar.TabStop = false;
+            pb_avatar.UseWaitCursor = true;
             // 
             // Tb_nameUser
             // 

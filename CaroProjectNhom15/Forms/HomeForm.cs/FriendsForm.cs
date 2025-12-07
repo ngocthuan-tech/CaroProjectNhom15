@@ -317,8 +317,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         }
 
         /// <summary>
-        /// Search a user by username (textBox1) and send a friend request from current user to that user.
-        /// If no match found, nothing is added to UI.
+        /// Search a user by username (textBox1) and allow sending a friend request from current user to that user.
+        /// The right panel will display result rows with a "Gửi lời mời" button for each match.
         /// </summary>
         private async Task SearchAndSendRequestAsync()
         {
@@ -335,6 +335,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 return;
             }
 
+            panel1.Controls.Clear();
+
             try
             {
                 List<FirebaseObject<UserModel>> matches = null!;
@@ -343,16 +345,16 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     // Query users by username. The realtime client doesn't support complex queries easily,
                     // so we load all users and filter locally (ok for moderate size).
                     var all = await Database.Child("users").OnceAsync<UserModel>();
-                    matches = all?.Where(x => string.Equals(x.Object?.UserName, query, StringComparison.OrdinalIgnoreCase)).ToList();
+                    matches = all?.Where(x => !string.IsNullOrEmpty(x.Object?.UserName)
+                                               && x.Object.UserName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                                  .ToList();
                 }, $"search user {query}");
 
                 if (matches == null || matches.Count == 0)
                 {
-                    // no user found; nothing to show (per your requirement)
-                    panel1.Controls.Clear();
                     var lbl = new Label
                     {
-                        Text = $"No user found with username '{query}'.",
+                        Text = $"No user found with username containing '{query}'.",
                         AutoSize = false,
                         Size = panel1.Size,
                         TextAlign = ContentAlignment.MiddleCenter
@@ -361,36 +363,83 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     return;
                 }
 
-                // If there are multiple matches take all; for simplicity we send request to first match only.
-                var target = matches.First();
-                var targetUid = target.Key;
-                var targetUser = target.Object;
-
-                // Avoid sending request to self
-                if (targetUid == _currentUid)
+                // create a vertical flow panel to show each match with Send Request button
+                var flow = new FlowLayoutPanel
                 {
-                    MessageBox.Show("Cannot send friend request to yourself.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    Dock = DockStyle.Fill,
+                    AutoScroll = true,
+                    FlowDirection = FlowDirection.TopDown,
+                    WrapContents = false,
+                    Padding = new Padding(8)
+                };
+
+                foreach (var firebaseUser in matches)
+                {
+                    var targetUid = firebaseUser.Key;
+                    var targetUser = firebaseUser.Object;
+
+                    var itemPanel = new Panel
+                    {
+                        Width = Math.Max(320, panel1.Width - 40),
+                        Height = 72,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        Margin = new Padding(4)
+                    };
+
+                    var lbl = new Label
+                    {
+                        Text = targetUser != null ? $"{targetUser.UserName} — {targetUser.FullName}" : $"(unknown user: {targetUid})",
+                        Location = new Point(8, 8),
+                        AutoSize = false,
+                        Width = itemPanel.Width - 160,
+                        Height = 56,
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
+                    itemPanel.Controls.Add(lbl);
+
+                    var btnSend = new Button
+                    {
+                        Text = "Gửi lời mời",
+                        Location = new Point(itemPanel.Width - 140, 18),
+                        Size = new Size(120, 36)
+                    };
+
+                    // avoid sending request to self
+                    if (targetUid == _currentUid)
+                    {
+                        btnSend.Enabled = false;
+                        btnSend.Text = "Bạn là chính bạn";
+                    }
+
+                    btnSend.Click += async (_, __) =>
+                    {
+                        btnSend.Enabled = false;
+                        try
+                        {
+                            await TryHelper.TryAsync(async () =>
+                            {
+                                // Create request node friendRequests/{targetUid}/{fromUid} = true
+                                await Database.Child("friendRequests").Child(targetUid).Child(_currentUid).PutAsync(true);
+                            }, $"send friend request to {targetUid}");
+
+                            MessageBox.Show($"Đã gửi lời mời tới {targetUser?.UserName ?? targetUid}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Optionally change button to indicate sent
+                            btnSend.Text = "Đã gửi";
+                            btnSend.Enabled = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error sending request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            btnSend.Enabled = true;
+                        }
+                    };
+
+                    itemPanel.Controls.Add(btnSend);
+                    flow.Controls.Add(itemPanel);
                 }
 
-                // Create request node friendRequests/{targetUid}/{fromUid} = true
-                await TryHelper.TryAsync(async () =>
-                {
-                    await Database.Child("friendRequests").Child(targetUid).Child(_currentUid).PutAsync(true);
-                }, $"send friend request to {targetUid}");
-
-                MessageBox.Show($"Friend request sent to {targetUser?.UserName ?? targetUid}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Optionally refresh UI or show result
-                panel1.Controls.Clear();
-                var lblSucc = new Label
-                {
-                    Text = $"Friend request sent to {targetUser?.UserName ?? targetUid}.",
-                    AutoSize = false,
-                    Size = panel1.Size,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                panel1.Controls.Add(lblSucc);
+                panel1.Controls.Add(flow);
             }
             catch (Exception ex)
             {

@@ -141,8 +141,12 @@ namespace CaroProjectNhom15.Forms.Auth
                 }
 
                 // Always open Home once we have a UserModel
-                var home = new global::CaroProjectNhom15.Forms.HomeForm.cs.Home(user);
-                home.FormClosed += (s, args) => this.Close();
+                // pass idToken so Home can forward it to UserForm / FriendsForm
+                var home = new global::CaroProjectNhom15.Forms.HomeForm.cs.Home(user, idToken);
+
+                // IMPORTANT: show the original LoginForm again when Home closes
+                home.FormClosed += (s, args) => this.Show();
+
                 home.Show();
                 this.Hide();
             }

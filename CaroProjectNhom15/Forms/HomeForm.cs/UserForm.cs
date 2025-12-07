@@ -18,6 +18,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         private readonly string _uid;
         private readonly string? _idToken;
 
+        // New: flag to indicate user requested sign-out
+        public bool SignedOut { get; private set; } = false;
+
+        // New: expose changes so caller (Home) can update UI
+        public string? NewAvatarUrl { get; private set; }
+        public string? NewUserName { get; private set; }
+
         // Constructor now accepts uid (and optional idToken)
         public UserForm(string uid, string? idToken = null)
         {
@@ -31,6 +38,9 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             Btn_DoiTen.Click += Btn_DoiTen_ClickAsync;
             btn_DoiAnh.Click += Btn_DoiAnh_ClickAsync;
             Btn_DangXuat.Click += Btn_DangXuat_Click;
+
+            // Ensure Exit button closes the form when clicked
+            Btn_ExitUser.Click += (_, __) => Close();
         }
 
         private async void UserForm_LoadAsync(object? sender, EventArgs e)
@@ -52,6 +62,16 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 }
 
                 await LoadUserAsync();
+
+                // Make action buttons visible after loading user so the UI is usable
+                try
+                {
+                    Btn_ExitUser.Visible = true;
+                    Btn_DoiTen.Visible = true;
+                    btn_DoiAnh.Visible = true;
+                    Btn_DangXuat.Visible = true;
+                }
+                catch { /* ignore if designer control names differ */ }
             }
             catch (Exception ex)
             {
@@ -167,6 +187,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 _currentUser.UserName = newName;
                 await _userService.UpdateUserAsync(_currentUser.Uid, _currentUser);
+                NewUserName = _currentUser.UserName;
                 MessageBox.Show("Đổi tên thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -220,6 +241,10 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 // Persist change
                 btn_DoiAnh.Enabled = false;
                 await _userService.UpdateUserAsync(_currentUser.Uid, _currentUser);
+
+                // expose the new avatar so caller (Home) can update its UI after dialog closes
+                NewAvatarUrl = _currentUser.AvatarUrl;
+
                 MessageBox.Show("Đổi ảnh thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -234,7 +259,10 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
         private void Btn_DangXuat_Click(object? sender, EventArgs e)
         {
-            // Clear DB reference and return to login form
+            // Mark that user requested sign-out so caller (Home) can react
+            SignedOut = true;
+
+            // Clear DB reference
             try
             {
                 FirebaseProvider.Instance.ClearDatabase();
@@ -244,19 +272,27 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 Console.WriteLine($"[UserForm] Error clearing DB: {ex.Message}");
             }
 
+            // Optionally clear saved refresh token from settings (best-effort)
             try
             {
-                // If your AuthClient supports sign-out, perform it in your auth flow.
-                // Navigate back to login
-                var login = new LoginForm();
-                login.Show();
+                var settings = Properties.Settings.Default;
+                if (settings != null)
+                {
+                    try
+                    {
+                        var prop = settings.Properties["RefreshToken"];
+                        if (prop != null)
+                        {
+                            settings["RefreshToken"] = string.Empty;
+                            settings.Save();
+                        }
+                    }
+                    catch { }
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[UserForm] Error opening LoginForm: {ex.Message}");
-            }
+            catch { }
 
-            // Close this form
+            // Close this form. Home (caller) will inspect SignedOut and perform navigation (close + open Login).
             Close();
         }
     }
