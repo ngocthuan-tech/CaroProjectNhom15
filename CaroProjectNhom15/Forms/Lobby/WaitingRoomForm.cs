@@ -58,10 +58,36 @@ namespace CaroProjectNhom15.Forms
 
         private void UpdateUI(RoomModel room)
         {
-            Lb_UserName1.Text = room.Host?.UserName ?? "(Host rời phòng)";
-            Lb_UserName2.Text = room.Guest?.UserName ?? "Đang chờ...";
-            Lb_UserName2.ForeColor = room.Guest == null ? Color.Gray : Color.Black;
+            
+            Tb_RoomId.Text = room.ID;
 
+            // 1. Xử lý Host (Player 1)
+            if (room.Host != null)
+            {
+                Lbl_Player01.Text = room.Host.UserName; // Hiện tên lên label đẹp
+            }
+            else
+            {
+                Lbl_Player01.Text = "(Trống)";
+            }
+
+            // 2. Xử lý Guest (Player 2)
+            if (room.Guest != null)
+            {
+                Lbl_Player02.Text = room.Guest.UserName;
+                Lbl_Player02.ForeColor = Color.Yellow; // Màu chữ khi có người
+            }
+            else
+            {
+                Lbl_Player02.Text = "Waiting...";
+                Lbl_Player02.ForeColor = Color.WhiteSmoke; // Đổi màu nhạt hơn khi chưa có người
+            }
+
+            // 3. Ẩn luôn 2 cái label cũ bị thừa đi (hoặc vào Designer xóa cũng được)
+            Lb_UserName1.Visible = false;
+            Lb_UserName2.Visible = false;
+
+            // --- Phần logic nút Start giữ nguyên ---
             if (_isHost)
             {
                 Btn_Start.Text = "Start Game";

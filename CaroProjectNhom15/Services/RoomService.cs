@@ -50,31 +50,60 @@ namespace CaroProjectNhom15.Services
 
         // ================= ACTIONS (CREATE / JOIN / LEAVE) =================
 
+        //hỗ trợ random room id
+        private readonly Random _random = new Random();
+
         public async Task<RoomModel> CreateRoomAsync(UserModel currentUser)
         {
             return await TryHelper.TryAsync<RoomModel>(async () =>
             {
+                string roomId = "";
+                bool isUnique = false;
+
+                // VÒNG LẶP ĐẢM BẢO DUY NHẤT
+                // Random liên tục đến khi nào tìm được ID chưa ai dùng
+                while (!isUnique)
+                {
+                    roomId = GenerateRandomId(6); // Tạo ID 6 số (VD: 839210)
+
+                    // Kiểm tra xem ID này có trên Firebase chưa
+                    var existingRoom = await Database.Child("rooms").Child(roomId)
+                                             .OnceSingleAsync<object>();
+
+                    if (existingRoom == null)
+                    {
+                        isUnique = true; // Chưa có -> Dùng được
+                    }
+                }
+
+                // Tạo object phòng với ID ngắn gọn vừa tìm được
                 var newRoom = new RoomModel()
                 {
+                    ID = roomId, // Gán ID số vào đây
                     Name = "Phòng của " + currentUser.UserName,
                     Host = currentUser,
                     Guest = null,
                     Status = "Waiting",
                 };
 
-                // 1. Post lên để lấy Key
-                var result = await Database.Child("rooms").
-                PostAsync(newRoom).ConfigureAwait(false);
-
-                string roomID = result.Key;
-                newRoom.ID = roomID;
-
-                // 2. Update lại ID vào trong object trên Firebase
-                await Database.Child("rooms").Child(roomID).Child("ID").
-                PutAsync(roomID).ConfigureAwait(false);
+                // QUAN TRỌNG: Dùng PutAsync (Ghi đè theo Key chỉ định) thay vì PostAsync (Tự sinh Key)
+                await Database.Child("rooms").Child(roomId)
+                              .PutAsync(newRoom).ConfigureAwait(false);
 
                 return newRoom;
             }, "tạo phòng");
+        }
+
+        // Hàm hỗ trợ random số
+        private string GenerateRandomId(int length)
+        {
+            const string chars = "0123456789";
+            char[] stringChars = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                stringChars[i] = chars[_random.Next(chars.Length)];
+            }
+            return new string(stringChars);
         }
 
         public async Task<RoomModel> JoinRoomAsync(RoomModel room, UserModel currentUser)
@@ -82,21 +111,52 @@ namespace CaroProjectNhom15.Services
             return await TryHelper.TryAsync(async () =>
             {
                 if (room == null) throw new Exception("Phòng không tồn tại");
-                if (room.Guest != null) throw new Exception("Phòng này đã đủ 2 người chơi");
 
-                // Update Local object
-                room.Guest = currentUser;
-                room.Status = "Ready";
-
-                // Update Firebase
-                await Database.Child("rooms").Child(room.ID).
-                PatchAsync(new
+                // TRƯỜNG HỢP 1: Phòng bị lỗi mất Host (hoặc Host cũ đã thoát) -> Chiếm quyền làm Host
+                if (room.Host == null)
                 {
-                    Guest = currentUser,
-                    Status = "Ready"
-                }).ConfigureAwait(false);
+                    room.Host = currentUser;
+                    room.Status = "Waiting";
+                    room.Guest = null; // Đảm bảo guest trống
 
-                return room;
+                    // Cập nhật tên phòng theo Host mới luôn cho đẹp
+                    room.Name = "Phòng của " + currentUser.UserName;
+
+                    // Update Firebase
+                    await Database.Child("rooms").Child(room.ID)
+                        .PatchAsync(new
+                        {
+                            Host = currentUser,
+                            Guest = (UserModel)null, // Xóa Guest cũ nếu có
+                            Status = "Waiting",
+                            Name = room.Name
+                        });
+
+                    return room;
+                }
+
+                // TRƯỜNG HỢP 2: Đã có Host, mình vào làm Guest
+                if (room.Guest == null)
+                {
+                    // Kiểm tra: Không cho phép tự mình vào phòng mình tạo (tránh lỗi logic)
+                    if (room.Host.Uid == currentUser.Uid)
+                        throw new Exception("Bạn đang ở trong phòng này rồi!");
+
+                    room.Guest = currentUser;
+                    room.Status = "Ready";
+
+                    // Update Firebase
+                    await Database.Child("rooms").Child(room.ID).
+                    PatchAsync(new
+                    {
+                        Guest = currentUser,
+                        Status = "Ready"
+                    });
+
+                    return room;
+                }
+
+                throw new Exception("Phòng này đã đủ 2 người chơi");
             }, "join phòng");
         }
 
@@ -155,30 +215,51 @@ namespace CaroProjectNhom15.Services
         // ================= LISTENERS (REALTIME) =================
 
         // Lắng nghe 1 phòng cụ thể (Dùng trong Waiting Room)
+        // Trong Services/RoomService.cs
+
         public void ListenToRoom(string roomID, Action<RoomModel> onRoomChanged)
         {
-            // Hủy đăng ký cũ nếu có để tránh nghe 2 lần
+            // Hủy đăng ký cũ
             StopListenRoom();
 
             try
             {
+                // Thay vì AsObservable<RoomModel>, ta dùng AsObservable<object> 
+                // để bắt mọi thay đổi (kể cả thay đổi nhỏ nhất)
                 roomListener = Database
                     .Child("rooms")
                     .Child(roomID)
-                    .AsObservable<RoomModel>()
+                    .AsObservable<object>()
                     .Subscribe(d =>
                     {
-                        if (d.Object != null)
+                        // MỖI KHI CÓ THAY ĐỔI: Gọi hàm lấy lại toàn bộ thông tin phòng
+                        try
                         {
-                            // Gán lại Key cho chắc ăn
-                            d.Object.ID = d.Key;
-                            onRoomChanged(d.Object);
+                            // Gọi GetRoomByIdAsync để lấy dữ liệu tươi mới nhất
+                            GetRoomByIdAsync(roomID).ContinueWith(task =>
+                            {
+                                if (task.IsFaulted)
+                                {
+                                    Console.WriteLine("Lỗi tải lại phòng: " + task.Exception?.Message);
+                                }
+                                else if (task.IsCompleted && task.Result != null)
+                                {
+                                    // Lấy được dữ liệu mới -> Trả về cho UI cập nhật
+                                    var freshRoom = task.Result;
+                                    freshRoom.ID = roomID; // Đảm bảo ID luôn đúng
+
+                                    onRoomChanged(freshRoom);
+                                }
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Lỗi trong Subscribe: " + ex.Message);
                         }
                     },
                     error =>
                     {
-                        // Xử lý lỗi khi mất kết nối
-                        MessageBox.Show("Mất kết nối phòng: " + error.Message);
+                        Console.WriteLine("Stream error (Room): " + error.Message);
                     });
             }
             catch (Exception ex)
@@ -195,30 +276,57 @@ namespace CaroProjectNhom15.Services
 
         // Lắng nghe danh sách phòng (Dùng trong Lobby)
         // Lưu ý: Cách dùng GetAllRoomsAsync trong này hơi tốn tài nguyên nhưng code đơn giản, chấp nhận được.
+        // Trong Services/RoomService.cs
+
         public void ListenToRoomsList(Action<List<RoomModel>> onRoomsChanged)
         {
             // Hủy cái cũ nếu có
-            if (roomsListener != null) roomsListener.Dispose();
+            if (roomsListener != null)
+            {
+                roomsListener.Dispose();
+                roomsListener = null;
+            }
 
             try
             {
                 roomsListener = Database
-                .Child("rooms")
-                .AsObservable<RoomModel>()
-                .Subscribe(_ =>
-                {
-                    // Mỗi lần có thay đổi bất kỳ, tải lại toàn bộ danh sách
-                    // Dùng ContinueWith để không chặn luồng
-                    GetAllRoomsAsync().ContinueWith(task =>
+                    .Child("rooms")
+                    .AsObservable<RoomModel>()
+                    .Subscribe(d =>
                     {
-                        if (task.Exception == null)
-                            onRoomsChanged(task.Result);
+                        // SỬA: Đưa logic gọi lại GetAllRoomsAsync vào khối try-catch để không crash app
+                        try
+                        {
+                            // Gọi GetAllRoomsAsync nhưng không await để tránh block UI, dùng ContinueWith để xử lý kết quả
+                            GetAllRoomsAsync().ContinueWith(task =>
+                            {
+                                if (task.IsFaulted)
+                                {
+                                    // Log lỗi nhẹ nhàng vào Console thay vì crash
+                                    Console.WriteLine("Lỗi tải danh sách phòng: " + task.Exception?.InnerException?.Message);
+                                }
+                                else if (task.IsCompleted)
+                                {
+                                    // Trả về UI
+                                    onRoomsChanged(task.Result);
+                                }
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Lỗi xử lý luồng rooms: " + ex.Message);
+                        }
+                    },
+                    error =>
+                    {
+                        // SỬA: Xử lý lỗi kết nối của Stream (ví dụ: mất mạng, sai quyền)
+                        // Không MessageBox ở đây để tránh spam popup liên tục
+                        Console.WriteLine("Stream error: " + error.Message);
                     });
-                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi ListenToRoomsList: " + ex.Message);
+                MessageBox.Show("Không thể khởi tạo trình lắng nghe phòng: " + ex.Message);
             }
         }
 

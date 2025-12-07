@@ -39,6 +39,8 @@
             Lbl_Player01 = new Label();
             Lbl_Player02 = new Label();
             uC_Chat1 = new CaroProjectNhom15.UserControls.UC_Chat();
+            Lbl_RoomId = new Label();
+            Tb_RoomId = new TextBox();
             ((System.ComponentModel.ISupportInitialize)Pb_Background).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player01).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player02).BeginInit();
@@ -47,9 +49,9 @@
             // Pb_Background
             // 
             Pb_Background.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
-            Pb_Background.Location = new Point(-6, 1);
+            Pb_Background.Location = new Point(-10, 1);
             Pb_Background.Name = "Pb_Background";
-            Pb_Background.Size = new Size(1246, 454);
+            Pb_Background.Size = new Size(1246, 500);
             Pb_Background.TabIndex = 0;
             Pb_Background.TabStop = false;
             // 
@@ -58,7 +60,7 @@
             Btn_Start.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_Start.ForeColor = Color.Yellow;
             Btn_Start.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
-            Btn_Start.Location = new Point(335, 296);
+            Btn_Start.Location = new Point(335, 402);
             Btn_Start.Name = "Btn_Start";
             Btn_Start.Size = new Size(145, 53);
             Btn_Start.TabIndex = 1;
@@ -156,14 +158,36 @@
             // 
             uC_Chat1.Location = new Point(819, 1);
             uC_Chat1.Name = "uC_Chat1";
-            uC_Chat1.Size = new Size(429, 454);
+            uC_Chat1.Size = new Size(429, 500);
             uC_Chat1.TabIndex = 12;
+            // 
+            // Lbl_RoomId
+            // 
+            Lbl_RoomId.AutoSize = true;
+            Lbl_RoomId.BackColor = Color.Transparent;
+            Lbl_RoomId.Font = new Font("Showcard Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_RoomId.Location = new Point(295, 21);
+            Lbl_RoomId.Name = "Lbl_RoomId";
+            Lbl_RoomId.Size = new Size(61, 37);
+            Lbl_RoomId.TabIndex = 13;
+            Lbl_RoomId.Text = "ID:";
+            // 
+            // Tb_RoomId
+            // 
+            Tb_RoomId.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Tb_RoomId.Location = new Point(378, 16);
+            Tb_RoomId.Name = "Tb_RoomId";
+            Tb_RoomId.ReadOnly = true;
+            Tb_RoomId.Size = new Size(348, 47);
+            Tb_RoomId.TabIndex = 14;
             // 
             // Frm_WaitingRoomForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1237, 452);
+            ClientSize = new Size(1237, 496);
+            Controls.Add(Tb_RoomId);
+            Controls.Add(Lbl_RoomId);
             Controls.Add(uC_Chat1);
             Controls.Add(Lbl_Player02);
             Controls.Add(Lbl_Player01);
@@ -178,8 +202,8 @@
             Name = "Frm_WaitingRoomForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";
-            Load += Frm_WaitingRoomForm_Load;
             FormClosing += Frm_WaitingRoomForm_FormClosing;
+            Load += Frm_WaitingRoomForm_Load;
             ((System.ComponentModel.ISupportInitialize)Pb_Background).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player01).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player02).EndInit();
@@ -201,5 +225,7 @@
         private Label Lbl_Player01;
         private Label Lbl_Player02;
         private UserControls.UC_Chat uC_Chat1;
+        private Label Lbl_RoomId;
+        private TextBox Tb_RoomId;
     }
 }

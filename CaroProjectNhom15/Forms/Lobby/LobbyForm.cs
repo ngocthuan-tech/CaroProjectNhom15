@@ -19,6 +19,7 @@ namespace CaroProjectNhom15.Forms
         {
             InitializeComponent();
             _currentUser = user;
+            Btn_FindRoom.Click += Btn_FindRoom_Click;
         }
 
         private void LobbyForm_Load(object sender, EventArgs e)
@@ -113,6 +114,48 @@ namespace CaroProjectNhom15.Forms
         {
             // chỉ cần gọi lại listener, listener sẽ tự cập nhật
             StartRoomsListener();
+        }
+
+        private async void Btn_FindRoom_Click(object sender, EventArgs e)
+        {
+            string roomId = Tb_RoomId.Text.Trim();
+
+            if (string.IsNullOrEmpty(roomId))
+            {
+                MessageBox.Show("Vui lòng nhập ID phòng cần tìm.");
+                return;
+            }
+
+            Btn_FindRoom.Enabled = false; // Khóa nút để tránh bấm liên tục
+
+            try
+            {
+                // 1. Tìm thông tin phòng trên Firebase trước
+                var roomFound = await _roomService.GetRoomByIdAsync(roomId);
+
+                if (roomFound == null)
+                {
+                    MessageBox.Show("Không tìm thấy phòng có ID này!");
+                    return;
+                }
+
+                // 2. Nếu tìm thấy, gọi hàm JoinRoomAsync
+                // Hàm này (bạn đã sửa ở bước trước) sẽ tự động lo liệu việc:
+                // - Nếu phòng mất Host -> Bạn thành Host
+                // - Nếu phòng có Host -> Bạn thành Guest
+                var joinedRoom = await _roomService.JoinRoomAsync(roomFound, _currentUser);
+
+                // 3. Vào phòng chờ
+                GoToWaitingRoom(joinedRoom);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tìm phòng: " + ex.Message);
+            }
+            finally
+            {
+                Btn_FindRoom.Enabled = true; // Mở lại nút
+            }
         }
 
         private void Btn_Back_Click(object sender, EventArgs e)

@@ -21,7 +21,6 @@ namespace CaroProjectNhom15.Forms.Auth
 
             // Đảm bảo event được gắn — an toàn dù Designer có gắn hay không
             Btn_LogIn.Click += Btn_LogIn_Click;
-            Btn_CreateNewAccount.Click += Btn_CreateNewAccount_Click;
             LnkL_ForgotPassword.LinkClicked += LnkL_ForgotPassword_LinkClicked;
         }
 
@@ -114,9 +113,21 @@ namespace CaroProjectNhom15.Forms.Auth
                 // TODO: mở MainForm, truyền idToken/userId nếu cần
                 UserService userService = new UserService();
 
-                var user = await userService.GetUserAsync(idToken);
+                var user = await userService.GetUserAsync(userId);
+
+                if (user == null)
+                {
+                    MessageBox.Show("Lỗi dữ liệu: Không tìm thấy thông tin người dùng trong Database.\nVui lòng kiểm tra lại quá trình đăng ký.",
+                                    "Data Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // 3. Mở Lobby
+                // Ẩn form Login đi thay vì để nó nằm dưới
+                this.Hide();
                 var lobby = new LobbyForm(user);
-                lobby.Show();
+                lobby.ShowDialog(); // Dùng ShowDialog để khi đóng Lobby thì quay lại Login hoặc thoát hẳn
+                this.Show();
 
             }
             catch (Exception ex)

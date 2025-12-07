@@ -21,6 +21,7 @@ namespace CaroProjectNhom15
             try
             {
                 // Kiểm tra biến môi trường FIREBASE_API_KEY — cảnh báo trong DEBUG để bạn dễ cấu hình
+/*
 #if DEBUG
                 var apiKey = Environment.GetEnvironmentVariable("FIREBASE_API_KEY");
                 if (string.IsNullOrWhiteSpace(apiKey))
@@ -37,6 +38,7 @@ namespace CaroProjectNhom15
 #endif
 
                 // Khởi chạy form login (không thay đổi Designer)
+ */               
                 Application.Run(new LoginForm());
             }
             catch (Exception ex)
