@@ -16,16 +16,16 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         public ListFriends()
         {
             InitializeComponent();
-            // Configure listView for simple details view
+            // Cấu hình listView cho chế độ xem chi tiết đơn giản
             listView1.View = View.Details;
             listView1.Columns.Clear();
-            listView1.Columns.Add("Username", 140);
-            listView1.Columns.Add("Full name", 180);
+            listView1.Columns.Add("Tên người dùng", 140); // Username
+            listView1.Columns.Add("Họ và tên", 180); // Full name
             listView1.FullRowSelect = true;
         }
 
         /// <summary>
-        /// Populate the list control with a collection of users.
+        /// Điền vào control danh sách bằng một tập hợp người dùng.
         /// </summary>
         public void SetUsers(List<UserModel> users)
         {
@@ -38,13 +38,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 var li = new ListViewItem(u.UserName ?? "");
                 li.SubItems.Add(u.FullName ?? "");
-                li.Tag = u; // keep model for selection usage
+                li.Tag = u; // giữ model để sử dụng khi chọn
                 listView1.Items.Add(li);
             }
         }
 
         /// <summary>
-        /// Return the selected user model or null if none selected.
+        /// Trả về model người dùng đã chọn hoặc null nếu không có gì được chọn.
         /// </summary>
         public UserModel? GetSelectedUser()
         {
@@ -53,7 +53,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         }
 
         /// <summary>
-        /// Expose the underlying ListView if caller wants to attach events.
+        /// Hiển thị ListView bên dưới nếu người gọi muốn gắn các sự kiện.
         /// </summary>
         public ListView InnerListView => listView1;
     }

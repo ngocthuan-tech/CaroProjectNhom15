@@ -83,7 +83,7 @@ namespace CaroProjectNhom15.Forms.Auth
                         MessageBox.Show("Đã gửi email xác thực. Vui lòng kiểm tra hộp thư.", "Đã gửi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-          
+
                     return;
                 }
 
@@ -103,21 +103,21 @@ namespace CaroProjectNhom15.Forms.Auth
                                 settings.Save();
                             }
                         }
-                        catch { /* bỏ qua nếu property không tồn tại hoặc save lỗi */ }
+                        catch { /* bỏ qua nếu property không tồn tại hoặc save lỗi */ } // ignore if property does not exist or save fails
                     }
                 }
-                catch { /* ignore */ }
+                catch { /* Bỏ qua lỗi */ } // ignore
 
                 // 5) Thành công
                 MessageBox.Show($"Đăng nhập thành công: {email}", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
 
                 // TODO: mở MainForm, truyền idToken/userId nếu cần
                 try
                 {
                     FirebaseProvider.Instance.InitDatabase(idToken);
                 }
-                catch { /* ignore */ }
+                catch { /* Bỏ qua lỗi */ } // ignore
                 UserModel user = null;
                 try
                 {
@@ -137,14 +137,14 @@ namespace CaroProjectNhom15.Forms.Auth
                         if (!string.IsNullOrEmpty(user.Uid))
                             await _userService.CreateUserAsync(user);
                     }
-                    catch { /* ignore */ }
+                    catch { /* Bỏ qua lỗi */ } // ignore
                 }
 
-                // Always open Home once we have a UserModel
-                // pass idToken so Home can forward it to UserForm / FriendsForm
+                // Luôn mở Home sau khi có UserModel
+                // truyền idToken để Home có thể chuyển tiếp nó đến UserForm / FriendsForm
                 var home = new global::CaroProjectNhom15.Forms.HomeForm.cs.Home(user, idToken);
 
-                // IMPORTANT: show the original LoginForm again when Home closes
+                // QUAN TRỌNG: hiển thị lại LoginForm ban đầu khi Home đóng
                 home.FormClosed += (s, args) => this.Show();
 
                 home.Show();
@@ -172,14 +172,14 @@ namespace CaroProjectNhom15.Forms.Auth
             frm.ShowDialog(this);
         }
 
-        // Helpers
+        // Các hàm trợ giúp
         private static string? ExtractRefreshToken(object credential)
         {
             if (credential == null) return null;
             try
             {
                 dynamic d = credential;
-                try { string rt = d.RefreshToken; if (!string.IsNullOrEmpty(rt)) return rt; } catch { }
+                try { string rt = d.RefreshToken; if (!string.IsNullOrEmpty(rt)) return rt; } catch { } // try dynamic access
 
                 var t = credential.GetType();
                 foreach (var name in new[] { "RefreshToken", "RefreshTokenToken" })
@@ -208,7 +208,7 @@ namespace CaroProjectNhom15.Forms.Auth
                     }
                 }
             }
-            catch { }
+            catch { } // ignore
             return null;
         }
 
@@ -230,7 +230,7 @@ namespace CaroProjectNhom15.Forms.Auth
                         return ev.GetBoolean();
                 }
             }
-            catch { }
+            catch { } // ignore
             return false;
         }
     }

@@ -21,14 +21,14 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         {
             InitializeComponent();
 
-            // Wire up the Friends button to open the FriendsForm
+            // Gắn sự kiện cho nút Bạn bè để mở FriendsForm
             Btn_Friends.Click += Btn_Friends_Click;
 
-            // Wire up the User button to open UserForm
+            // Gắn sự kiện cho nút Người dùng để mở UserForm
             Btn_user.Click += Btn_user_Click;
         }
 
-        // New constructor that accepts a UserModel and optional idToken and fills UI
+        // Constructor mới chấp nhận UserModel và idToken tùy chọn, và điền vào UI
         public Home(UserModel user, string? idToken = null) : this()
         {
             _currentUid = user?.Uid;
@@ -38,35 +38,35 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 Tb_tenUser.Text = !string.IsNullOrEmpty(user?.UserName) ? user.UserName : user?.Email ?? string.Empty;
 
-                // Try to load avatar robustly (data URI, http(s), file path). Keep designer default if none/failed.
+                // Cố gắng tải avatar một cách mạnh mẽ (URI dữ liệu, http(s), đường dẫn tệp). Giữ mặc định của designer nếu không có/thất bại.
                 TryLoadAvatar(user?.AvatarUrl);
             }
-            catch { /* be resilient to nulls or missing data */ }
+            catch { /* linh hoạt với null hoặc dữ liệu thiếu */ } // be resilient to nulls or missing data
         }
 
         private void Btn_user_Click(object? sender, EventArgs e)
         {
-            // If we don't have current uid, inform the developer/user
+            // Nếu ta không có uid hiện tại, thông báo cho nhà phát triển/người dùng
             if (string.IsNullOrEmpty(_currentUid))
             {
-                MessageBox.Show("Current user id not available. User profile cannot be shown.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Id người dùng hiện tại không có sẵn. Không thể hiển thị hồ sơ người dùng.", "Thông tin", MessageBoxButtons.OK, MessageBoxIcon.Information); // Current user id not available. User profile cannot be shown.
                 return;
             }
 
-            // Open UserForm and pass current uid and optional idToken
+            // Mở UserForm và truyền uid hiện tại và idToken tùy chọn
             var userForm = new UserForm(_currentUid, _idToken);
             userForm.ShowDialog(this);
 
-            // If the user logged out from UserForm, just close Home.
-            // The original LoginForm (which opened Home) now has a handler to Show() itself,
-            // so closing Home returns user to Login without exiting application.
+            // Nếu người dùng đăng xuất khỏi UserForm, chỉ cần đóng Home.
+            // LoginForm ban đầu (đã mở Home) hiện có một trình xử lý để Show() chính nó,
+            // vì vậy việc đóng Home sẽ đưa người dùng trở lại màn hình Đăng nhập mà không thoát ứng dụng.
             if (userForm.SignedOut)
             {
                 this.Close();
                 return;
             }
 
-            // Update Home UI immediately if user changed profile in UserForm
+            // Cập nhật UI Home ngay lập tức nếu người dùng thay đổi hồ sơ trong UserForm
             try
             {
                 if (!string.IsNullOrEmpty(userForm.NewUserName))
@@ -79,21 +79,21 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     TryLoadAvatar(userForm.NewAvatarUrl);
                 }
             }
-            catch { /* ignore UI update errors */ }
+            catch { /* bỏ qua các lỗi cập nhật UI */ } // ignore UI update errors
         }
 
         private void Btn_Friends_Click(object? sender, EventArgs e)
         {
-            // Pass current uid into FriendsForm so it can load the friend list
+            // Truyền uid hiện tại vào FriendsForm để nó có thể tải danh sách bạn bè
             var friendsForm = new FriendsForm(_currentUid);
             friendsForm.ShowDialog(this);
         }
 
-        // Robust avatar loader: supports data URI (base64), http(s) URLs and file paths.
+        // Bộ tải avatar mạnh mẽ: hỗ trợ URI dữ liệu (base64), URL http(s) và đường dẫn tệp cục bộ.
         private void TryLoadAvatar(string? avatarUrl)
         {
             if (string.IsNullOrWhiteSpace(avatarUrl))
-                return; // keep default image from designer
+                return; // giữ hình ảnh mặc định từ designer
 
             try
             {
@@ -112,7 +112,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     return;
                 }
 
-                // HTTP/HTTPS remote URL
+                // URL từ xa HTTP/HTTPS
                 if (avatarUrl.StartsWith("http:", StringComparison.OrdinalIgnoreCase) ||
                     avatarUrl.StartsWith("https:", StringComparison.OrdinalIgnoreCase))
                 {
@@ -122,34 +122,34 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     }
                     catch
                     {
-                        // ignore — keep designer default
+                        // bỏ qua — giữ mặc định của designer
                     }
                     return;
                 }
 
-                // Local file path
+                // Đường dẫn tệp cục bộ
                 if (File.Exists(avatarUrl))
                 {
                     try
                     {
-                        // Load copy to avoid locking file
+                        // Tải bản sao để tránh khóa tệp
                         using var fs = File.OpenRead(avatarUrl);
                         var img = Image.FromStream(fs);
                         Pb_anhUser.Image = new Bitmap(img);
                     }
                     catch
                     {
-                        // ignore
+                        // bỏ qua
                     }
                     return;
                 }
 
-                // Otherwise, not recognized — keep default (designer) avatar.
+                // Nếu không, không được nhận dạng — giữ avatar mặc định (designer).
             }
             catch
             {
-                // swallow errors, keep default avatar
-            }
+                // nuốt lỗi, giữ avatar mặc định
+            } // swallow errors, keep default avatar
         }
     }
 }

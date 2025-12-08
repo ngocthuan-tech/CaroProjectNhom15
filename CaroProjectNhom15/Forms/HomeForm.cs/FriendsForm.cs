@@ -16,8 +16,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 {
     public partial class FriendsForm : Form
     {
-        // Optional: you can set current user uid here when creating FriendsForm
-        // e.g. new FriendsForm(currentUid)
+        // Tùy chọn: bạn có thể thiết lập uid của người dùng hiện tại ở đây khi tạo FriendsForm
+        // ví dụ: new FriendsForm(currentUid)
         private readonly string? _currentUid;
 
         public FriendsForm(string? currentUid = null)
@@ -26,7 +26,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
             _currentUid = currentUid;
 
-            // Wire up UI events
+            // Gắn sự kiện UI
             Load += FriendsForm_Load;
             Btn_ExitFriends.Click += (_, __) => Close();
             Btn_DsBanBe.Click += async (_, __) => await ShowFriendsAsync();
@@ -36,34 +36,34 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
         private async void FriendsForm_Load(object? sender, EventArgs e)
         {
-            // Make controls visible when form loads
+            // Hiển thị các control khi form load
             Btn_ExitFriends.Visible = true;
             Btn_DsBanBe.Visible = true;
             Btn_LoiMoiKB.Visible = true;
             Btn_timFriend.Visible = true;
 
-            // If we don't have current uid, try to infer it from FirebaseProvider.AuthClient
+            // Nếu không có uid hiện tại, thử suy luận từ FirebaseProvider.AuthClient
             if (string.IsNullOrEmpty(_currentUid))
             {
                 try
                 {
-                    // The FirebaseAuthClient may expose the current user's id token/user info depending on usage.
-                    // If you store current user's uid elsewhere in your app, pass it via constructor instead.
+                    // FirebaseAuthClient có thể tiết lộ id token/thông tin người dùng hiện tại tùy thuộc vào cách sử dụng.
+                    // Nếu bạn lưu uid người dùng hiện tại ở nơi khác trong ứng dụng, hãy truyền nó qua constructor.
                 }
-                catch { /* ignore; we work without it but some features need uid */ }
+                catch { /* Bỏ qua; ta vẫn làm việc được nhưng một số tính năng cần uid */ }
             }
 
-            // default: show friends if possible
+            // Mặc định: hiển thị danh sách bạn bè nếu có thể
             await ShowFriendsAsync();
         }
 
         private FirebaseClient Database => FirebaseProvider.Instance.Database;
 
         /// <summary>
-        /// Load and display the current user's friends.
-        /// expects DB structure:
-        ///   friends/{currentUid}/{friendUid} = true
-        ///   users/{uid} => user model
+        /// Tải và hiển thị danh sách bạn bè của người dùng hiện tại.
+        /// Cấu trúc DB dự kiến:
+        ///    friends/{currentUid}/{friendUid} = true
+        ///    users/{uid} => user model
         /// </summary>
         private async Task ShowFriendsAsync()
         {
@@ -71,10 +71,10 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
             if (string.IsNullOrEmpty(_currentUid))
             {
-                // Show a helpful message in the panel so developer knows to pass current uid
+                // Hiển thị một thông báo hữu ích trong panel để nhà phát triển biết cần truyền current uid
                 var lbl = new Label
                 {
-                    Text = "Current user uid not provided. Set it when creating FriendsForm to load friends.",
+                    Text = "Uid người dùng hiện tại chưa được cung cấp. Hãy thiết lập nó khi tạo FriendsForm để tải bạn bè.",
                     AutoSize = false,
                     Size = panel1.Size,
                     TextAlign = ContentAlignment.MiddleCenter
@@ -93,7 +93,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                 await TryHelper.TryAsync(async () =>
                 {
-                    // read friend keys
+                    // đọc các key bạn bè
                     var snapshot = await Database
                         .Child("friends")
                         .Child(_currentUid)
@@ -103,12 +103,12 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     {
                         foreach (var item in snapshot)
                         {
-                            // item.Key is friendUid
+                            // item.Key là friendUid
                             if (!string.IsNullOrEmpty(item.Key))
                                 friendUids.Add(item.Key);
                         }
                     }
-                }, "load friend list");
+                }, "tải danh sách bạn bè"); // load friend list
 
                 var users = new List<UserModel>();
                 foreach (var uid in friendUids)
@@ -117,7 +117,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     {
                         var obj = await Database.Child("users").Child(uid).OnceSingleAsync<UserModel>();
                         return obj;
-                    }, $"load user {uid}");
+                    }, $"tải người dùng {uid}"); // load user {uid}
 
                     if (u != null)
                     {
@@ -127,27 +127,27 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                 listControl.SetUsers(users);
 
-                // optional: double-click to open profile / start chat
+                // tùy chọn: double-click để mở hồ sơ / bắt đầu trò chuyện
                 listControl.InnerListView.DoubleClick += (_, __) =>
                 {
                     var selected = listControl.GetSelectedUser();
                     if (selected != null)
                     {
-                        MessageBox.Show($"Selected friend: {selected.UserName} ({selected.FullName})", "Friend selected",
+                        MessageBox.Show($"Bạn bè được chọn: {selected.UserName} ({selected.FullName})", "Chọn bạn bè",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 };
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading friends: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tải bạn bè: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Load incoming friend requests and display Accept/Decline buttons for each.
-        /// expects DB structure:
-        ///   friendRequests/{targetUid}/{fromUid} = true
+        /// Tải các lời mời kết bạn đến và hiển thị các nút Chấp nhận/Từ chối cho mỗi lời mời.
+        /// Cấu trúc DB dự kiến:
+        ///    friendRequests/{targetUid}/{fromUid} = true
         /// </summary>
         private async Task ShowRequestsAsync()
         {
@@ -157,7 +157,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 var lbl = new Label
                 {
-                    Text = "Current user uid not provided. Set it when creating FriendsForm to manage requests.",
+                    Text = "Uid người dùng hiện tại chưa được cung cấp. Hãy thiết lập nó khi tạo FriendsForm để quản lý lời mời.",
                     AutoSize = false,
                     Size = panel1.Size,
                     TextAlign = ContentAlignment.MiddleCenter
@@ -181,13 +181,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                                 requestFromUids.Add(item.Key);
                         }
                     }
-                }, "load friend requests");
+                }, "tải lời mời kết bạn"); // load friend requests
 
                 if (requestFromUids.Count == 0)
                 {
                     var lbl = new Label
                     {
-                        Text = "No incoming friend requests.",
+                        Text = "Không có lời mời kết bạn nào đến.",
                         AutoSize = false,
                         Size = panel1.Size,
                         TextAlign = ContentAlignment.MiddleCenter
@@ -196,7 +196,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     return;
                 }
 
-                // create a vertical flow panel to show each request with buttons
+                // tạo một flow panel dọc để hiển thị từng lời mời với các nút
                 var flow = new FlowLayoutPanel
                 {
                     Dock = DockStyle.Fill,
@@ -212,7 +212,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     {
                         var u = await Database.Child("users").Child(fromUid).OnceSingleAsync<UserModel>();
                         return u;
-                    }, $"load user {fromUid}");
+                    }, $"tải người dùng {fromUid}"); // load user {fromUid}
 
                     var itemPanel = new Panel
                     {
@@ -224,7 +224,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                     var lbl = new Label
                     {
-                        Text = user != null ? $"{user.UserName} — {user.FullName}" : $"(unknown user: {fromUid})",
+                        Text = user != null ? $"{user.UserName} — {user.FullName}" : $"(người dùng không rõ: {fromUid})", // (unknown user: {fromUid})
                         Location = new Point(6, 8),
                         AutoSize = false,
                         Width = itemPanel.Width - 160,
@@ -234,24 +234,24 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                     var btnAccept = new Button
                     {
-                        Text = "Accept",
+                        Text = "Chấp nhận", // Accept
                         Location = new Point(itemPanel.Width - 140, 10),
                         Size = new Size(60, 32)
                     };
                     var btnDecline = new Button
                     {
-                        Text = "Decline",
+                        Text = "Từ chối", // Decline
                         Location = new Point(itemPanel.Width - 72, 10),
                         Size = new Size(60, 32)
                     };
 
-                    // capture fromUid for handlers
+                    // bắt fromUid cho các trình xử lý
                     btnAccept.Click += async (_, __) =>
                     {
                         btnAccept.Enabled = false;
                         btnDecline.Enabled = false;
                         await AcceptRequestAsync(fromUid);
-                        // refresh the requests view
+                        // làm mới chế độ xem lời mời
                         await ShowRequestsAsync();
                     };
 
@@ -273,7 +273,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading requests: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tải lời mời: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -285,17 +285,17 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 await TryHelper.TryAsync(async () =>
                 {
-                    // set friendship both ways
+                    // thiết lập tình bạn hai chiều
                     await Database.Child("friends").Child(_currentUid).Child(fromUid).PutAsync(true);
                     await Database.Child("friends").Child(fromUid).Child(_currentUid).PutAsync(true);
 
-                    // remove the request
+                    // xóa lời mời
                     await Database.Child("friendRequests").Child(_currentUid).Child(fromUid).DeleteAsync();
-                }, $"accept friend request from {fromUid}");
+                }, $"chấp nhận lời mời kết bạn từ {fromUid}"); // accept friend request from {fromUid}
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error accepting request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi chấp nhận lời mời: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -308,30 +308,30 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 await TryHelper.TryAsync(async () =>
                 {
                     await Database.Child("friendRequests").Child(_currentUid).Child(fromUid).DeleteAsync();
-                }, $"decline friend request from {fromUid}");
+                }, $"từ chối lời mời kết bạn từ {fromUid}"); // decline friend request from {fromUid}
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error declining request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi từ chối lời mời: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Search a user by username (textBox1) and allow sending a friend request from current user to that user.
-        /// The right panel will display result rows with a "Gửi lời mời" button for each match.
+        /// Tìm kiếm người dùng bằng tên người dùng (textBox1) và cho phép gửi lời mời kết bạn từ người dùng hiện tại đến người dùng đó.
+        /// Panel bên phải sẽ hiển thị các hàng kết quả với nút "Gửi lời mời" cho mỗi kết quả phù hợp.
         /// </summary>
         private async Task SearchAndSendRequestAsync()
         {
             var query = textBox1.Text?.Trim();
             if (string.IsNullOrEmpty(query))
             {
-                MessageBox.Show("Please enter a username to search.", "Search", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Vui lòng nhập tên người dùng để tìm kiếm.", "Tìm kiếm", MessageBoxButtons.OK, MessageBoxIcon.Information); // Please enter a username to search.
                 return;
             }
 
             if (string.IsNullOrEmpty(_currentUid))
             {
-                MessageBox.Show("Current user uid not provided. Cannot send request.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Uid người dùng hiện tại chưa được cung cấp. Không thể gửi lời mời.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); // Current user uid not provided. Cannot send request.
                 return;
             }
 
@@ -342,19 +342,19 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 List<FirebaseObject<UserModel>> matches = null!;
                 await TryHelper.TryAsync(async () =>
                 {
-                    // Query users by username. The realtime client doesn't support complex queries easily,
-                    // so we load all users and filter locally (ok for moderate size).
+                    // Truy vấn người dùng theo tên người dùng. Client realtime không hỗ trợ truy vấn phức tạp dễ dàng,
+                    // nên ta tải tất cả người dùng và lọc cục bộ (ổn đối với kích thước vừa phải).
                     var all = await Database.Child("users").OnceAsync<UserModel>();
                     matches = all?.Where(x => !string.IsNullOrEmpty(x.Object?.UserName)
-                                               && x.Object.UserName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
-                                  .ToList();
-                }, $"search user {query}");
+                                                     && x.Object.UserName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                                     .ToList();
+                }, $"tìm kiếm người dùng {query}"); // search user {query}
 
                 if (matches == null || matches.Count == 0)
                 {
                     var lbl = new Label
                     {
-                        Text = $"No user found with username containing '{query}'.",
+                        Text = $"Không tìm thấy người dùng nào có tên chứa '{query}'.", // No user found with username containing '{query}'.
                         AutoSize = false,
                         Size = panel1.Size,
                         TextAlign = ContentAlignment.MiddleCenter
@@ -363,7 +363,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     return;
                 }
 
-                // create a vertical flow panel to show each match with Send Request button
+                // tạo một flow panel dọc để hiển thị mỗi kết quả phù hợp với nút Gửi lời mời
                 var flow = new FlowLayoutPanel
                 {
                     Dock = DockStyle.Fill,
@@ -388,7 +388,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                     var lbl = new Label
                     {
-                        Text = targetUser != null ? $"{targetUser.UserName} — {targetUser.FullName}" : $"(unknown user: {targetUid})",
+                        Text = targetUser != null ? $"{targetUser.UserName} — {targetUser.FullName}" : $"(người dùng không rõ: {targetUid})", // (unknown user: {targetUid})
                         Location = new Point(8, 8),
                         AutoSize = false,
                         Width = itemPanel.Width - 160,
@@ -404,7 +404,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                         Size = new Size(120, 36)
                     };
 
-                    // avoid sending request to self
+                    // tránh gửi lời mời cho chính mình
                     if (targetUid == _currentUid)
                     {
                         btnSend.Enabled = false;
@@ -418,19 +418,19 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                         {
                             await TryHelper.TryAsync(async () =>
                             {
-                                // Create request node friendRequests/{targetUid}/{fromUid} = true
+                                // Tạo node lời mời friendRequests/{targetUid}/{fromUid} = true
                                 await Database.Child("friendRequests").Child(targetUid).Child(_currentUid).PutAsync(true);
-                            }, $"send friend request to {targetUid}");
+                            }, $"gửi lời mời kết bạn tới {targetUid}"); // send friend request to {targetUid}
 
-                            MessageBox.Show($"Đã gửi lời mời tới {targetUser?.UserName ?? targetUid}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show($"Đã gửi lời mời tới {targetUser?.UserName ?? targetUid}.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information); // Success
 
-                            // Optionally change button to indicate sent
+                            // Tùy chọn thay đổi nút để báo đã gửi
                             btnSend.Text = "Đã gửi";
                             btnSend.Enabled = false;
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show($"Error sending request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show($"Lỗi khi gửi lời mời: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             btnSend.Enabled = true;
                         }
                     };
@@ -443,7 +443,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error searching/sending request: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tìm kiếm/gửi lời mời: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
