@@ -1,6 +1,5 @@
 ﻿// GamePlay.cs
 using Auth.Models;
-using CaroProjectNhom15.Forms.Forms.Gameplay;
 using CaroProjectNhom15.Models; // Cần thêm để sử dụng GameRoomModel, UserModel, v.v.
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -30,7 +29,7 @@ namespace CaroProjectNhom15.Forms.Gameplay
             // 2. Khởi tạo người dùng hiện tại (Giả định là Host)
             currentUser = new UserModel
             {
-                ID = "user123_Host",
+                Uid = "user123_Host",
                 UserName = "PlayerA_Host"
             };
 
@@ -51,7 +50,7 @@ namespace CaroProjectNhom15.Forms.Gameplay
                     Status = "Waiting",
 
                     // --- THUỘC TÍNH GAMEPLAY MỚI ---
-                    Turn = currentUser.ID, // 👈 Host (PlayerA) đi trước
+                    Turn = currentUser.Uid, // 👈 Host (PlayerA) đi trước
                     Winner = "",
                     Moves = new Dictionary<string, MoveModel>(), // Bàn cờ trống
                     LastMove = null,
