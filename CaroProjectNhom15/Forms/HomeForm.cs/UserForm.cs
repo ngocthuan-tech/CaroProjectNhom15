@@ -16,16 +16,16 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         private readonly UserService _userService = new UserService();
         private UserModel _currentUser;
         private readonly string _uid;
-        private readonly string? _idToken;
+        private string? _idToken; // thay đổi từ readonly sang mutable (có thể thay đổi)
 
-        // New: flag to indicate user requested sign-out
+        // Mới: cờ báo hiệu người dùng yêu cầu đăng xuất
         public bool SignedOut { get; private set; } = false;
 
-        // New: expose changes so caller (Home) can update UI
+        // Mới: hiển thị các thay đổi để người gọi (Home) có thể cập nhật UI
         public string? NewAvatarUrl { get; private set; }
         public string? NewUserName { get; private set; }
 
-        // Constructor now accepts uid (and optional idToken)
+        // Constructor hiện chấp nhận uid (và idToken tùy chọn)
         public UserForm(string uid, string? idToken = null)
         {
             InitializeComponent();
@@ -33,13 +33,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             _uid = uid ?? throw new ArgumentNullException(nameof(uid));
             _idToken = idToken;
 
-            // Wire events
+            // Gắn sự kiện
             Load += UserForm_LoadAsync;
             Btn_DoiTen.Click += Btn_DoiTen_ClickAsync;
             btn_DoiAnh.Click += Btn_DoiAnh_ClickAsync;
             Btn_DangXuat.Click += Btn_DangXuat_Click;
 
-            // Ensure Exit button closes the form when clicked
+            // Đảm bảo nút Thoát đóng form khi được nhấp
             Btn_ExitUser.Click += (_, __) => Close();
         }
 
@@ -47,23 +47,59 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
         {
             try
             {
-                // If an idToken is provided, ensure Database is initialized here (safe to call if already init)
-                if (!string.IsNullOrEmpty(_idToken))
+                // Đảm bảo Database được khởi tạo. Nếu ta không có idToken hợp lệ, hãy thử làm mới nó
+                // từ refresh token đã lưu (Properties.Settings.Default.RefreshToken).
+                if (FirebaseProvider.Instance.Database == null)
                 {
-                    try
+                    if (!string.IsNullOrEmpty(_idToken))
                     {
-                        FirebaseProvider.Instance.InitDatabase(_idToken);
+                        try
+                        {
+                            FirebaseProvider.Instance.InitDatabase(_idToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[UserForm] Khởi tạo Database bằng idToken được cung cấp thất bại: {ex.Message}");
+                        }
                     }
-                    catch (Exception ex)
+
+                    // Nếu vẫn chưa được khởi tạo, thử quy trình refresh-token
+                    if (FirebaseProvider.Instance.Database == null)
                     {
-                        Console.WriteLine($"[UserForm] InitDatabase failed: {ex.Message}");
-                        // continue — GetUserAsync will inform if DB not initialized
+                        try
+                        {
+                            var saved = string.Empty;
+                            try
+                            {
+                                saved = global::CaroProjectNhom15.Properties.Settings.Default?.RefreshToken ?? string.Empty;
+                            }
+                            catch { saved = string.Empty; }
+
+                            if (!string.IsNullOrEmpty(saved))
+                            {
+                                var auth = new AuthService();
+                                try
+                                {
+                                    var tuple = await auth.LoginWithRefreshTokenAsync(saved);
+                                    _idToken = tuple.idToken;
+                                    FirebaseProvider.Instance.InitDatabase(_idToken);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine($"[UserForm] Đăng nhập bằng refresh token thất bại: {ex.Message}");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[UserForm] Lỗi khi cố gắng refresh token: {ex.Message}");
+                        }
                     }
                 }
 
                 await LoadUserAsync();
 
-                // Make action buttons visible after loading user so the UI is usable
+                // Hiển thị các nút hành động sau khi tải người dùng để UI có thể sử dụng được
                 try
                 {
                     Btn_ExitUser.Visible = true;
@@ -71,7 +107,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     btn_DoiAnh.Visible = true;
                     Btn_DangXuat.Visible = true;
                 }
-                catch { /* ignore if designer control names differ */ }
+                catch { /* bỏ qua nếu tên control của designer khác */ }
             }
             catch (Exception ex)
             {
@@ -81,7 +117,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
         private async Task LoadUserAsync()
         {
-            // Disable controls while loading
+            // Tắt controls trong khi tải
             SetControlsEnabled(false);
             try
             {
@@ -94,21 +130,21 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                 _currentUser = user;
 
-                // Set display name: prefer UserName, fallback FullName or Email
+                // Đặt tên hiển thị: ưu tiên UserName, nếu không có thì dùng FullName hoặc Email
                 Tb_nameUser.Text = !string.IsNullOrWhiteSpace(user.UserName)
                     ? user.UserName
                     : !string.IsNullOrWhiteSpace(user.FullName)
                         ? user.FullName
                         : user.Email;
 
-                // Load avatar if available
+                // Tải avatar nếu có
                 if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
                 {
                     try
                     {
                         if (user.AvatarUrl.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Data URI -> decode
+                            // Data URI -> giải mã
                             var comma = user.AvatarUrl.IndexOf(',');
                             if (comma >= 0)
                             {
@@ -121,19 +157,19 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                         }
                         else if (user.AvatarUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Remote URL: LoadAsync (may throw if unreachable)
+                            // URL từ xa: LoadAsync (có thể ném lỗi nếu không truy cập được)
                             try
                             {
                                 pb_avatar.LoadAsync(user.AvatarUrl);
                             }
                             catch
                             {
-                                // ignore, keep default image from resources
+                                // bỏ qua, giữ hình ảnh mặc định từ resources
                             }
                         }
                         else
                         {
-                            // treat as file path if exists
+                            // coi là đường dẫn tệp nếu tồn tại
                             if (File.Exists(user.AvatarUrl))
                             {
                                 pb_avatar.Image = Image.FromFile(user.AvatarUrl);
@@ -142,8 +178,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[UserForm] Error loading avatar: {ex.Message}");
-                        // keep existing/default avatar
+                        Console.WriteLine($"[UserForm] Lỗi khi tải avatar: {ex.Message}");
+                        // giữ avatar hiện có/mặc định
                     }
                 }
             }
@@ -221,13 +257,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             var file = ofd.FileName;
             try
             {
-                // Load image and display immediately
+                // Tải ảnh và hiển thị ngay lập tức
                 using var src = Image.FromFile(file);
-                // create a copy to avoid locking the file
+                // tạo một bản sao để tránh khóa tệp
                 var bmp = new Bitmap(src);
                 pb_avatar.Image = new Bitmap(bmp);
 
-                // Convert to PNG base64 data URI and store in user model
+                // Chuyển sang Data URI PNG base64 và lưu trữ trong user model
                 byte[] imageBytes;
                 using (var ms = new MemoryStream())
                 {
@@ -238,14 +274,51 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                 var base64 = Convert.ToBase64String(imageBytes);
                 _currentUser.AvatarUrl = $"data:image/png;base64,{base64}";
 
-                // Persist change
+                // Đảm bảo DB được khởi tạo trước khi cố gắng cập nhật
+                if (FirebaseProvider.Instance.Database == null)
+                {
+                    // Thử khởi tạo với idToken trong bộ nhớ nếu có sẵn
+                    if (!string.IsNullOrEmpty(_idToken))
+                    {
+                        try { FirebaseProvider.Instance.InitDatabase(_idToken); }
+                        catch { }
+                    }
+
+                    // dự phòng sang refresh token đã lưu
+                    if (FirebaseProvider.Instance.Database == null)
+                    {
+                        try
+                        {
+                            var saved = string.Empty;
+                            try { saved = global::CaroProjectNhom15.Properties.Settings.Default?.RefreshToken ?? string.Empty; } catch { saved = string.Empty; }
+                            if (!string.IsNullOrEmpty(saved))
+                            {
+                                var auth = new AuthService();
+                                var tuple = await auth.LoginWithRefreshTokenAsync(saved);
+                                _idToken = tuple.idToken;
+                                FirebaseProvider.Instance.InitDatabase(_idToken);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[UserForm] Không thể khởi tạo DB trước khi lưu avatar: {ex.Message}");
+                        }
+                    }
+                }
+
+                // Lưu thay đổi
                 btn_DoiAnh.Enabled = false;
-                await _userService.UpdateUserAsync(_currentUser.Uid, _currentUser);
-
-                // expose the new avatar so caller (Home) can update its UI after dialog closes
-                NewAvatarUrl = _currentUser.AvatarUrl;
-
-                MessageBox.Show("Đổi ảnh thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    await _userService.UpdateUserAsync(_currentUser.Uid, _currentUser);
+                    // hiển thị avatar mới để người gọi (Home) có thể cập nhật UI sau khi đóng dialog
+                    NewAvatarUrl = _currentUser.AvatarUrl;
+                    MessageBox.Show("Đổi ảnh thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi lưu ảnh lên server: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -259,20 +332,20 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
         private void Btn_DangXuat_Click(object? sender, EventArgs e)
         {
-            // Mark that user requested sign-out so caller (Home) can react
+            // Đánh dấu rằng người dùng yêu cầu đăng xuất để người gọi (Home) có thể phản ứng
             SignedOut = true;
 
-            // Clear DB reference
+            // Xóa tham chiếu DB
             try
             {
                 FirebaseProvider.Instance.ClearDatabase();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[UserForm] Error clearing DB: {ex.Message}");
+                Console.WriteLine($"[UserForm] Lỗi khi xóa DB: {ex.Message}");
             }
 
-            // Optionally clear saved refresh token from settings (best-effort)
+            // Tùy chọn xóa refresh token đã lưu khỏi settings (cố gắng hết sức)
             try
             {
                 var settings = Properties.Settings.Default;
@@ -292,7 +365,7 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             }
             catch { }
 
-            // Close this form. Home (caller) will inspect SignedOut and perform navigation (close + open Login).
+            // Đóng form này. Home (người gọi) sẽ kiểm tra SignedOut và thực hiện điều hướng (đóng + mở Login).
             Close();
         }
     }

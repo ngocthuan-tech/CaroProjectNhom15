@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Auth.Models;
 using AuthTest01.Services;
-using CaroProjectNhom15.Utils; // cần để gọi FirebaseProvider
+using CaroProjectNhom15.Utils; 
 
 namespace CaroProjectNhom15.Forms.Auth
 {
