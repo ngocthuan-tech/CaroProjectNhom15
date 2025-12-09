@@ -39,16 +39,39 @@ namespace CaroProjectNhom15.Forms
         {
             if (this.IsDisposed) return;
 
-            this.Invoke((MethodInvoker)delegate
+            this.Invoke((MethodInvoker)async delegate // Chuyển thành async để gọi hàm await
             {
                 if (updatedRoom == null)
                 {
-                    MessageBox.Show("Phòng đã bị xóa.");
+                    MessageBox.Show("Phòng đã bị giải tán.");
                     CloseSafely();
                     return;
                 }
 
                 _currentRoom = updatedRoom;
+
+                // --- LOGIC TỰ ỨNG CỬ (SELF-PROMOTION) ---
+                // Nếu phát hiện Host bị null (trống) MÀ mình đang là Guest
+                // -> Tự động chiếm quyền Host ngay lập tức
+                if (_currentRoom.Host == null && _currentRoom.Guest?.Uid == _currentUser.Uid)
+                {
+                    try
+                    {
+                        // Gọi Service để update lại: Host = Mình, Guest = Null
+                        // (Bạn cần đảm bảo logic này có trong JoinRoom hoặc viết hàm Update mới, 
+                        // nhưng cách nhanh nhất là dùng lại JoinRoomAsync vì nó có logic chiếm phòng trống)
+                        var newRoom = await _roomService.JoinRoomAsync(_currentRoom, _currentUser);
+
+                        // Sau khi Join xong, nó sẽ trả về room mới, cập nhật lại luôn
+                        _currentRoom = newRoom;
+                    }
+                    catch { /* Lỗi mạng thì bỏ qua, đợi lần update sau */ }
+                }
+                // ----------------------------------------
+
+                // Tính toán lại quyền Host
+                _isHost = (_currentRoom.Host?.Uid == _currentUser.Uid);
+
                 UpdateUI(_currentRoom);
 
                 if (_currentRoom.Status == "Playing")
@@ -58,45 +81,44 @@ namespace CaroProjectNhom15.Forms
 
         private void UpdateUI(RoomModel room)
         {
-            
             Tb_RoomId.Text = room.ID;
-
-            // 1. Xử lý Host (Player 1)
+            // 1. Hiển thị Host (Player 1 - Bên Trái)
             if (room.Host != null)
             {
-                Lbl_Player01.Text = room.Host.UserName; // Hiện tên lên label đẹp
+                Lbl_Player01.Text = room.Host.UserName;
             }
             else
             {
-                Lbl_Player01.Text = "(Trống)";
+                Lbl_Player01.Text = "(Đang chờ Host...)";
             }
 
-            // 2. Xử lý Guest (Player 2)
+            // 2. Hiển thị Guest (Player 2 - Bên Phải)
             if (room.Guest != null)
             {
                 Lbl_Player02.Text = room.Guest.UserName;
-                Lbl_Player02.ForeColor = Color.Yellow; // Màu chữ khi có người
+                Lbl_Player02.ForeColor = Color.Yellow;
             }
             else
             {
+                // QUAN TRỌNG: Phải reset về text mặc định khi không có Guest
                 Lbl_Player02.Text = "Waiting...";
-                Lbl_Player02.ForeColor = Color.WhiteSmoke; // Đổi màu nhạt hơn khi chưa có người
+                Lbl_Player02.ForeColor = Color.WhiteSmoke;
             }
 
-            // 3. Ẩn luôn 2 cái label cũ bị thừa đi (hoặc vào Designer xóa cũng được)
-            Lb_UserName1.Visible = false;
-            Lb_UserName2.Visible = false;
-
-            // --- Phần logic nút Start giữ nguyên ---
+            // 3. Xử lý nút Start
             if (_isHost)
             {
                 Btn_Start.Text = "Start Game";
-                Btn_Start.Enabled = room.Guest != null;
+                // Chỉ cho phép Start khi đã có đối thủ (Guest khác null)
+                Btn_Start.Enabled = (room.Guest != null);
+                Btn_Start.Visible = true;
             }
             else
             {
                 Btn_Start.Text = "Ready";
                 Btn_Start.Enabled = false;
+                // Hoặc ẩn luôn nút nếu là Guest cho đỡ rối
+                // Btn_Start.Visible = false; 
             }
         }
 
@@ -116,37 +138,24 @@ namespace CaroProjectNhom15.Forms
 
         private async void Btn_ExitRoom_Click(object sender, EventArgs e)
         {
-            _isClosing = true;
+            _isClosing = true; // Đánh dấu để không kích hoạt FormClosing lần nữa
 
             try
             {
-                if (_isHost)
-                    await _roomService.DeleteRoomAsync(_currentRoom);
-                else
-                    await _roomService.LeaveRoomAsync(_currentRoom);
+                // Gọi hàm xử lý thông minh mới viết
+                await _roomService.ExitRoomAsync(_currentRoom, _currentUser);
             }
-            catch { }
-
-            this.Close();
-        }
-
-        private async void Frm_WaitingRoomForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (_isClosing == false)
+            catch (Exception ex)
             {
-                // user bấm dấu X
-                try
-                {
-                    if (_isHost)
-                        await _roomService.DeleteRoomAsync(_currentRoom);
-                    else
-                        await _roomService.LeaveRoomAsync(_currentRoom);
-                }
-                catch { }
+                MessageBox.Show("Lỗi khi thoát: " + ex.Message);
             }
-
-            _roomService.StopListenRoom();
-            uC_Chat1.StopListening();
+            finally
+            {
+                // Dừng lắng nghe và đóng form
+                _roomService.StopListenRoom();
+                uC_Chat1.StopListening();
+                this.Close();
+            }
         }
 
         private void CloseSafely()
