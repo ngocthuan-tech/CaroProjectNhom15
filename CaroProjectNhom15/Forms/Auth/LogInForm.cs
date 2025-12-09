@@ -21,7 +21,6 @@ namespace CaroProjectNhom15.Forms.Auth
 
             // Đảm bảo event được gắn — an toàn dù Designer có gắn hay không
             Btn_LogIn.Click += Btn_LogIn_Click;
-            Btn_CreateNewAccount.Click += Btn_CreateNewAccount_Click;
             LnkL_ForgotPassword.LinkClicked += LnkL_ForgotPassword_LinkClicked;
         }
 
@@ -83,7 +82,6 @@ namespace CaroProjectNhom15.Forms.Auth
                         MessageBox.Show("Đã gửi email xác thực. Vui lòng kiểm tra hộp thư.", "Đã gửi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
 
-
                     return;
                 }
 
@@ -113,6 +111,7 @@ namespace CaroProjectNhom15.Forms.Auth
 
 
                 // TODO: mở MainForm, truyền idToken/userId nếu cần
+
                 try
                 {
                     FirebaseProvider.Instance.InitDatabase(idToken);
@@ -149,6 +148,9 @@ namespace CaroProjectNhom15.Forms.Auth
 
                 home.Show();
                 this.Hide();
+
+               
+
             }
             catch (Exception ex)
             {

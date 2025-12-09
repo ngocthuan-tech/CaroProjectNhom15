@@ -48,7 +48,7 @@
             // 
             // Pb_Background
             // 
-            Pb_Background.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Pb_Background.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Pb_Background.Location = new Point(-10, 1);
             Pb_Background.Name = "Pb_Background";
             Pb_Background.Size = new Size(1246, 500);
@@ -59,7 +59,7 @@
             // 
             Btn_Start.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_Start.ForeColor = Color.Yellow;
-            Btn_Start.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Btn_Start.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Btn_Start.Location = new Point(335, 402);
             Btn_Start.Name = "Btn_Start";
             Btn_Start.Size = new Size(145, 53);
@@ -108,7 +108,7 @@
             Lbl_VS.BackColor = Color.ForestGreen;
             Lbl_VS.Font = new Font("Snap ITC", 36F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_VS.ForeColor = Color.Yellow;
-            Lbl_VS.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Lbl_VS.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Lbl_VS.Location = new Point(350, 167);
             Lbl_VS.Name = "Lbl_VS";
             Lbl_VS.Size = new Size(130, 77);
@@ -119,7 +119,7 @@
             // 
             Btn_ExitRoom.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_ExitRoom.ForeColor = Color.Yellow;
-            Btn_ExitRoom.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Btn_ExitRoom.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Btn_ExitRoom.Location = new Point(12, 12);
             Btn_ExitRoom.Name = "Btn_ExitRoom";
             Btn_ExitRoom.Size = new Size(222, 59);
@@ -134,7 +134,7 @@
             Lbl_Player01.BackColor = Color.ForestGreen;
             Lbl_Player01.Font = new Font("Snap ITC", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_Player01.ForeColor = Color.Yellow;
-            Lbl_Player01.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Lbl_Player01.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Lbl_Player01.Location = new Point(53, 295);
             Lbl_Player01.Name = "Lbl_Player01";
             Lbl_Player01.Size = new Size(207, 51);
@@ -147,7 +147,7 @@
             Lbl_Player02.BackColor = Color.ForestGreen;
             Lbl_Player02.Font = new Font("Snap ITC", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_Player02.ForeColor = Color.Yellow;
-            Lbl_Player02.Image = Properties.Resources.hãy_tạo_một_ảnh_nền_game_2d_phong_cách_hoạt_hình__phong_cách_cổ_điển__tường_cây_cỏ_lá__dây_leo__rêu;
+            Lbl_Player02.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Lbl_Player02.Location = new Point(553, 298);
             Lbl_Player02.Name = "Lbl_Player02";
             Lbl_Player02.Size = new Size(217, 51);

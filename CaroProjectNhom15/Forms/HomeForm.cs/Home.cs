@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Auth.Models;
+using AuthTest01.Services;
 
 namespace CaroProjectNhom15.Forms.HomeForm.cs
 {
@@ -150,6 +151,30 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             {
                 // nuốt lỗi, giữ avatar mặc định
             } // swallow errors, keep default avatar
+        }
+
+        private async void Btn_EnterLobby_Click(object sender, EventArgs e)
+        {
+            UserService userService = new UserService();
+            UserModel? lobbyUser = null;
+            if (!string.IsNullOrEmpty(_currentUid))
+            {
+                lobbyUser = await userService.GetUserAsync(_currentUid);
+            }
+            if (lobbyUser == null)
+            {
+                MessageBox.Show("Lỗi dữ liệu: Không tìm thấy thông tin người dùng trong Database.\nVui lòng kiểm tra lại quá trình đăng ký.",
+                                "Data Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 3. Mở Lobby
+            // Ẩn form Login đi thay vì để nó nằm dưới
+            this.Hide();
+            var lobby = new LobbyForm(lobbyUser);
+            lobby.ShowDialog(); // Dùng ShowDialog để khi đóng Lobby thì quay lại Login hoặc thoát hẳn
+            this.Show();
+
         }
     }
 }

@@ -30,8 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Home));
             pictureBox1 = new PictureBox();
-            Btn_TaoPhong = new Button();
-            Btn_TimPhong = new Button();
+            Btn_EnterLobby = new Button();
             Btn_Friends = new Button();
             Pb_anhUser = new PictureBox();
             Btn_user = new Button();
@@ -53,35 +52,21 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // Btn_TaoPhong
+            // Btn_EnterLobby
             // 
-            Btn_TaoPhong.BackColor = SystemColors.ActiveCaption;
-            Btn_TaoPhong.BackgroundImageLayout = ImageLayout.Center;
-            Btn_TaoPhong.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
-            Btn_TaoPhong.ForeColor = Color.Goldenrod;
-            Btn_TaoPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_TaoPhong.Location = new Point(630, 410);
-            Btn_TaoPhong.Margin = new Padding(4);
-            Btn_TaoPhong.Name = "Btn_TaoPhong";
-            Btn_TaoPhong.Size = new Size(178, 51);
-            Btn_TaoPhong.TabIndex = 1;
-            Btn_TaoPhong.Text = "Tạo phòng";
-            Btn_TaoPhong.UseVisualStyleBackColor = false;
-            // 
-            // Btn_TimPhong
-            // 
-            Btn_TimPhong.BackColor = SystemColors.ActiveCaption;
-            Btn_TimPhong.BackgroundImageLayout = ImageLayout.Center;
-            Btn_TimPhong.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
-            Btn_TimPhong.ForeColor = Color.Goldenrod;
-            Btn_TimPhong.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_TimPhong.Location = new Point(408, 410);
-            Btn_TimPhong.Margin = new Padding(4);
-            Btn_TimPhong.Name = "Btn_TimPhong";
-            Btn_TimPhong.Size = new Size(181, 51);
-            Btn_TimPhong.TabIndex = 2;
-            Btn_TimPhong.Text = "Tìm phòng";
-            Btn_TimPhong.UseVisualStyleBackColor = false;
+            Btn_EnterLobby.BackColor = SystemColors.ActiveCaption;
+            Btn_EnterLobby.BackgroundImageLayout = ImageLayout.Center;
+            Btn_EnterLobby.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_EnterLobby.ForeColor = Color.Goldenrod;
+            Btn_EnterLobby.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
+            Btn_EnterLobby.Location = new Point(457, 410);
+            Btn_EnterLobby.Margin = new Padding(4);
+            Btn_EnterLobby.Name = "Btn_EnterLobby";
+            Btn_EnterLobby.Size = new Size(278, 51);
+            Btn_EnterLobby.TabIndex = 2;
+            Btn_EnterLobby.Text = "Vào sảnh";
+            Btn_EnterLobby.UseVisualStyleBackColor = false;
+            Btn_EnterLobby.Click += Btn_EnterLobby_Click;
             // 
             // Btn_Friends
             // 
@@ -90,7 +75,7 @@
             Btn_Friends.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
             Btn_Friends.ForeColor = Color.Goldenrod;
             Btn_Friends.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_Friends.Location = new Point(196, 410);
+            Btn_Friends.Location = new Point(267, 410);
             Btn_Friends.Margin = new Padding(4);
             Btn_Friends.Name = "Btn_Friends";
             Btn_Friends.Size = new Size(182, 51);
@@ -146,8 +131,7 @@
             Controls.Add(Btn_user);
             Controls.Add(Pb_anhUser);
             Controls.Add(Btn_Friends);
-            Controls.Add(Btn_TimPhong);
-            Controls.Add(Btn_TaoPhong);
+            Controls.Add(Btn_EnterLobby);
             Controls.Add(pictureBox1);
             Margin = new Padding(4);
             Name = "Home";
@@ -162,7 +146,7 @@
 
         private PictureBox pictureBox1;
         private Button Btn_TaoPhong;
-        private Button Btn_TimPhong;
+        private Button Btn_EnterLobby;
         private Button Btn_Friends;
         private PictureBox Pb_anhUser;
         private Button Btn_user;
