@@ -202,7 +202,7 @@
             Name = "Frm_WaitingRoomForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";
-            FormClosing += Frm_WaitingRoomForm_FormClosing;
+            FormClosing += Btn_ExitRoom_Click;
             Load += Frm_WaitingRoomForm_Load;
             ((System.ComponentModel.ISupportInitialize)Pb_Background).EndInit();
             ((System.ComponentModel.ISupportInitialize)Pb_Player01).EndInit();
