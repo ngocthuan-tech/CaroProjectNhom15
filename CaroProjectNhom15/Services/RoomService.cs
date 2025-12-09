@@ -173,31 +173,52 @@ namespace CaroProjectNhom15.Services
             }, "đuổi người chơi");
         }
 
-        public async Task LeaveRoomAsync(RoomModel currentRoom)
+        // Trong Services/RoomService.cs
+
+        public async Task ExitRoomAsync(RoomModel room, UserModel currentUser)
         {
             await TryHelper.TryAsync(async () =>
             {
-                // Update Local (cho chắc)
-                currentRoom.Guest = null;
-                currentRoom.Status = "Waiting";
+                // Lấy dữ liệu mới nhất để đảm bảo không xử lý sai nếu mạng lag
+                var currentData = await GetRoomByIdAsync(room.ID);
+                if (currentData == null) return; // Phòng đã bị xóa trước đó
 
-                // Update Firebase
-                await Database.Child("rooms").Child(currentRoom.ID).
-                PatchAsync(new
+                // TRƯỜNG HỢP 1: BẠN LÀ GUEST
+                if (currentData.Guest != null && currentData.Guest.Uid == currentUser.Uid)
                 {
-                    Guest = (UserModel)null,
-                    Status = "Waiting"
-                }).ConfigureAwait(false);
-            }, "rời phòng");
-        }
+                    // Guest thoát -> Chỉ cần set Guest về null
+                    await Database.Child("rooms").Child(room.ID).PatchAsync(new
+                    {
+                        Guest = (UserModel)null,
+                        Status = "Waiting"
+                    });
+                    return;
+                }
 
-        public async Task DeleteRoomAsync(RoomModel myRoom)
-        {
-            await TryHelper.TryAsync(async () =>
-            {
-                await Database.Child("rooms").Child(myRoom.ID).
-                DeleteAsync().ConfigureAwait(false);
-            }, "xóa phòng");
+                // TRƯỜNG HỢP 2: BẠN LÀ HOST
+                if (currentData.Host.Uid == currentUser.Uid)
+                {
+                    // 2a. Nếu còn Guest trong phòng -> Thăng chức Guest lên làm Host
+                    if (currentData.Guest != null)
+                    {
+                        var newHost = currentData.Guest;
+
+                        // Cập nhật Firebase: Guest thành Host, xóa vị trí Guest cũ
+                        await Database.Child("rooms").Child(room.ID).PatchAsync(new
+                        {
+                            Host = newHost,
+                            Guest = (UserModel)null,
+                            Name = "Phòng của " + newHost.UserName, // Đổi tên phòng theo chủ mới
+                            Status = "Waiting"
+                        });
+                    }
+                    // 2b. Nếu chỉ có một mình Host -> Xóa phòng luôn
+                    else
+                    {
+                        await Database.Child("rooms").Child(room.ID).DeleteAsync();
+                    }
+                }
+            }, "thoát phòng");
         }
 
         public async Task StartGameAsync(RoomModel myRoom)
