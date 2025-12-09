@@ -19,8 +19,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
             // Cấu hình listView cho chế độ xem chi tiết đơn giản
             listView1.View = View.Details;
             listView1.Columns.Clear();
-            listView1.Columns.Add("Tên người dùng", 140); // Username
-            listView1.Columns.Add("Họ và tên", 180); // Full name
+            listView1.Columns.Add("Tên người dùng", 200); // Username
+            listView1.Columns.Add("Họ và tên", 200); // Full name
             listView1.FullRowSelect = true;
         }
 

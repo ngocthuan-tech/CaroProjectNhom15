@@ -235,13 +235,13 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
                     var btnAccept = new Button
                     {
                         Text = "Chấp nhận", // Accept
-                        Location = new Point(itemPanel.Width - 140, 10),
+                        Location = new Point(itemPanel.Width - 140, 20),
                         Size = new Size(60, 32)
                     };
                     var btnDecline = new Button
                     {
                         Text = "Từ chối", // Decline
-                        Location = new Point(itemPanel.Width - 72, 10),
+                        Location = new Point(itemPanel.Width - 72, 20),
                         Size = new Size(60, 32)
                     };
 
