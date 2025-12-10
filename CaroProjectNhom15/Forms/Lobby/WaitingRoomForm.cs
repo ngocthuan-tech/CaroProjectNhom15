@@ -1,4 +1,5 @@
 ﻿using Auth.Models;
+using CaroProjectNhom15.Forms.Gameplay;
 using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Services;
 using System;
@@ -125,7 +126,14 @@ namespace CaroProjectNhom15.Forms
         private async void Btn_Start_Click(object sender, EventArgs e)
         {
             if (_isHost)
+            {
+                // 1. Host gửi lệnh Start Game lên Firebase
                 await _roomService.StartGameAsync(_currentRoom);
+
+                // 2. Sau khi gửi lệnh, Host gọi StartGame() để mở form ngay lập tức.
+                //    (Guest sẽ được gọi StartGame() thông qua OnRoomUpdate).
+                StartGame();
+            }
         }
 
         private void StartGame()
@@ -133,7 +141,17 @@ namespace CaroProjectNhom15.Forms
             _roomService.StopListenRoom();
             uC_Chat1.StopListening();
 
-            MessageBox.Show("→ Vào game (GameForm sẽ mở ở đây)");
+            // 1. Tạo GameForm mới
+            // Truyền các thông tin cần thiết:
+            // - _currentRoom: Dữ liệu phòng (Host, Guest, ID)
+            // - _currentUser: Dữ liệu người chơi hiện tại
+            // - _roomService: Để GameForm có thể gọi các hàm như UpdateMoveAsync (sẽ viết sau)
+            var gameForm = new GameForm(_currentRoom, _currentUser, _roomService);
+
+            // 2. Ẩn phòng chờ và hiển thị GameForm
+            this.Hide();
+            gameForm.ShowDialog();
+            this.Close(); // Đóng phòng chờ sau khi GameForm kết thúc
         }
 
         private async void Btn_ExitRoom_Click(object sender, EventArgs e)

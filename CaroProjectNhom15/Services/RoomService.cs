@@ -223,13 +223,36 @@ namespace CaroProjectNhom15.Services
 
         public async Task StartGameAsync(RoomModel myRoom)
         {
+            if (myRoom.Host == null || myRoom.Guest == null)
+            {
+                throw new Exception("Không đủ người chơi để bắt đầu game.");
+            }
+
+            // 1. Khởi tạo đối tượng GameModel
+            var initialGameModel = new GameModel
+            {
+                // Giả định Host luôn là người đi trước
+                Turn = myRoom.Host.Uid,
+                Winner = "",
+                Moves = new Dictionary<string, MoveModel>(),
+                LastMove = null,
+            };
+
             await TryHelper.TryAsync(async () =>
             {
+                // 2. Sử dụng PatchAsync để cập nhật cục bộ 2 trường:
+                //    a) Status (trong node cha)
+                //    b) Game (là một object lồng nhau)
+
                 await Database.Child("rooms").Child(myRoom.ID).
                 PatchAsync(new
                 {
-                    Status = "Playing"
+                    Status = "Playing", // Cập nhật trạng thái phòng thành đang chơi
+
+                    Game = initialGameModel
+
                 }).ConfigureAwait(false);
+
             }, "bắt đầu game");
         }
 
