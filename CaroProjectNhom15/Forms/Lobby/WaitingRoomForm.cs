@@ -1,5 +1,4 @@
 ﻿using Auth.Models;
-using CaroProjectNhom15.Forms.Gameplay;
 using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Services;
 using System;
@@ -14,7 +13,7 @@ namespace CaroProjectNhom15.Forms
         private UserModel _currentUser;
         private RoomService _roomService;
         private bool _isHost;
-
+        private bool _gameStarted = false;
         private bool _isClosing = false;
 
         public Frm_WaitingRoomForm(RoomModel room, UserModel user, RoomService service)
@@ -75,8 +74,14 @@ namespace CaroProjectNhom15.Forms
 
                 UpdateUI(_currentRoom);
 
-                if (_currentRoom.Status == "Playing")
-                    StartGame();
+                if (updatedRoom.Status == "Playing" && !_gameStarted)
+                {
+                    _gameStarted = true; // Đánh dấu là đã vào game
+                    StartGame();         // Gọi chỉ 1 lần
+                }
+
+                // ... logic cập nhật UI khác ...
+                UpdateUI(updatedRoom);
             });
         }
 
@@ -127,12 +132,11 @@ namespace CaroProjectNhom15.Forms
         {
             if (_isHost)
             {
-                // 1. Host gửi lệnh Start Game lên Firebase
+                // 1. Host gửi lệnh Start Game lên Firebase (cập nhật Status = 'Playing')
                 await _roomService.StartGameAsync(_currentRoom);
 
-                // 2. Sau khi gửi lệnh, Host gọi StartGame() để mở form ngay lập tức.
-                //    (Guest sẽ được gọi StartGame() thông qua OnRoomUpdate).
-                StartGame();
+                // 2. KHÔNG TỰ GỌI StartGame() ở đây nữa.
+                // Host sẽ chờ Listener kích hoạt, giống như Guest.
             }
         }
 

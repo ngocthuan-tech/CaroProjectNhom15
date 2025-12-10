@@ -99,7 +99,7 @@ namespace CaroProjectNhom15.Forms
             Lbl_CurrentTurn.AutoSize = true;
             Lbl_CurrentTurn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             Lbl_CurrentTurn.ForeColor = Color.Red;
-            Lbl_CurrentTurn.Location = new Point(160, 117);
+            Lbl_CurrentTurn.Location = new Point(160, 112);
             Lbl_CurrentTurn.Name = "Lbl_CurrentTurn";
             Lbl_CurrentTurn.Size = new Size(100, 28);
             Lbl_CurrentTurn.TabIndex = 5;
