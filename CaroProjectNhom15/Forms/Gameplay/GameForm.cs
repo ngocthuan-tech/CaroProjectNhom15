@@ -31,8 +31,6 @@ namespace CaroProjectNhom15.Forms
         {
             // Designer sẽ tạo ra các control và gán sự kiện Btn_Exit_Click ở đây.
             InitializeComponent();
-            gameBoard = new GameBoardManager(Pnl_BoardContainer);
-            gameBoard.DrawBoard();
 
             _currentRoom = room;
             _currentUser = user;
@@ -53,6 +51,9 @@ namespace CaroProjectNhom15.Forms
             LoadPlayerInfo();
 
             // Khởi tạo bàn cờ (InitGameBoard(); - cần bạn tự viết)
+
+            gameBoard = new GameBoardManager(Pnl_BoardContainer);
+            gameBoard.DrawBoard();
         }
 
         private void LoadPlayerInfo()

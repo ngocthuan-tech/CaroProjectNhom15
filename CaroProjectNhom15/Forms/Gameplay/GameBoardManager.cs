@@ -11,7 +11,7 @@ namespace CaroProjectNhom15.Forms.Gameplay
     {
         #region Properties
         private Panel board;
-        public Panel Board { get => Board; set => Board=value; }
+        public Panel Board { get => board; set => board=value; }
         #endregion
 
         #region Initialize
@@ -27,7 +27,7 @@ namespace CaroProjectNhom15.Forms.Gameplay
             Button oldButton = new Button() { Width = 0, Location = new Point(0,0) };
             for (int i = 0; i < GameCons.CHESS_BOARD_SIZE; i++)
             {
-                for (int j = 0; i < GameCons.CHESS_BOARD_SIZE; j++)
+                for (int j = 0; j < GameCons.CHESS_BOARD_SIZE; j++)
                 {
                     Button Btn = new Button()
                     {
