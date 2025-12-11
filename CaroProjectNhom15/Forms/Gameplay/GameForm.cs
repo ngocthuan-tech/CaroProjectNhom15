@@ -5,12 +5,16 @@ using Auth.Models;
 using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Services;
 using System.Drawing;
+using CaroProjectNhom15.Forms.Gameplay;
 
 namespace CaroProjectNhom15.Forms
 {
     // ĐÃ ĐỔI TÊN THÀNH GameForm
     public partial class GameForm : Form
     {
+        #region Properties
+        GameBoardManager gameBoard;
+        #endregion
         private readonly RoomService _roomService;
         private readonly RoomModel _currentRoom;
         private readonly UserModel _currentUser;
@@ -27,6 +31,8 @@ namespace CaroProjectNhom15.Forms
         {
             // Designer sẽ tạo ra các control và gán sự kiện Btn_Exit_Click ở đây.
             InitializeComponent();
+            gameBoard = new GameBoardManager(Pnl_BoardContainer);
+            gameBoard.DrawBoard();
 
             _currentRoom = room;
             _currentUser = user;
