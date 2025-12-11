@@ -51,17 +51,17 @@ namespace CaroProjectNhom15.Forms
             Pnl_BoardContainer.Location = new Point(0, 0);
             Pnl_BoardContainer.Margin = new Padding(3, 4, 3, 4);
             Pnl_BoardContainer.Name = "Pnl_BoardContainer";
-            Pnl_BoardContainer.Size = new Size(800, 933);
+            Pnl_BoardContainer.Size = new Size(734, 703);
             Pnl_BoardContainer.TabIndex = 0;
             // 
             // Pnl_RightSide
             // 
             Pnl_RightSide.Controls.Add(Grp_GameInfo);
             Pnl_RightSide.Dock = DockStyle.Right;
-            Pnl_RightSide.Location = new Point(800, 0);
+            Pnl_RightSide.Location = new Point(734, 0);
             Pnl_RightSide.Margin = new Padding(3, 4, 3, 4);
             Pnl_RightSide.Name = "Pnl_RightSide";
-            Pnl_RightSide.Size = new Size(343, 933);
+            Pnl_RightSide.Size = new Size(343, 703);
             Pnl_RightSide.TabIndex = 1;
             // 
             // Grp_GameInfo
@@ -154,10 +154,12 @@ namespace CaroProjectNhom15.Forms
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1143, 933);
+            ClientSize = new Size(1077, 703);
             Controls.Add(Pnl_BoardContainer);
             Controls.Add(Pnl_RightSide);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
             Name = "GameForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Game Caro";

@@ -8,8 +8,8 @@ namespace CaroProjectNhom15.Forms.Gameplay
 {
     public class GameCons
     {
-        public static int CHESS_WIDTH = 50;
-        public static int CHESS_HEIGHT = 50;
+        public static int CHESS_WIDTH = 35;
+        public static int CHESS_HEIGHT = 35;
         public static int CHESS_BOARD_SIZE = 20;
     }
 }
