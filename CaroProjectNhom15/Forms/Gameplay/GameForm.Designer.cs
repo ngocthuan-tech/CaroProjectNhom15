@@ -30,8 +30,11 @@ namespace CaroProjectNhom15.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Pnl_BoardContainer = new Panel();
             Pnl_RightSide = new Panel();
+            Pctb_CurrentMark = new PictureBox();
+            Prcb_CoolDown = new ProgressBar();
             Grp_GameInfo = new GroupBox();
             Btn_Exit = new Button();
             Lbl_CurrentTurn = new Label();
@@ -40,7 +43,9 @@ namespace CaroProjectNhom15.Forms
             Lbl_PlayerO_Title = new Label();
             Lbl_PlayerX_Name = new Label();
             Lbl_PlayerX_Title = new Label();
+            Tmr_CoolDown = new System.Windows.Forms.Timer(components);
             Pnl_RightSide.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Pctb_CurrentMark).BeginInit();
             Grp_GameInfo.SuspendLayout();
             SuspendLayout();
             // 
@@ -56,6 +61,8 @@ namespace CaroProjectNhom15.Forms
             // 
             // Pnl_RightSide
             // 
+            Pnl_RightSide.Controls.Add(Pctb_CurrentMark);
+            Pnl_RightSide.Controls.Add(Prcb_CoolDown);
             Pnl_RightSide.Controls.Add(Grp_GameInfo);
             Pnl_RightSide.Dock = DockStyle.Right;
             Pnl_RightSide.Location = new Point(734, 0);
@@ -63,6 +70,22 @@ namespace CaroProjectNhom15.Forms
             Pnl_RightSide.Name = "Pnl_RightSide";
             Pnl_RightSide.Size = new Size(343, 703);
             Pnl_RightSide.TabIndex = 1;
+            // 
+            // Pctb_CurrentMark
+            // 
+            Pctb_CurrentMark.Location = new Point(97, 384);
+            Pctb_CurrentMark.Name = "Pctb_CurrentMark";
+            Pctb_CurrentMark.Size = new Size(149, 149);
+            Pctb_CurrentMark.SizeMode = PictureBoxSizeMode.Zoom;
+            Pctb_CurrentMark.TabIndex = 2;
+            Pctb_CurrentMark.TabStop = false;
+            // 
+            // Prcb_CoolDown
+            // 
+            Prcb_CoolDown.Location = new Point(97, 317);
+            Prcb_CoolDown.Name = "Prcb_CoolDown";
+            Prcb_CoolDown.Size = new Size(149, 29);
+            Prcb_CoolDown.TabIndex = 1;
             // 
             // Grp_GameInfo
             // 
@@ -164,6 +187,7 @@ namespace CaroProjectNhom15.Forms
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Game Caro";
             Pnl_RightSide.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)Pctb_CurrentMark).EndInit();
             Grp_GameInfo.ResumeLayout(false);
             Grp_GameInfo.PerformLayout();
             ResumeLayout(false);
@@ -182,5 +206,8 @@ namespace CaroProjectNhom15.Forms
         private System.Windows.Forms.Label Lbl_CurrentTurn;
         private System.Windows.Forms.Label Lbl_TurnTitle;
         private System.Windows.Forms.Button Btn_Exit;
+        private ProgressBar Prcb_CoolDown;
+        private PictureBox Pctb_CurrentMark;
+        private System.Windows.Forms.Timer Tmr_CoolDown;
     }
 }
