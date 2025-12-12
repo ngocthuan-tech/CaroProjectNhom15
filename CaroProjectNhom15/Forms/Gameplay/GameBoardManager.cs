@@ -125,21 +125,20 @@ namespace CaroProjectNhom15.Forms.Gameplay
             // Lấy tọa độ nước đi (Point(X, Y))
             Point point = (Point)btn.Tag;
 
-            // 2. Đã loại bỏ việc lưu lịch sử nước đi
-
-            // 3. Thông báo đã đánh dấu (cho Form biết để reset Timer)
-            PlayerMarked?.Invoke(this, new ButtonClickEvent(point));
-
-            // 4. Kiểm tra kết thúc game
+            // 2. Kiểm tra kết thúc game
             if (IsEndGame(point))
             {
+                // Nếu kết thúc, gọi EndGame (không đổi lượt)
                 EndGame();
             }
             else
             {
-                // 5. Đổi lượt chơi
+                // 3. Đổi lượt chơi TRƯỚC KHI THÔNG BÁO cho Form
                 CurrentPlayer = CurrentPlayer == 0 ? 1 : 0;
             }
+
+            // 4. Thông báo đã đánh dấu (Form sẽ dùng CurrentPlayer MỚI để cập nhật UI)
+            PlayerMarked?.Invoke(this, new ButtonClickEvent(point));
         }
 
         // Đánh dấu quân cờ của đối thủ (dùng cho logic mạng)

@@ -132,7 +132,15 @@ namespace CaroProjectNhom15.Forms
             // 1. Reset lại Timer
             ResetCoolDownTimer();
 
-            // 2. Cập nhật hình ảnh quân cờ hiện tại và tên người chơi
+            // KIỂM TRA: Nếu game đã kết thúc (bàn cờ bị vô hiệu hóa bởi EndGame) thì không cập nhật lượt
+            // Ngăn chặn việc cập nhật lượt khi game đã kết thúc (trường hợp thắng)
+            if (gameBoard.Board.Enabled == false)
+            {
+                return;
+            }
+
+            // 2. Cập nhật hình ảnh quân cờ hiện tại và tên người chơi (Lượt mới)
+            // Giờ đây CurrentPlayer đã là người chơi tiếp theo do logic đã sửa trong GameBoardManager.cs
             UpdateCurrentMark();
 
             // --- Ở đây cần gửi nước đi (e.ClickedPoint) lên Firebase (sẽ viết sau) ---
@@ -168,7 +176,7 @@ namespace CaroProjectNhom15.Forms
         {
             if (gameBoard == null) return;
 
-            // Lấy Player hiện tại
+            // Lấy Player hiện tại (đã là người chơi tiếp theo)
             Player currentPlayer = gameBoard.Player[gameBoard.CurrentPlayer];
 
             // Cập nhật PictureBox
