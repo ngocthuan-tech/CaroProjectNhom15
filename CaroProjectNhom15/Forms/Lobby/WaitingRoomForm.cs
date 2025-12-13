@@ -155,9 +155,8 @@ namespace CaroProjectNhom15.Forms
             // 2. Ẩn phòng chờ và hiển thị GameForm
             this.Hide();
             gameForm.ShowDialog();
-            this.Close(); // Đóng phòng chờ sau khi GameForm kết thúc
+                this.Close();
         }
-
         private async void Btn_ExitRoom_Click(object sender, EventArgs e)
         {
             _isClosing = true; // Đánh dấu để không kích hoạt FormClosing lần nữa

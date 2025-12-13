@@ -17,7 +17,7 @@ namespace CaroProjectNhom15.Services
         private FirebaseClient Database => FirebaseProvider.Instance.Database;
 
         // Biến lưu subscription để quản lý
-        private IDisposable roomListener, roomsListener;
+        private IDisposable roomListener, roomsListener, _gameListener;
 
         // ================= GET DATA (SNAPSHOT) =================
 
@@ -221,41 +221,6 @@ namespace CaroProjectNhom15.Services
             }, "thoát phòng");
         }
 
-        public async Task StartGameAsync(RoomModel myRoom)
-        {
-            if (myRoom.Host == null || myRoom.Guest == null)
-            {
-                throw new Exception("Không đủ người chơi để bắt đầu game.");
-            }
-
-            // 1. Khởi tạo đối tượng GameModel
-            var initialGameModel = new GameModel
-            {
-                // Giả định Host luôn là người đi trước
-                Turn = myRoom.Host.Uid,
-                Winner = "",
-                Moves = new Dictionary<string, MoveModel>(),
-                LastMove = null,
-            };
-
-            await TryHelper.TryAsync(async () =>
-            {
-                // 2. Sử dụng PatchAsync để cập nhật cục bộ 2 trường:
-                //    a) Status (trong node cha)
-                //    b) Game (là một object lồng nhau)
-
-                await Database.Child("rooms").Child(myRoom.ID).
-                PatchAsync(new
-                {
-                    Status = "Playing", // Cập nhật trạng thái phòng thành đang chơi
-
-                    Game = initialGameModel
-
-                }).ConfigureAwait(false);
-
-            }, "bắt đầu game");
-        }
-
         // ================= LISTENERS (REALTIME) =================
 
         // Lắng nghe 1 phòng cụ thể (Dùng trong Waiting Room)
@@ -408,6 +373,77 @@ namespace CaroProjectNhom15.Services
                 .Child(roomId)
                 .Child("Messages")
                 .AsObservable<MessageModel>();
+        }
+
+        // ================= GAME LOGIC =================
+
+        // 1. Khởi tạo Game (Được gọi bởi Host khi nhấn Start)
+        public async Task StartGameAsync(RoomModel room)
+        {
+            await TryHelper.TryAsync(async () =>
+            {
+                // Khởi tạo GameInfo sạch
+                var initialGame = new GameInfo
+                {
+                    Command = GameInfo.CMD_NEW_GAME,
+                    CurrentTurnID = room.Host.Uid, // Host luôn đi trước
+                    SenderID = "System",
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                };
+
+                // Cập nhật Status và node Game
+                await Database.Child("rooms").Child(room.ID).PatchAsync(new
+                {
+                    Status = "Playing",
+                    Game = initialGame
+                });
+            }, "bắt đầu game");
+        }
+
+        // 2. Gửi nước đi hoặc cập nhật trạng thái game
+        // Hàm này dùng chung cho: Đánh cờ, Undo, Win, Thua
+        public async Task UpdateGameAsync(string roomId, GameInfo gameInfo)
+        {
+            // Không dùng TryHelper để tránh block UI nếu lag nhẹ, hoặc handle bên ngoài
+            try
+            {
+                gameInfo.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+                // Chỉ update node Game để tiết kiệm băng thông
+                await Database.Child("rooms").Child(roomId).Child("Game")
+                              .PutAsync(gameInfo).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi UpdateGame: " + ex.Message);
+            }
+        }
+
+        // 3. Lắng nghe thay đổi của Game (Chỉ nghe node Game)
+        public void ListenToGame(string roomId, Action<GameInfo> onGameUpdate)
+        {
+            StopListenGame(); // Hủy cái cũ nếu có
+
+            _gameListener = Database
+                .Child("rooms")
+                .Child(roomId)
+                .Child("Game")
+                .AsObservable<GameInfo>()
+                .Subscribe(d =>
+                {
+                    if (d.Object != null)
+                    {
+                        onGameUpdate(d.Object);
+                    }
+                }, error =>
+                {
+                    Console.WriteLine("Game Stream Error: " + error.Message);
+                });
+        }
+
+        public void StopListenGame()
+        {
+            _gameListener?.Dispose();
         }
     }
 }

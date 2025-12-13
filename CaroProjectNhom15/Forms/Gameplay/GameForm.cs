@@ -1,219 +1,255 @@
-﻿// GameForm.cs
-using System;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Auth.Models;
 using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Services;
-using System.Drawing;
 using CaroProjectNhom15.Forms.Gameplay;
 
 namespace CaroProjectNhom15.Forms
 {
-    // ĐÃ ĐỔI TÊN THÀNH GameForm
     public partial class GameForm : Form
     {
-        #region Properties
-        GameBoardManager gameBoard;
-        #endregion
+        private GameBoardManager gameBoard;
         private readonly RoomService _roomService;
         private readonly RoomModel _currentRoom;
         private readonly UserModel _currentUser;
 
-        // Biến lưu trạng thái game cục bộ (Realtime)
-        private GameModel _currentGameData;
+        // Xác định mình là Host (Player 0 - X) hay Guest (Player 1 - O)
+        private int _myRole; // 0 hoặc 1
 
-        // Listener cho game
-        private IDisposable _gameListener;
-
-        // CÁC THÀNH PHẦN MỚI CẦN CÓ TRONG DESIGNER:
-        // 1. Timer: Tmr_CoolDown
-        // 2. ProgressBar: Prcb_CoolDown
-        // 3. PictureBox: Pctb_CurrentMark
-
-
-        // Constructor Tương thích với WaitingRoomForm.cs
         public GameForm(RoomModel room, UserModel user, RoomService service)
         {
-            // Designer sẽ tạo ra các control và gán sự kiện Btn_Exit_Click ở đây.
             InitializeComponent();
-
             _currentRoom = room;
             _currentUser = user;
             _roomService = service;
 
-            this.Text = $"Game Caro — ID: {_currentRoom.ID} | {user.UserName}";
-
-            // Chỉ cần gán sự kiện Load
-            this.Load += GameForm_Load;
+            // Xác định vai trò
+            if (_currentUser.Uid == _currentRoom.Host.Uid) _myRole = 0; // Host đi trước (X)
+            else _myRole = 1; // Guest đi sau (O)
         }
 
         private void GameForm_Load(object sender, EventArgs e)
         {
-            // Tải thông tin người chơi lên UI
-            LoadPlayerInfo();
+            // Setup tên người chơi...
+            Lbl_PlayerX_Name.Text = _currentRoom.Host.UserName;
+            Lbl_PlayerO_Name.Text = _currentRoom.Guest.UserName;
 
-            // Khởi tạo bàn cờ (InitGameBoard(); - cần bạn tự viết)
-            InitGameBoard();
-
-            // Thiết lập Timer
-            InitCoolDownTimer();
-
-            // Bắt đầu lắng nghe Game data (sẽ viết sau)
-            // ListenToGameChanges();
-        }
-
-        // --- KHỞI TẠO BÀN CỜ VÀ GẮN SỰ KIỆN ---
-        private void InitGameBoard()
-        {
-            // 1. Khởi tạo GameBoardManager
+            // Khởi tạo bàn cờ và đăng ký sự kiện...
             gameBoard = new GameBoardManager(Pnl_BoardContainer);
-
-            // 2. Gán sự kiện khi người chơi đánh dấu (dùng để reset Timer)
             gameBoard.PlayerMarked += GameBoard_PlayerMarked;
-
-            // 3. Gán sự kiện khi game kết thúc (dùng để dừng Timer)
             gameBoard.EndedGame += GameBoard_EndedGame;
 
-            // Bàn cờ được vẽ trong Constructor của GameBoardManager
-            // gameBoard.DrawBoard();
+            // 1. GỌI DRAWBOARD TẠI ĐÂY
+            gameBoard.DrawBoard();
 
-            // Thiết lập UI ban đầu
-            UpdateCurrentMark();
+            // 2. ÉP BUỘC REDRAW
+            Pnl_BoardContainer.Refresh();
+
+            // 3. Bắt đầu lắng nghe game
+            _roomService.ListenToGame(_currentRoom.ID, OnGameUpdate);
+
+            // Đăng ký các sự kiện để GameForm có thể phản hồi lại game logic
+            gameBoard.PlayerMarked += GameBoard_PlayerMarked;
+            gameBoard.EndedGame += GameBoard_EndedGame;
+
+            // Khởi tạo các UI liên quan đến Timer/ProgressBar
+            Prcb_CoolDown.Step = GameCons.COOL_DOWN_STEP; // Giả định bạn có Prcb_CoolDown
+            Prcb_CoolDown.Maximum = GameCons.COOL_DOWN_TIME;
+            Tmr_CoolDown.Interval = GameCons.COOL_DOWN_INTERVAL; // Giả định bạn có Tmr_CoolDown
+
+            // Bàn cờ lúc này đã được vẽ xong, nhưng cần cập nhật trạng thái game hiện tại
+            if (_currentRoom.Game != null)
+            {
+                // Xử lý luôn trạng thái game đầu tiên
+                OnGameUpdate(_currentRoom.Game);
+            }
+
+            // Start listening to the game
+            _roomService.ListenToGame(_currentRoom.ID, OnGameUpdate);
         }
 
+        // --- NHẬN DỮ LIỆU TỪ FIREBASE (REALTIME) ---
+        private void OnGameUpdate(GameInfo gameInfo)
+        {
+            // Invoke để thao tác trên UI Thread
+            this.Invoke((MethodInvoker)delegate
+            {
+                // 1. Kiểm tra xem tin này có phải do chính mình gửi không?
+                if (gameInfo.SenderID == _currentUser.Uid)
+                {
+                    // Nếu là mình gửi, thì mình đã xử lý UI ở sự kiện Click rồi.
+                    // Chỉ cần đảm bảo Timer hoạt động đúng.
+                    return;
+                }
 
-        // --- LOGIC TIMER VÀ PROGRESS BAR ---
+                // 2. Xử lý logic dựa trên Command
+                switch (gameInfo.Command)
+                {
+                    case GameInfo.CMD_SEND_POINT:
+                        HandleOpponentMove(gameInfo);
+                        break;
+                    case GameInfo.CMD_END_GAME:
+                        HandleEndGame(gameInfo.WinnerID);
+                        break;
+                    case GameInfo.CMD_NEW_GAME:
+                        // Reset bàn cờ nếu cần
+                        break;
+                    case GameInfo.CMD_EXIT:
+                        MessageBox.Show("Đối thủ đã thoát!");
+                        this.Close();
+                        break;
+                }
+            });
+        }
+
+        // Xử lý khi đối thủ đi
+        private void HandleOpponentMove(GameInfo info)
+        {
+            Point point = new Point(info.X, info.Y);
+
+            // Vẽ nước đi của đối thủ lên bàn cờ mình
+            gameBoard.OtherPlayerMark(point);
+
+            // Reset Timer
+            ResetCoolDownTimer();
+
+            // Cập nhật lượt: Bây giờ đến lượt mình
+            Lbl_CurrentTurn.Text = "Đến lượt bạn!";
+            Pnl_BoardContainer.Enabled = true; // Mở khóa bàn cờ
+
+            // Đồng bộ CurrentPlayer trong Manager cho đúng logic vẽ
+            gameBoard.CurrentPlayer = _myRole;
+            UpdateCurrentMarkUI();
+        }
+
+        private void HandleEndGame(string winnerId)
+        {
+            Tmr_CoolDown.Stop();
+            gameBoard.EndGame(); // Khóa bàn cờ
+
+            string msg = (winnerId == _currentUser.Uid) ? "Bạn đã chiến thắng!" : "Bạn đã thua!";
+            MessageBox.Show(msg, "Kết thúc", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        // --- GỬI DỮ LIỆU LÊN FIREBASE (ACTION) ---
+
+        // Khi mình click vào bàn cờ
+        private async void GameBoard_PlayerMarked(object sender, ButtonClickEvent e)
+        {
+            Tmr_CoolDown.Stop(); // Dừng tạm thời
+            Prcb_CoolDown.Value = 0;
+
+            // Chuẩn bị dữ liệu gửi lên
+            var gameInfo = new GameInfo
+            {
+                Command = GameInfo.CMD_SEND_POINT,
+                X = e.ClickedPoint.X,
+                Y = e.ClickedPoint.Y,
+                SenderID = _currentUser.Uid,
+                // Lượt tiếp theo là của người kia
+                CurrentTurnID = (_myRole == 0) ? _currentRoom.Guest.Uid : _currentRoom.Host.Uid
+            };
+
+            // Kiểm tra xem nước đi này có thắng không (GameBoardManager đã check và gọi EndGame -> Board disabled)
+            if (gameBoard.IsEndGame(e.ClickedPoint))
+            {
+                gameInfo.Command = GameInfo.CMD_END_GAME;
+                gameInfo.WinnerID = _currentUser.Uid;
+            }
+
+            // Gửi lên Firebase
+            await _roomService.UpdateGameAsync(_currentRoom.ID, gameInfo);
+
+            if (gameInfo.Command != GameInfo.CMD_END_GAME)
+            {
+                // Nếu chưa thắng, update UI chờ đối thủ
+                Lbl_CurrentTurn.Text = "Đợi đối thủ...";
+                // Start Timer chờ đối thủ (nếu muốn tính giờ cả 2 bên)
+                Tmr_CoolDown.Start();
+                UpdateCurrentMarkUI();
+            }
+        }
+
+        // Hết giờ
+        private async void GameBoard_EndedGame(object sender, EventArgs e)
+        {
+            // Sự kiện này kích hoạt khi Hết Giờ (gọi từ Timer Tick)
+            // Gửi thông báo thua cuộc lên server
+            var gameInfo = new GameInfo
+            {
+                Command = GameInfo.CMD_END_GAME,
+                SenderID = _currentUser.Uid,
+                WinnerID = (_myRole == 0) ? _currentRoom.Guest.Uid : _currentRoom.Host.Uid // Người kia thắng
+            };
+            await _roomService.UpdateGameAsync(_currentRoom.ID, gameInfo);
+        }
+
+        // Timer Logic (Giữ nguyên logic của bạn)
         private void InitCoolDownTimer()
         {
-            // Thiết lập thông số cho ProgressBar
+            Prcb_CoolDown.Step = GameCons.COOL_DOWN_STEP;
             Prcb_CoolDown.Maximum = GameCons.COOL_DOWN_TIME;
-            Prcb_CoolDown.Value = GameCons.COOL_DOWN_TIME;
-
-            // Thiết lập thông số cho Timer
+            Prcb_CoolDown.Value = 0;
             Tmr_CoolDown.Interval = GameCons.COOL_DOWN_INTERVAL;
             Tmr_CoolDown.Tick += Tmr_CoolDown_Tick;
-            Tmr_CoolDown.Start();
+
+            // Nếu mình là Host (đi trước), bắt đầu Timer ngay
+            if (_myRole == 0)
+            {
+                Tmr_CoolDown.Start();
+                Pnl_BoardContainer.Enabled = true;
+                Lbl_CurrentTurn.Text = "Đến lượt bạn!";
+            }
+            else
+            {
+                Pnl_BoardContainer.Enabled = false; // Guest đợi
+                Lbl_CurrentTurn.Text = "Đợi Host đi trước...";
+            }
+            UpdateCurrentMarkUI();
         }
 
-        // Xử lý sự kiện Tick của Timer (cập nhật Progress Bar và kiểm tra hết giờ)
         private void Tmr_CoolDown_Tick(object sender, EventArgs e)
         {
-            // Giảm giá trị ProgressBar
             Prcb_CoolDown.PerformStep();
-
-            // Progress Bar giảm dần
-            Prcb_CoolDown.Value -= GameCons.COOL_DOWN_INTERVAL;
-
-            // Kiểm tra xem thời gian đã hết chưa
-            if (Prcb_CoolDown.Value <= 0)
+            if (Prcb_CoolDown.Value >= Prcb_CoolDown.Maximum)
             {
-                // Dừng Timer
                 Tmr_CoolDown.Stop();
-
-                // Kết thúc game vì hết thời gian
+                // Hết giờ -> Tự xử thua
                 gameBoard.EndGame();
             }
         }
 
-        // Reset Timer khi có nước đi mới
         private void ResetCoolDownTimer()
         {
-            Tmr_CoolDown.Stop();
-            Prcb_CoolDown.Value = GameCons.COOL_DOWN_TIME;
+            Prcb_CoolDown.Value = 0;
             Tmr_CoolDown.Start();
         }
 
-
-        // --- XỬ LÝ SỰ KIỆN GAMEBOARD ---
-
-        // Xử lý khi có người đánh dấu (cả local và other)
-        private void GameBoard_PlayerMarked(object sender, ButtonClickEvent e)
+        private void UpdateCurrentMarkUI()
         {
-            // 1. Reset lại Timer
-            ResetCoolDownTimer();
+            // Logic hiển thị ảnh X/O ai đang đánh ở góc màn hình
+            // Host (0) luôn là X, Guest (1) luôn là O
+            // Nếu CurrentTurn là mình -> Hiện hình của mình
+            // Nếu CurrentTurn là địch -> Hiện hình địch
 
-            // KIỂM TRA: Nếu game đã kết thúc (bàn cờ bị vô hiệu hóa bởi EndGame) thì không cập nhật lượt
-            // Ngăn chặn việc cập nhật lượt khi game đã kết thúc (trường hợp thắng)
-            if (gameBoard.Board.Enabled == false)
-            {
-                return;
-            }
-
-            // 2. Cập nhật hình ảnh quân cờ hiện tại và tên người chơi (Lượt mới)
-            // Giờ đây CurrentPlayer đã là người chơi tiếp theo do logic đã sửa trong GameBoardManager.cs
-            UpdateCurrentMark();
-
-            // --- Ở đây cần gửi nước đi (e.ClickedPoint) lên Firebase (sẽ viết sau) ---
-            // SendMoveToFirebase(e.ClickedPoint);
-        }
-
-        // Xử lý khi Game kết thúc (Thắng hoặc Hết giờ)
-        private void GameBoard_EndedGame(object sender, EventArgs e)
-        {
-            // Dừng Timer
-            Tmr_CoolDown.Stop();
-
-            // Vô hiệu hóa Progress Bar (tùy chọn)
-            Prcb_CoolDown.Value = 0;
-        }
-
-
-        // --- CẬP NHẬT UI ---
-
-        private void LoadPlayerInfo()
-        {
-            // Host là X, Guest là O
-            Lbl_PlayerX_Name.Text = _currentRoom.Host?.UserName ?? "Host (X)";
-            Lbl_PlayerO_Name.Text = _currentRoom.Guest?.UserName ?? "Guest (O)";
-
-            // Tên người chơi ban đầu
-            // Cập nhật lượt hiện tại
-            Lbl_CurrentTurn.Text = "Đang chờ...";
-        }
-
-        // Cập nhật hình ảnh quân cờ và tên người chơi
-        private void UpdateCurrentMark()
-        {
-            if (gameBoard == null) return;
-
-            // Lấy Player hiện tại (đã là người chơi tiếp theo)
+            // Đơn giản hóa: Dựa vào gameBoard.CurrentPlayer
             Player currentPlayer = gameBoard.Player[gameBoard.CurrentPlayer];
-
-            // Cập nhật PictureBox
             Pctb_CurrentMark.Image = currentPlayer.Mark;
-
-            // Cập nhật tên người chơi (dựa trên CurrentPlayer index 0=X, 1=O)
-            if (gameBoard.CurrentPlayer == 0)
-            {
-                Lbl_CurrentTurn.Text = _currentRoom.Host?.UserName ?? "Host (X)";
-            }
-            else
-            {
-                Lbl_CurrentTurn.Text = _currentRoom.Guest?.UserName ?? "Guest (O)";
-            }
         }
 
-
-        // HÀM XỬ LÝ SỰ KIỆN CLICK CHO NÚT EXIT (DESIGNER TỰ GỌI)
         private async void Btn_Exit_Click(object sender, EventArgs e)
         {
-            var confirm = MessageBox.Show("Bạn có chắc muốn thoát ván game này không?", "Xác nhận",
-                                          MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm == DialogResult.Yes)
+            // Gửi lệnh thoát
+            var gameInfo = new GameInfo
             {
-                // Dừng Timer
-                Tmr_CoolDown.Stop();
-
-                // Dừng lắng nghe
-                // StopListenToGameChanges();
-
-                // Gọi hàm thoát (sẽ tạo sau trong RoomService)
-                // await _roomService.ExitGameAsync(_currentRoom, _currentUser); 
-
-                this.Close();
-            }
+                Command = GameInfo.CMD_EXIT,
+                SenderID = _currentUser.Uid
+            };
+            await _roomService.UpdateGameAsync(_currentRoom.ID, gameInfo);
+            _roomService.StopListenGame();
+            this.Close();
         }
-
-        // --- LOGIC GAME CỐT LÕI (SẼ VIẾT Ở BƯỚC SAU) ---
     }
 }

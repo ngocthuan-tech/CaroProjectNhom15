@@ -51,6 +51,7 @@ namespace CaroProjectNhom15.Forms
             // 
             // Pnl_BoardContainer
             // 
+            Pnl_BoardContainer.AutoScroll = true;
             Pnl_BoardContainer.BorderStyle = BorderStyle.FixedSingle;
             Pnl_BoardContainer.Dock = DockStyle.Fill;
             Pnl_BoardContainer.Location = new Point(0, 0);
