@@ -28,6 +28,7 @@ namespace CaroProjectNhom15.Forms
             // Xác định vai trò
             if (_currentUser.Uid == _currentRoom.Host.Uid) _myRole = 0; // Host đi trước (X)
             else _myRole = 1; // Guest đi sau (O)
+            Load += GameForm_Load;
         }
 
         private void GameForm_Load(object sender, EventArgs e)
