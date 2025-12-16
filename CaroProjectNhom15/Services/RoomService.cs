@@ -382,13 +382,14 @@ namespace CaroProjectNhom15.Services
         {
             await TryHelper.TryAsync(async () =>
             {
-                // Khởi tạo GameInfo sạch
+                // Khởi tạo GameInfo sạch (Không còn Command, Timestamp)
                 var initialGame = new GameInfo
                 {
-                    Command = GameInfo.CMD_NEW_GAME,
+                    X = 0,
+                    Y = 0,
                     CurrentTurnID = room.Host.Uid, // Host luôn đi trước
                     SenderID = "System",
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    WinnerID = null
                 };
 
                 // Cập nhật Status và node Game
@@ -401,15 +402,12 @@ namespace CaroProjectNhom15.Services
         }
 
         // 2. Gửi nước đi hoặc cập nhật trạng thái game
-        // Hàm này dùng chung cho: Đánh cờ, Undo, Win, Thua
+        // Hàm này dùng chung cho: Đánh cờ, Win, Thua (Dựa trên X, Y, WinnerID)
         public async Task UpdateGameAsync(string roomId, GameInfo gameInfo)
         {
-            // Không dùng TryHelper để tránh block UI nếu lag nhẹ, hoặc handle bên ngoài
+            // Không còn dùng Timestamp, chỉ gửi dữ liệu GameInfo lên node Game
             try
             {
-                gameInfo.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-                // Chỉ update node Game để tiết kiệm băng thông
                 await Database.Child("rooms").Child(roomId).Child("Game")
                               .PutAsync(gameInfo).ConfigureAwait(false);
             }
@@ -424,26 +422,57 @@ namespace CaroProjectNhom15.Services
         {
             StopListenGame(); // Hủy cái cũ nếu có
 
-            _gameListener = Database
-                .Child("rooms")
-                .Child(roomId)
-                .Child("Game")
-                .AsObservable<GameInfo>()
-                .Subscribe(d =>
-                {
-                    if (d.Object != null)
+            try
+            {
+                // Lắng nghe node /rooms/{roomId}/Game
+                _gameListener = Database
+                    .Child("rooms")
+                    .Child(roomId)
+                    .Child("Game")
+                    .AsObservable<object>() // Lắng nghe đối tượng thô
+                    .Subscribe(d =>
                     {
-                        onGameUpdate(d.Object);
-                    }
-                }, error =>
-                {
-                    Console.WriteLine("Game Stream Error: " + error.Message);
-                });
+                        // MỖI KHI CÓ THAY ĐỔI: Gọi hàm lấy lại toàn bộ thông tin phòng
+                        try
+                        {
+                            // Lấy dữ liệu game mới nhất. Cần lấy cả phòng để có Host/Guest
+                            GetRoomByIdAsync(roomId).ContinueWith(task =>
+                            {
+                                if (task.IsFaulted)
+                                {
+                                    Console.WriteLine("Lỗi tải lại Game: " + task.Exception?.Message);
+                                }
+                                // Lấy được dữ liệu phòng mới
+                                else if (task.IsCompleted && task.Result?.Game != null)
+                                {
+                                    // Lấy object GameInfo từ RoomModel vừa tải về
+                                    var freshGame = task.Result.Game;
+
+                                    // Trả về cho UI cập nhật
+                                    onGameUpdate(freshGame);
+                                }
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Lỗi trong Subscribe Game: " + ex.Message);
+                        }
+                    },
+                    error =>
+                    {
+                        Console.WriteLine("Game Stream Error: " + error.Message);
+                    });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi ListenToGame: " + ex.Message);
+            }
         }
 
         public void StopListenGame()
         {
             _gameListener?.Dispose();
+            _gameListener= null;
         }
     }
 }

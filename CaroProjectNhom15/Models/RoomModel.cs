@@ -24,15 +24,6 @@ namespace CaroProjectNhom15.Models
 
     public class GameInfo
     {
-        // Các loại lệnh (Command)
-        public const int CMD_SEND_POINT = 1;
-        public const int CMD_UNDO = 2;
-        public const int CMD_END_GAME = 3;
-        public const int CMD_NEW_GAME = 4;
-        public const int CMD_EXIT = 5;
-
-        public int Command { get; set; }
-
         // Tọa độ nước đi (X, Y)
         public int X { get; set; }
         public int Y { get; set; }
@@ -45,10 +36,5 @@ namespace CaroProjectNhom15.Models
 
         // UID người thắng (nếu có)
         public string WinnerID { get; set; }
-
-        // Thời gian để đảm bảo thứ tự
-        public long Timestamp { get; set; }
-
-        public string Message { get; set; } // Chat hoặc thông báo kèm theo
     }
 }

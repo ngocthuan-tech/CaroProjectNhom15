@@ -80,7 +80,6 @@ namespace CaroProjectNhom15.Forms
                     StartGame();         // Gọi chỉ 1 lần
                 }
 
-                // ... logic cập nhật UI khác ...
                 UpdateUI(updatedRoom);
             });
         }

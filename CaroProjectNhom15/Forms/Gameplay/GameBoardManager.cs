@@ -9,7 +9,11 @@ namespace CaroProjectNhom15.Forms.Gameplay
     {
         public Panel Board { get; set; }
         public List<Player> Player { get; set; }
-        public int CurrentPlayer { get; set; } // 0: Host (X), 1: Guest (O)
+
+        // GIỮ NGUYÊN: CurrentPlayer (0: Host/X, 1: Guest/O)
+        // QUAN TRỌNG: GameForm sẽ TỰ GÁN giá trị này trước khi gọi Mark.
+        public int CurrentPlayer { get; set; }
+
         public List<List<Button>> Matrix { get; set; }
 
         public event EventHandler<ButtonClickEvent> PlayerMarked;
@@ -21,20 +25,23 @@ namespace CaroProjectNhom15.Forms.Gameplay
             this.Matrix = new List<List<Button>>();
 
             // Player 0: X, Player 1: O
+            // Lưu ý: Đảm bảo Resource files có hình ảnh 'x_mark' và 'o_mark'
             this.Player = new List<Player>()
             {
-                new Player(Properties.Resources.x_mark), // Thay bằng Resource thật của bạn
+                new Player(Properties.Resources.x_mark),
                 new Player(Properties.Resources.o_mark)
             };
 
-            CurrentPlayer = 0;
+            CurrentPlayer = 0; // Host (X) đi trước
         }
 
         public void DrawBoard()
         {
             Board.Enabled = true; // Bật bàn cờ
+            Board.Controls.Clear(); // Đảm bảo làm sạch khi Draw lại (cho New Game)
+            Matrix.Clear();
 
-            // Dùng vòng lặp tạo nút dựa trên tọa độ toán học (Không dùng OldButton)
+            // Dùng vòng lặp tạo nút dựa trên tọa độ toán học
             for (int i = 0; i < GameCons.CHESS_BOARD_SIZE; i++) // Vòng lặp Hàng (Y)
             {
                 Matrix.Add(new List<Button>());
@@ -44,7 +51,6 @@ namespace CaroProjectNhom15.Forms.Gameplay
                     {
                         Width = GameCons.CHESS_WIDTH,
                         Height = GameCons.CHESS_HEIGHT,
-                        // Tọa độ (X, Y) được tính toán trực tiếp
                         Location = new Point(j * GameCons.CHESS_WIDTH, i * GameCons.CHESS_HEIGHT),
                         BackgroundImageLayout = ImageLayout.Stretch,
                         Tag = new Point(j, i) // Tag: (X, Y)
@@ -63,31 +69,33 @@ namespace CaroProjectNhom15.Forms.Gameplay
             Button btn = sender as Button;
             if (btn.BackgroundImage != null) return;
 
-            // 1. Vẽ ngay lập tức lên bàn cờ của mình (Optimistic UI)
+            // 1. Vẽ ngay lập tức lên bàn cờ của mình
+            // CurrentPlayer đã được GameForm set trước đó (là _myRole)
             Mark(btn);
 
-            // 2. Vô hiệu hóa bàn cờ ngay để tránh click liên tục
-            Board.Enabled = false;
+            // 2. Vô hiệu hóa bàn cờ ngay (ĐÃ XÓA logic Board.Enabled = false; ở đây,
+            // để GameForm tự quản lý việc khóa/mở sau khi gửi lệnh lên Firebase)
 
             Point point = (Point)btn.Tag;
 
-            // 3. Kiểm tra thắng thua CỤC BỘ (để gửi Command Win nếu cần)
+            // 3. Kiểm tra thắng thua CỤC BỘ
             bool isWin = IsEndGame(point);
-            if (isWin) EndGame();
+            if (isWin) EndGame(); // Kích hoạt EndedGame và khóa Board
 
             // 4. Bắn sự kiện ra Form để gửi lên Firebase
+            // GameForm sẽ dùng thông tin Point này để gửi tọa độ (X, Y) và check Win
             PlayerMarked?.Invoke(this, new ButtonClickEvent(point));
-            // Lưu ý: Form sẽ check IsEndGame lại hoặc cờ hiệu để gửi lệnh WIN
         }
 
         // Xử lý khi ĐỐI PHƯƠNG đánh (nhận từ Firebase)
         public void OtherPlayerMark(Point point)
         {
+            // CurrentPlayer lúc này đã được GameForm set là vai trò của ĐỐI THỦ
+
             Button btn = Matrix[point.Y][point.X];
             if (btn.BackgroundImage != null) return;
 
-            // Đổi lượt sang đối thủ để lấy đúng hình ảnh (X hoặc O)
-            CurrentPlayer = CurrentPlayer == 0 ? 1 : 0;
+            // Đã loại bỏ logic tự đổi lượt: CurrentPlayer đã được GameForm set chính xác
 
             Mark(btn);
 
@@ -95,11 +103,9 @@ namespace CaroProjectNhom15.Forms.Gameplay
             {
                 EndGame();
             }
-            else
-            {
-                // Trả lại lượt cho mình (để chuẩn bị đánh)
-                CurrentPlayer = CurrentPlayer == 0 ? 1 : 0;
-            }
+            // ĐÃ XÓA logic trả lại lượt cho mình (CurrentPlayer = CurrentPlayer == 0 ? 1 : 0;)
+            // -> Việc quản lý lượt, bao gồm cả việc set lại CurrentPlayer sau nước đi,
+            //    thuộc về logic của GameForm.
         }
 
         private void Mark(Button btn)
@@ -107,13 +113,27 @@ namespace CaroProjectNhom15.Forms.Gameplay
             btn.BackgroundImage = Player[CurrentPlayer].Mark;
         }
 
+        // Xóa tất cả các quân cờ
+        public void ClearBoard()
+        {
+            foreach (var row in Matrix)
+            {
+                foreach (var btn in row)
+                {
+                    btn.BackgroundImage = null;
+                }
+            }
+            Board.Refresh();
+        }
+
         public void EndGame()
         {
             Board.Enabled = false; // Khóa bàn cờ
+            // Kích hoạt sự kiện để GameForm xử lý thông báo/lưu trữ (nếu cần)
             EndedGame?.Invoke(this, new EventArgs());
         }
 
-        // Logic tìm người thắng (Giữ nguyên code cũ của bạn)
+        // --- CÁC HÀM KIỂM TRA THẮNG THUA (Giữ nguyên) ---
         public bool IsEndGame(Point point)
         {
             Button btn = Matrix[point.Y][point.X];
