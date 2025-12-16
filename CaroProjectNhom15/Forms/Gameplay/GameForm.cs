@@ -14,6 +14,7 @@ namespace CaroProjectNhom15.Forms
         private readonly RoomService _roomService;
         private RoomModel _currentRoom;
         private readonly UserModel _currentUser;
+        private bool _gameEndHandled = false;
 
         // Xác định mình là Host (Player 0 - X) hay Guest (Player 1 - O)
         private int _myRole; // 0 hoặc 1
@@ -59,7 +60,7 @@ namespace CaroProjectNhom15.Forms
         // NHẬN DATA VÀ XỬ LÝ TRÊN UI THREAD (GIỐNG OnRoomUpdate trong WaitingRoomForm)
         private void OnGameUpdate(GameInfo gameInfo)
         {
-            if (this.IsDisposed) return;
+            if (this.IsDisposed || _gameEndHandled) return;
 
             // BẮT BUỘC dùng Invoke để chạy code trên UI Thread
             this.Invoke((MethodInvoker)delegate
@@ -103,11 +104,27 @@ namespace CaroProjectNhom15.Forms
 
         private void HandleEndGame(string winnerId)
         {
+            if (_gameEndHandled) return; // Bảo vệ lần nữa
+            _gameEndHandled = true; // Đánh dấu đã xử lý
+
+            _roomService.StopListenGame(); // <<< QUAN TRỌNG: DỪNG LẮNG NGHE VÔ HẠN LOOP
             _gameBoardManager.EndGame(); // Khóa bàn cờ
             Pnl_BoardContainer.Enabled = false;
 
-            string msg = (winnerId == _currentUser.Uid) ? "Bạn đã chiến thắng!" : "Bạn đã thua!";
-            MessageBox.Show(msg, "Kết thúc Game", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Xác định thông tin người thắng
+            bool isWinner = winnerId == _currentUser.Uid;
+            string winnerName = isWinner
+                ? _currentUser.UserName
+                : (winnerId == _currentRoom.Host.Uid ? _currentRoom.Host.UserName : _currentRoom.Guest.UserName);
+
+            // Hiển thị Form kết thúc game
+            using (var endGameForm = new EndGameForm(winnerName, isWinner))
+            {
+                endGameForm.ShowDialog();
+            }
+
+            // Sau khi EndGameForm đóng, đóng luôn GameForm
+            this.Close();
         }
 
         // Cập nhật giao diện lượt chơi
@@ -201,8 +218,7 @@ namespace CaroProjectNhom15.Forms
 
         private async void Btn_Exit_Click(object sender, EventArgs e)
         {
-            // Xử lý thoát phòng: xóa Game khỏi Firebase và cập nhật lại RoomModel
-            // Cần có logic để thông báo cho đối thủ bằng cách cập nhật RoomStatus (đã được xử lý trong ExitRoomAsync của RoomService)
+            // Cập nhật trạng thái phòng.
             await _roomService.ExitRoomAsync(_currentRoom, _currentUser);
 
             _roomService.StopListenGame();
@@ -211,7 +227,7 @@ namespace CaroProjectNhom15.Forms
 
         private void Frm_GameForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Đảm bảo tắt Listener khi form đóng
+            // Đảm bảo tắt Listener khi form đóng (phòng trường hợp thoát bằng nút X)
             _roomService.StopListenGame();
         }
     }
