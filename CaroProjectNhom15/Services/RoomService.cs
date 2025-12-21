@@ -405,9 +405,11 @@ namespace CaroProjectNhom15.Services
         // Hàm này dùng chung cho: Đánh cờ, Win, Thua (Dựa trên X, Y, WinnerID)
         public async Task UpdateGameAsync(string roomId, GameInfo gameInfo)
         {
-            // Không còn dùng Timestamp, chỉ gửi dữ liệu GameInfo lên node Game
             try
             {
+                // Sử dụng ServerValue.Timestamp hoặc UtcNow để làm "nhãn" định danh nước đi mới nhất
+                gameInfo.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
                 await Database.Child("rooms").Child(roomId).Child("Game")
                               .PutAsync(gameInfo).ConfigureAwait(false);
             }
