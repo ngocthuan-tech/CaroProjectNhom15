@@ -48,7 +48,7 @@
             // 
             Lbl_WinnerName.AutoSize = true;
             Lbl_WinnerName.Font = new Font("Arial", 20F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Lbl_WinnerName.Location = new Point(12, 64);
+            Lbl_WinnerName.Location = new Point(34, 64);
             Lbl_WinnerName.Name = "Lbl_WinnerName";
             Lbl_WinnerName.Size = new Size(355, 39);
             Lbl_WinnerName.TabIndex = 1;

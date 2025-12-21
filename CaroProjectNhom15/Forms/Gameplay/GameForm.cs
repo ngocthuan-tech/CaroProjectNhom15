@@ -58,37 +58,34 @@ namespace CaroProjectNhom15.Forms
 
         // --- HÀM LẮNG NGHE FIREBASE (OnGameUpdate) ---
         // NHẬN DATA VÀ XỬ LÝ TRÊN UI THREAD (GIỐNG OnRoomUpdate trong WaitingRoomForm)
-        private void OnGameUpdate(GameInfo gameInfo)
+        private async void OnGameUpdate(GameInfo gameInfo)
         {
             if (this.IsDisposed || _gameEndHandled) return;
 
-            // BẮT BUỘC dùng Invoke để chạy code trên UI Thread
-            this.Invoke((MethodInvoker)delegate
+            // Sử dụng BeginInvoke hoặc Invoke để đảm bảo chạy trên UI Thread
+            this.BeginInvoke((MethodInvoker)async delegate
             {
-                // Cập nhật _currentRoom.Game để Form luôn có trạng thái mới nhất
-                _currentRoom.Game = gameInfo;
-
-                // 1. Kiểm tra xem tin này có phải do chính mình gửi không?
-                if (gameInfo.SenderID == _currentUser.Uid)
+                // 1. CẬP NHẬT NƯỚC ĐI TRƯỚC (Dù thắng hay thua đều phải thấy nước đi này)
+                // Kiểm tra nếu là nước đi của ĐỐI THỦ (SenderID khác mình) và có tọa độ hợp lệ
+                if (gameInfo.SenderID != _currentUser.Uid && (gameInfo.X > 0 || gameInfo.Y > 0))
                 {
-                    // Nếu là mình gửi, đã xử lý UI cục bộ, chỉ cần cập nhật lượt.
-                    UpdateTurnUI(gameInfo.CurrentTurnID);
-                    return;
+                    HandleOpponentMove(gameInfo);
+
+                    // Ép bàn cờ vẽ lại ngay lập tức để người chơi thấy quân cờ
+                    Pnl_BoardContainer.Refresh();
+
+                    // Cho người chơi 0.5 giây để nhìn thấy quân cờ "kết liễu" trước khi hiện Form
+                    if (gameInfo.WinnerID != null) await Task.Delay(500);
                 }
 
-                // 2. KIỂM TRA KẾT THÚC GAME
+                // 2. KIỂM TRA KẾT THÚC GAME SAU KHI ĐÃ VẼ
                 if (gameInfo.WinnerID != null)
                 {
                     HandleEndGame(gameInfo.WinnerID);
-                }
-                // 3. XỬ LÝ NƯỚC ĐI CỦA ĐỐI THỦ
-                // Chỉ xử lý nếu có tọa độ hợp lệ (X, Y > 0)
-                else if (gameInfo.X > 0 && gameInfo.Y > 0)
-                {
-                    HandleOpponentMove(gameInfo);
+                    return;
                 }
 
-                // 4. Cập nhật lượt
+                // 3. NẾU CHƯA KẾT THÚC THÌ CẬP NHẬT LƯỢT NHƯ BÌNH THƯỜNG
                 UpdateTurnUI(gameInfo.CurrentTurnID);
             });
         }
@@ -104,26 +101,30 @@ namespace CaroProjectNhom15.Forms
 
         private void HandleEndGame(string winnerId)
         {
-            if (_gameEndHandled) return; // Bảo vệ lần nữa
-            _gameEndHandled = true; // Đánh dấu đã xử lý
+            if (_gameEndHandled) return;
+            _gameEndHandled = true;
 
-            _roomService.StopListenGame(); // <<< QUAN TRỌNG: DỪNG LẮNG NGHE VÔ HẠN LOOP
-            _gameBoardManager.EndGame(); // Khóa bàn cờ
+            // Dừng listener ngay để tránh nhận thêm dữ liệu thừa
+            _roomService.StopListenGame();
+
+            // Khóa bàn cờ
+            _gameBoardManager.EndGame();
             Pnl_BoardContainer.Enabled = false;
 
-            // Xác định thông tin người thắng
-            bool isWinner = winnerId == _currentUser.Uid;
-            string winnerName = isWinner
-                ? _currentUser.UserName
-                : (winnerId == _currentRoom.Host.Uid ? _currentRoom.Host.UserName : _currentRoom.Guest.UserName);
+            bool isWinner = (winnerId == _currentUser.Uid);
 
-            // Hiển thị Form kết thúc game
+            // Tìm tên người thắng một cách chính xác
+            string winnerName = "";
+            if (winnerId == _currentRoom.Host.Uid) winnerName = _currentRoom.Host.UserName;
+            else if (_currentRoom.Guest != null && winnerId == _currentRoom.Guest.Uid) winnerName = _currentRoom.Guest.UserName;
+            else winnerName = "Đối thủ";
+
+            // Hiển thị Form kết thúc
             using (var endGameForm = new EndGameForm(winnerName, isWinner))
             {
                 endGameForm.ShowDialog();
             }
 
-            // Sau khi EndGameForm đóng, đóng luôn GameForm
             this.Close();
         }
 
@@ -162,25 +163,19 @@ namespace CaroProjectNhom15.Forms
         // Khi mình click vào bàn cờ (sự kiện của GameBoardManager)
         private async void GameBoard_PlayerMarked(object sender, ButtonClickEvent e)
         {
-            // 1. Kiểm tra lượt (Phòng trường hợp người chơi click quá nhanh trước khi UI kịp khóa)
-            if (_currentRoom.Game.CurrentTurnID != _currentUser.Uid)
-            {
-                MessageBox.Show("Chưa đến lượt bạn!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // 1. Chỉ mình đánh mới chạy vào đây. Khóa bàn cờ tạm thời để tránh click liên tục
+            Pnl_BoardContainer.Enabled = false;
 
-            // 2. Xác định trạng thái tiếp theo
-            string nextTurnID = (_myRole == 0) ? _currentRoom.Guest.Uid : _currentRoom.Host.Uid;
             string winnerID = null;
+            string nextTurnID = (_myRole == 0) ? _currentRoom.Guest.Uid : _currentRoom.Host.Uid;
 
-            // Kiểm tra xem nước đi này có thắng không
+            // 2. KIỂM TRA THẮNG THUA CỤC BỘ (Chỉ máy người vừa đánh mới kiểm tra)
             if (_gameBoardManager.IsEndGame(e.ClickedPoint))
             {
-                winnerID = _currentUser.Uid;
-                nextTurnID = null; // Game kết thúc
+                winnerID = _currentUser.Uid; // Mình thắng
+                nextTurnID = null;           // Không còn lượt tiếp theo
             }
 
-            // 3. Chuẩn bị dữ liệu gửi lên
             var gameInfo = new GameInfo
             {
                 X = e.ClickedPoint.X,
@@ -190,12 +185,8 @@ namespace CaroProjectNhom15.Forms
                 WinnerID = winnerID
             };
 
-            // 4. Gửi lên Firebase
+            // 3. Gửi lên Firebase
             await _roomService.UpdateGameAsync(_currentRoom.ID, gameInfo);
-
-            // 5. Cập nhật UI cục bộ (tạm thời)
-            UpdateTurnUI(nextTurnID);
-            Pnl_BoardContainer.Enabled = false; // Khóa bàn cờ lại ngay
         }
 
         // Hết giờ hoặc sự kiện kết thúc khác
