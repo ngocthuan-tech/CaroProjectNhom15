@@ -32,195 +32,240 @@ namespace CaroProjectNhom15.Forms.Auth
         /// </summary>
         private void InitializeComponent()
         {
-            this.Lbl_Email = new Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegisterForm));
+            Lbl_Email = new Label();
             Tb_Password = new TextBox();
-            this.Btn_Continue = new Button();
-            this.Btn_BackToLogIn = new Button();
+            Btn_Continue = new Button();
+            Btn_BackToLogIn = new Button();
             Tb_Email = new TextBox();
-            this.Lbl_Register = new Label();
-            this.Lbl_Name = new Label();
-            this.Tb_Name = new TextBox();
-            this.Tb_Username = new TextBox();
-            this.Lbl_Username = new Label();
-            this.Lbl_Password = new Label();
-            this.Lbl_ConfirmPassword = new Label();
-            this.Tb_ConfirmPassword = new TextBox();
-            Lbl_AlreadyHaveAnAccount = new Label(); 
+            Lbl_Register = new Label();
+            Lbl_Name = new Label();
+            Tb_Name = new TextBox();
+            Tb_Username = new TextBox();
+            Lbl_Username = new Label();
+            Lbl_Password = new Label();
+            Lbl_ConfirmPassword = new Label();
+            Tb_ConfirmPassword = new TextBox();
+            Lbl_AlreadyHaveAnAccount = new Label();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // Lbl_Email
             // 
-            this.Lbl_Email.AutoSize = true;
-            this.Lbl_Email.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.Lbl_Email.Location = new Point(51, 109);
-            this.Lbl_Email.Name = "Lbl_Email";
-            this.Lbl_Email.Size = new Size(180, 31);
-            this.Lbl_Email.TabIndex = 13;
-            this.Lbl_Email.Text = "Enter your Email";
+            Lbl_Email.AutoSize = true;
+            Lbl_Email.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Email.ForeColor = SystemColors.ControlLightLight;
+            Lbl_Email.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_Email.Location = new Point(37, 132);
+            Lbl_Email.Margin = new Padding(4, 0, 4, 0);
+            Lbl_Email.Name = "Lbl_Email";
+            Lbl_Email.Size = new Size(219, 38);
+            Lbl_Email.TabIndex = 13;
+            Lbl_Email.Text = "Enter your Email";
             // 
             // Tb_Password
             // 
             Tb_Password.BorderStyle = BorderStyle.FixedSingle;
             Tb_Password.Font = new Font("Segoe UI", 15F);
-            Tb_Password.Location = new Point(562, 153);
+            Tb_Password.Location = new Point(616, 174);
+            Tb_Password.Margin = new Padding(4);
             Tb_Password.Name = "Tb_Password";
             Tb_Password.PlaceholderText = "Password";
-            Tb_Password.Size = new Size(424, 41);
+            Tb_Password.Size = new Size(530, 47);
             Tb_Password.TabIndex = 12;
             Tb_Password.UseSystemPasswordChar = true;
             // 
             // Btn_Continue
             // 
-            this.Btn_Continue.BackColor = Color.YellowGreen;
-            this.Btn_Continue.FlatAppearance.BorderColor = Color.Black;
-            this.Btn_Continue.FlatStyle = FlatStyle.Flat;
-            this.Btn_Continue.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            this.Btn_Continue.ForeColor = Color.White;
-            this.Btn_Continue.Location = new Point(297, 448);
-            this.Btn_Continue.Name = "Btn_Continue";
-            this.Btn_Continue.Size = new Size(424, 63);
-            this.Btn_Continue.TabIndex = 11;
-            this.Btn_Continue.Text = "Continue";
-            this.Btn_Continue.UseVisualStyleBackColor = false;
+            Btn_Continue.BackColor = Color.YellowGreen;
+            Btn_Continue.FlatAppearance.BorderColor = Color.Black;
+            Btn_Continue.FlatStyle = FlatStyle.Flat;
+            Btn_Continue.Font = new Font("Snap ITC", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_Continue.ForeColor = Color.Gold;
+            Btn_Continue.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_Continue.Location = new Point(313, 492);
+            Btn_Continue.Margin = new Padding(4);
+            Btn_Continue.Name = "Btn_Continue";
+            Btn_Continue.Size = new Size(530, 79);
+            Btn_Continue.TabIndex = 11;
+            Btn_Continue.Text = "Continue";
+            Btn_Continue.UseVisualStyleBackColor = false;
             // 
             // Btn_BackToLogIn
             // 
-            this.Btn_BackToLogIn.BackColor = Color.FromArgb(128, 128, 255);
-            this.Btn_BackToLogIn.FlatAppearance.BorderColor = Color.Black;
-            this.Btn_BackToLogIn.FlatStyle = FlatStyle.Flat;
-            this.Btn_BackToLogIn.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            this.Btn_BackToLogIn.ForeColor = Color.White;
-            this.Btn_BackToLogIn.Location = new Point(297, 606);
-            this.Btn_BackToLogIn.Name = "Btn_BackToLogIn";
-            this.Btn_BackToLogIn.Size = new Size(424, 63);
-            this.Btn_BackToLogIn.TabIndex = 10;
-            this.Btn_BackToLogIn.Text = "Back to Log in";
-            this.Btn_BackToLogIn.UseVisualStyleBackColor = false;
+            Btn_BackToLogIn.BackColor = Color.FromArgb(128, 128, 255);
+            Btn_BackToLogIn.FlatAppearance.BorderColor = Color.Black;
+            Btn_BackToLogIn.FlatStyle = FlatStyle.Flat;
+            Btn_BackToLogIn.Font = new Font("Snap ITC", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_BackToLogIn.ForeColor = Color.Gold;
+            Btn_BackToLogIn.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_BackToLogIn.Location = new Point(313, 635);
+            Btn_BackToLogIn.Margin = new Padding(4);
+            Btn_BackToLogIn.Name = "Btn_BackToLogIn";
+            Btn_BackToLogIn.Size = new Size(530, 79);
+            Btn_BackToLogIn.TabIndex = 10;
+            Btn_BackToLogIn.Text = "Back to Log in";
+            Btn_BackToLogIn.UseVisualStyleBackColor = false;
             // 
             // Tb_Email
             // 
             Tb_Email.BorderStyle = BorderStyle.FixedSingle;
             Tb_Email.Font = new Font("Segoe UI", 15F);
-            Tb_Email.Location = new Point(51, 153);
+            Tb_Email.Location = new Point(37, 174);
+            Tb_Email.Margin = new Padding(4);
             Tb_Email.Name = "Tb_Email";
             Tb_Email.PlaceholderText = "Email addresss";
-            Tb_Email.Size = new Size(424, 41);
+            Tb_Email.Size = new Size(530, 47);
             Tb_Email.TabIndex = 9;
             // 
             // Lbl_Register
             // 
-            this.Lbl_Register.AutoSize = true;
-            this.Lbl_Register.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            this.Lbl_Register.ForeColor = Color.DimGray;
-            this.Lbl_Register.Location = new Point(259, 24);
-            this.Lbl_Register.Name = "Lbl_Register";
-            this.Lbl_Register.Size = new Size(523, 54);
-            this.Lbl_Register.TabIndex = 7;
-            this.Lbl_Register.Text = "REGISTER YOUR ACCOUNT";
+            Lbl_Register.AutoSize = true;
+            Lbl_Register.Font = new Font("Showcard Gothic", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Lbl_Register.ForeColor = Color.Gold;
+            Lbl_Register.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_Register.Location = new Point(291, 18);
+            Lbl_Register.Margin = new Padding(4, 0, 4, 0);
+            Lbl_Register.Name = "Lbl_Register";
+            Lbl_Register.Size = new Size(642, 60);
+            Lbl_Register.TabIndex = 7;
+            Lbl_Register.Text = "REGISTER YOUR ACCOUNT";
             // 
             // Lbl_Name
             // 
-            this.Lbl_Name.AutoSize = true;
-            this.Lbl_Name.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.Lbl_Name.Location = new Point(51, 320);
-            this.Lbl_Name.Name = "Lbl_Name";
-            this.Lbl_Name.Size = new Size(185, 31);
-            this.Lbl_Name.TabIndex = 14;
-            this.Lbl_Name.Text = "Enter your Name";
+            Lbl_Name.AutoSize = true;
+            Lbl_Name.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Name.ForeColor = SystemColors.ControlLightLight;
+            Lbl_Name.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_Name.Location = new Point(37, 386);
+            Lbl_Name.Margin = new Padding(4, 0, 4, 0);
+            Lbl_Name.Name = "Lbl_Name";
+            Lbl_Name.Size = new Size(227, 38);
+            Lbl_Name.TabIndex = 14;
+            Lbl_Name.Text = "Enter your Name";
             // 
             // Tb_Name
             // 
-            this.Tb_Name.BorderStyle = BorderStyle.FixedSingle;
-            this.Tb_Name.Font = new Font("Segoe UI", 15F);
-            this.Tb_Name.Location = new Point(51, 363);
-            this.Tb_Name.Name = "Tb_Name";
-            this.Tb_Name.PlaceholderText = "Name";
-            this.Tb_Name.Size = new Size(424, 41);
-            this.Tb_Name.TabIndex = 15;
+            Tb_Name.BorderStyle = BorderStyle.FixedSingle;
+            Tb_Name.Font = new Font("Segoe UI", 15F);
+            Tb_Name.Location = new Point(37, 428);
+            Tb_Name.Margin = new Padding(4);
+            Tb_Name.Name = "Tb_Name";
+            Tb_Name.PlaceholderText = "Name";
+            Tb_Name.Size = new Size(530, 47);
+            Tb_Name.TabIndex = 15;
             // 
             // Tb_Username
             // 
-            this.Tb_Username.BorderStyle = BorderStyle.FixedSingle;
-            this.Tb_Username.Font = new Font("Segoe UI", 15F);
-            this.Tb_Username.Location = new Point(51, 261);
-            this.Tb_Username.Name = "Tb_Username";
-            this.Tb_Username.PlaceholderText = "Username";
-            this.Tb_Username.Size = new Size(424, 41);
-            this.Tb_Username.TabIndex = 17;
+            Tb_Username.BorderStyle = BorderStyle.FixedSingle;
+            Tb_Username.Font = new Font("Segoe UI", 15F);
+            Tb_Username.Location = new Point(37, 309);
+            Tb_Username.Margin = new Padding(4);
+            Tb_Username.Name = "Tb_Username";
+            Tb_Username.PlaceholderText = "Username";
+            Tb_Username.Size = new Size(530, 47);
+            Tb_Username.TabIndex = 17;
             // 
             // Lbl_Username
             // 
-            this.Lbl_Username.AutoSize = true;
-            this.Lbl_Username.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.Lbl_Username.Location = new Point(51, 214);
-            this.Lbl_Username.Name = "Lbl_Username";
-            this.Lbl_Username.Size = new Size(227, 31);
-            this.Lbl_Username.TabIndex = 16;
-            this.Lbl_Username.Text = "Enter your Username";
+            Lbl_Username.AutoSize = true;
+            Lbl_Username.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Username.ForeColor = SystemColors.ControlLightLight;
+            Lbl_Username.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_Username.Location = new Point(37, 267);
+            Lbl_Username.Margin = new Padding(4, 0, 4, 0);
+            Lbl_Username.Name = "Lbl_Username";
+            Lbl_Username.Size = new Size(278, 38);
+            Lbl_Username.TabIndex = 16;
+            Lbl_Username.Text = "Enter your Username";
             // 
             // Lbl_Password
             // 
-            this.Lbl_Password.AutoSize = true;
-            this.Lbl_Password.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.Lbl_Password.Location = new Point(562, 109);
-            this.Lbl_Password.Name = "Lbl_Password";
-            this.Lbl_Password.Size = new Size(220, 31);
-            this.Lbl_Password.TabIndex = 18;
-            this.Lbl_Password.Text = "Enter your Password";
+            Lbl_Password.AutoSize = true;
+            Lbl_Password.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Password.ForeColor = SystemColors.ControlLightLight;
+            Lbl_Password.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_Password.Location = new Point(616, 132);
+            Lbl_Password.Margin = new Padding(4, 0, 4, 0);
+            Lbl_Password.Name = "Lbl_Password";
+            Lbl_Password.Size = new Size(268, 38);
+            Lbl_Password.TabIndex = 18;
+            Lbl_Password.Text = "Enter your Password";
             // 
             // Lbl_ConfirmPassword
             // 
-            this.Lbl_ConfirmPassword.AutoSize = true;
-            this.Lbl_ConfirmPassword.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            this.Lbl_ConfirmPassword.Location = new Point(562, 217);
-            this.Lbl_ConfirmPassword.Name = "Lbl_ConfirmPassword";
-            this.Lbl_ConfirmPassword.Size = new Size(248, 31);
-            this.Lbl_ConfirmPassword.TabIndex = 20;
-            this.Lbl_ConfirmPassword.Text = "Confirm your Password";
+            Lbl_ConfirmPassword.AutoSize = true;
+            Lbl_ConfirmPassword.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_ConfirmPassword.ForeColor = SystemColors.ControlLightLight;
+            Lbl_ConfirmPassword.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_ConfirmPassword.Location = new Point(616, 267);
+            Lbl_ConfirmPassword.Margin = new Padding(4, 0, 4, 0);
+            Lbl_ConfirmPassword.Name = "Lbl_ConfirmPassword";
+            Lbl_ConfirmPassword.Size = new Size(303, 38);
+            Lbl_ConfirmPassword.TabIndex = 20;
+            Lbl_ConfirmPassword.Text = "Confirm your Password";
             // 
             // Tb_ConfirmPassword
             // 
-            this.Tb_ConfirmPassword.BorderStyle = BorderStyle.FixedSingle;
-            this.Tb_ConfirmPassword.Font = new Font("Segoe UI", 15F);
-            this.Tb_ConfirmPassword.Location = new Point(562, 261);
-            this.Tb_ConfirmPassword.Name = "Tb_ConfirmPassword";
-            this.Tb_ConfirmPassword.PlaceholderText = "Password";
-            this.Tb_ConfirmPassword.Size = new Size(424, 41);
-            this.Tb_ConfirmPassword.TabIndex = 19;
-            this.Tb_ConfirmPassword.UseSystemPasswordChar = true;
+            Tb_ConfirmPassword.BorderStyle = BorderStyle.FixedSingle;
+            Tb_ConfirmPassword.Font = new Font("Segoe UI", 15F);
+            Tb_ConfirmPassword.Location = new Point(616, 309);
+            Tb_ConfirmPassword.Margin = new Padding(4);
+            Tb_ConfirmPassword.Name = "Tb_ConfirmPassword";
+            Tb_ConfirmPassword.PlaceholderText = "Password";
+            Tb_ConfirmPassword.Size = new Size(530, 47);
+            Tb_ConfirmPassword.TabIndex = 19;
+            Tb_ConfirmPassword.UseSystemPasswordChar = true;
             // 
             // Lbl_AlreadyHaveAnAccount
             // 
             Lbl_AlreadyHaveAnAccount.AutoSize = true;
             Lbl_AlreadyHaveAnAccount.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Lbl_AlreadyHaveAnAccount.Location = new Point(347, 555);
+            Lbl_AlreadyHaveAnAccount.ForeColor = SystemColors.ControlLightLight;
+            Lbl_AlreadyHaveAnAccount.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_AlreadyHaveAnAccount.Location = new Point(382, 593);
+            Lbl_AlreadyHaveAnAccount.Margin = new Padding(4, 0, 4, 0);
             Lbl_AlreadyHaveAnAccount.Name = "Lbl_AlreadyHaveAnAccount";
-            Lbl_AlreadyHaveAnAccount.Size = new Size(314, 31);
+            Lbl_AlreadyHaveAnAccount.Size = new Size(382, 38);
             Lbl_AlreadyHaveAnAccount.TabIndex = 21;
             Lbl_AlreadyHaveAnAccount.Text = "You already have an account?";
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(-3, 0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(1190, 764);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 22;
+            pictureBox1.TabStop = false;
+            // 
             // RegisterForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1029, 732);
+            ClientSize = new Size(1189, 761);
             Controls.Add(Lbl_AlreadyHaveAnAccount);
-            Controls.Add(this.Lbl_ConfirmPassword);
-            Controls.Add(this.Tb_ConfirmPassword);
-            Controls.Add(this.Lbl_Password);
-            Controls.Add(this.Tb_Username);
-            Controls.Add(this.Lbl_Username);
-            Controls.Add(this.Tb_Name);
-            Controls.Add(this.Lbl_Name);
-            Controls.Add(this.Lbl_Email);
+            Controls.Add(Lbl_ConfirmPassword);
+            Controls.Add(Tb_ConfirmPassword);
+            Controls.Add(Lbl_Password);
+            Controls.Add(Tb_Username);
+            Controls.Add(Lbl_Username);
+            Controls.Add(Tb_Name);
+            Controls.Add(Lbl_Name);
+            Controls.Add(Lbl_Email);
             Controls.Add(Tb_Password);
-            Controls.Add(this.Btn_Continue);
-            Controls.Add(this.Btn_BackToLogIn);
+            Controls.Add(Btn_Continue);
+            Controls.Add(Btn_BackToLogIn);
             Controls.Add(Tb_Email);
-            Controls.Add(this.Lbl_Register); 
+            Controls.Add(Lbl_Register);
+            Controls.Add(pictureBox1);
+            Margin = new Padding(4);
             Name = "RegisterForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RegisterForm";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -240,5 +285,6 @@ namespace CaroProjectNhom15.Forms.Auth
         private Label Lbl_ConfirmPassword;
         private TextBox Tb_ConfirmPassword;
         private Label Lbl_AlreadyHaveAnAccount;
+        private PictureBox pictureBox1;
     }
 }
