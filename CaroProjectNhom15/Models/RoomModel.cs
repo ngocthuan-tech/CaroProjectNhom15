@@ -12,7 +12,7 @@ namespace CaroProjectNhom15.Models
         public UserModel Guest { get; set; }
         public string Status { get; set; } // "Waiting", "Playing"
 
-        // --- THÊM PHẦN GAME INFO ---
+        // --- PHẦN GAME INFO ---
         public GameInfo Game { get; set; }
 
         public RoomModel()
@@ -28,7 +28,7 @@ namespace CaroProjectNhom15.Models
         public int X { get; set; }
         public int Y { get; set; }
 
-        // UID người vừa thực hiện hành động (để Client lọc: nếu là mình thì bỏ qua)
+        // UID người vừa thực hiện hành động
         public string SenderID { get; set; }
 
         // UID người đến lượt đánh tiếp theo
@@ -36,5 +36,17 @@ namespace CaroProjectNhom15.Models
 
         // UID người thắng (nếu có)
         public string WinnerID { get; set; }
+
+        // --- THÊM TIMESTAMP ĐỂ ĐỒNG BỘ CHỐNG SPAM/SAI LƯỢT ---
+        // Sử dụng kiểu long để lưu miliseconds
+        public long Timestamp { get; set; }
+
+        public GameInfo()
+        {
+            // Khởi tạo mặc định để tránh lỗi null khi so sánh lần đầu
+            Timestamp = 0;
+            X = -1;
+            Y = -1;
+        }
     }
 }
