@@ -40,32 +40,38 @@
             // 
             // Flp_RoomList
             // 
-            Flp_RoomList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Flp_RoomList.AutoScroll = true;
-            Flp_RoomList.Location = new Point(1, 115);
+            Flp_RoomList.BackgroundImage = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Flp_RoomList.Location = new Point(1, 139);
+            Flp_RoomList.Margin = new Padding(4, 4, 4, 4);
             Flp_RoomList.Name = "Flp_RoomList";
-            Flp_RoomList.Size = new Size(1161, 445);
+            Flp_RoomList.Size = new Size(1163, 582);
             Flp_RoomList.TabIndex = 0;
             // 
             // panel1
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.BackgroundImage = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             panel1.Controls.Add(Btn_FindRoom);
             panel1.Controls.Add(Tb_RoomId);
             panel1.Controls.Add(Btn_Refresh);
             panel1.Controls.Add(Btn_Back);
             panel1.Controls.Add(Btn_CreateRoom);
             panel1.Location = new Point(1, 1);
+            panel1.Margin = new Padding(4, 4, 4, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1161, 108);
+            panel1.Size = new Size(1163, 144);
             panel1.TabIndex = 1;
             // 
             // Btn_FindRoom
             // 
-            Btn_FindRoom.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Btn_FindRoom.Location = new Point(461, 31);
+            Btn_FindRoom.Font = new Font("Showcard Gothic", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_FindRoom.ForeColor = Color.Gold;
+            Btn_FindRoom.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_FindRoom.Location = new Point(220, 5);
+            Btn_FindRoom.Margin = new Padding(4, 4, 4, 4);
             Btn_FindRoom.Name = "Btn_FindRoom";
-            Btn_FindRoom.Size = new Size(166, 47);
+            Btn_FindRoom.Size = new Size(247, 59);
             Btn_FindRoom.TabIndex = 4;
             Btn_FindRoom.Text = "Find Room";
             Btn_FindRoom.UseVisualStyleBackColor = true;
@@ -73,17 +79,21 @@
             // Tb_RoomId
             // 
             Tb_RoomId.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Tb_RoomId.Location = new Point(642, 36);
+            Tb_RoomId.Location = new Point(475, 12);
+            Tb_RoomId.Margin = new Padding(4, 4, 4, 4);
             Tb_RoomId.Name = "Tb_RoomId";
-            Tb_RoomId.Size = new Size(275, 38);
+            Tb_RoomId.Size = new Size(679, 44);
             Tb_RoomId.TabIndex = 3;
             // 
             // Btn_Refresh
             // 
-            Btn_Refresh.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Btn_Refresh.Location = new Point(972, 31);
+            Btn_Refresh.Font = new Font("Showcard Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_Refresh.ForeColor = Color.Gold;
+            Btn_Refresh.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_Refresh.Location = new Point(4, 71);
+            Btn_Refresh.Margin = new Padding(4, 4, 4, 4);
             Btn_Refresh.Name = "Btn_Refresh";
-            Btn_Refresh.Size = new Size(166, 47);
+            Btn_Refresh.Size = new Size(208, 59);
             Btn_Refresh.TabIndex = 2;
             Btn_Refresh.Text = "Refresh";
             Btn_Refresh.UseVisualStyleBackColor = true;
@@ -91,10 +101,13 @@
             // 
             // Btn_Back
             // 
-            Btn_Back.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Btn_Back.Location = new Point(29, 31);
+            Btn_Back.Font = new Font("Showcard Gothic", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_Back.ForeColor = Color.Gold;
+            Btn_Back.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_Back.Location = new Point(4, 4);
+            Btn_Back.Margin = new Padding(4, 4, 4, 4);
             Btn_Back.Name = "Btn_Back";
-            Btn_Back.Size = new Size(166, 47);
+            Btn_Back.Size = new Size(208, 59);
             Btn_Back.TabIndex = 1;
             Btn_Back.Text = "Back";
             Btn_Back.UseVisualStyleBackColor = true;
@@ -102,10 +115,13 @@
             // 
             // Btn_CreateRoom
             // 
-            Btn_CreateRoom.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Btn_CreateRoom.Location = new Point(237, 31);
+            Btn_CreateRoom.Font = new Font("Showcard Gothic", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_CreateRoom.ForeColor = Color.Gold;
+            Btn_CreateRoom.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_CreateRoom.Location = new Point(220, 71);
+            Btn_CreateRoom.Margin = new Padding(4, 4, 4, 4);
             Btn_CreateRoom.Name = "Btn_CreateRoom";
-            Btn_CreateRoom.Size = new Size(166, 47);
+            Btn_CreateRoom.Size = new Size(247, 59);
             Btn_CreateRoom.TabIndex = 0;
             Btn_CreateRoom.Text = "Create Room";
             Btn_CreateRoom.UseVisualStyleBackColor = true;
@@ -113,11 +129,12 @@
             // 
             // LobbyForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1165, 557);
+            ClientSize = new Size(1168, 718);
             Controls.Add(panel1);
             Controls.Add(Flp_RoomList);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "LobbyForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";

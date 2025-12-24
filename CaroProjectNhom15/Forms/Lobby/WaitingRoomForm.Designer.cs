@@ -50,9 +50,10 @@
             // 
             Pb_Background.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Pb_Background.Location = new Point(-12, 1);
-            Pb_Background.Margin = new Padding(4, 4, 4, 4);
+            Pb_Background.Margin = new Padding(4);
             Pb_Background.Name = "Pb_Background";
             Pb_Background.Size = new Size(1558, 625);
+            Pb_Background.SizeMode = PictureBoxSizeMode.StretchImage;
             Pb_Background.TabIndex = 0;
             Pb_Background.TabStop = false;
             // 
@@ -62,7 +63,7 @@
             Btn_Start.ForeColor = Color.Yellow;
             Btn_Start.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Btn_Start.Location = new Point(419, 502);
-            Btn_Start.Margin = new Padding(4, 4, 4, 4);
+            Btn_Start.Margin = new Padding(4);
             Btn_Start.Name = "Btn_Start";
             Btn_Start.Size = new Size(181, 66);
             Btn_Start.TabIndex = 1;
@@ -82,8 +83,8 @@
             // 
             // Pb_Player01
             // 
-            Pb_Player01.Location = new Point(89, 132);
-            Pb_Player01.Margin = new Padding(4, 4, 4, 4);
+            Pb_Player01.Location = new Point(84, 163);
+            Pb_Player01.Margin = new Padding(4);
             Pb_Player01.Name = "Pb_Player01";
             Pb_Player01.Size = new Size(218, 202);
             Pb_Player01.TabIndex = 3;
@@ -91,8 +92,8 @@
             // 
             // Pb_Player02
             // 
-            Pb_Player02.Location = new Point(712, 132);
-            Pb_Player02.Margin = new Padding(4, 4, 4, 4);
+            Pb_Player02.Location = new Point(715, 163);
+            Pb_Player02.Margin = new Padding(4);
             Pb_Player02.Name = "Pb_Player02";
             Pb_Player02.Size = new Size(218, 202);
             Pb_Player02.TabIndex = 5;
@@ -115,7 +116,7 @@
             Lbl_VS.Font = new Font("Snap ITC", 36F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_VS.ForeColor = Color.Yellow;
             Lbl_VS.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_VS.Location = new Point(438, 209);
+            Lbl_VS.Location = new Point(445, 238);
             Lbl_VS.Margin = new Padding(4, 0, 4, 0);
             Lbl_VS.Name = "Lbl_VS";
             Lbl_VS.Size = new Size(155, 93);
@@ -128,9 +129,9 @@
             Btn_ExitRoom.ForeColor = Color.Yellow;
             Btn_ExitRoom.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Btn_ExitRoom.Location = new Point(15, 15);
-            Btn_ExitRoom.Margin = new Padding(4, 4, 4, 4);
+            Btn_ExitRoom.Margin = new Padding(4);
             Btn_ExitRoom.Name = "Btn_ExitRoom";
-            Btn_ExitRoom.Size = new Size(278, 74);
+            Btn_ExitRoom.Size = new Size(287, 65);
             Btn_ExitRoom.TabIndex = 9;
             Btn_ExitRoom.Text = "Exit Room";
             Btn_ExitRoom.UseVisualStyleBackColor = true;
@@ -166,8 +167,9 @@
             // 
             // uC_Chat1
             // 
+            uC_Chat1.BackgroundImage = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
             uC_Chat1.Location = new Point(1024, 1);
-            uC_Chat1.Margin = new Padding(5, 5, 5, 5);
+            uC_Chat1.Margin = new Padding(5);
             uC_Chat1.Name = "uC_Chat1";
             uC_Chat1.Size = new Size(522, 625);
             uC_Chat1.TabIndex = 12;
@@ -177,7 +179,9 @@
             Lbl_RoomId.AutoSize = true;
             Lbl_RoomId.BackColor = Color.Transparent;
             Lbl_RoomId.Font = new Font("Showcard Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Lbl_RoomId.Location = new Point(394, 25);
+            Lbl_RoomId.ForeColor = Color.Gold;
+            Lbl_RoomId.Image = Properties.Resources.Gemini_Generated_Image_swcx3cswcx3cswcx;
+            Lbl_RoomId.Location = new Point(394, 20);
             Lbl_RoomId.Margin = new Padding(4, 0, 4, 0);
             Lbl_RoomId.Name = "Lbl_RoomId";
             Lbl_RoomId.Size = new Size(70, 44);
@@ -186,12 +190,13 @@
             // 
             // Tb_RoomId
             // 
-            Tb_RoomId.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Tb_RoomId.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Tb_RoomId.ForeColor = Color.Gold;
             Tb_RoomId.Location = new Point(472, 20);
-            Tb_RoomId.Margin = new Padding(4, 4, 4, 4);
+            Tb_RoomId.Margin = new Padding(4);
             Tb_RoomId.Name = "Tb_RoomId";
             Tb_RoomId.ReadOnly = true;
-            Tb_RoomId.Size = new Size(434, 55);
+            Tb_RoomId.Size = new Size(266, 45);
             Tb_RoomId.TabIndex = 14;
             // 
             // Frm_WaitingRoomForm
@@ -212,7 +217,7 @@
             Controls.Add(Lb_UserName1);
             Controls.Add(Btn_Start);
             Controls.Add(Pb_Background);
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "Frm_WaitingRoomForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LobbyForm";
