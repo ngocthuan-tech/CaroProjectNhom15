@@ -234,15 +234,15 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                     var btnAccept = new Button
                     {
-                        Text = "Chấp nhận", // Accept
+                        Text = "Accept", // Accept
                         Location = new Point(itemPanel.Width - 140, 20),
-                        Size = new Size(60, 32)
+                        Size = new Size(70, 32)
                     };
                     var btnDecline = new Button
                     {
-                        Text = "Từ chối", // Decline
+                        Text = "Decline", // Decline
                         Location = new Point(itemPanel.Width - 72, 20),
-                        Size = new Size(60, 32)
+                        Size = new Size(70, 32)
                     };
 
                     // bắt fromUid cho các trình xử lý
@@ -399,8 +399,8 @@ namespace CaroProjectNhom15.Forms.HomeForm.cs
 
                     var btnSend = new Button
                     {
-                        Text = "Gửi lời mời",
-                        Location = new Point(itemPanel.Width - 140, 18),
+                        Text = "Send Request",
+                        Location = new Point(itemPanel.Width - 150, 20),
                         Size = new Size(120, 36)
                     };
 

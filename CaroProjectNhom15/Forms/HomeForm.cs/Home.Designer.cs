@@ -56,15 +56,15 @@
             // 
             Btn_EnterLobby.BackColor = SystemColors.ActiveCaption;
             Btn_EnterLobby.BackgroundImageLayout = ImageLayout.Center;
-            Btn_EnterLobby.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_EnterLobby.Font = new Font("Stencil", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_EnterLobby.ForeColor = Color.Goldenrod;
             Btn_EnterLobby.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_EnterLobby.Location = new Point(457, 410);
+            Btn_EnterLobby.Location = new Point(350, 438);
             Btn_EnterLobby.Margin = new Padding(4);
             Btn_EnterLobby.Name = "Btn_EnterLobby";
-            Btn_EnterLobby.Size = new Size(278, 51);
+            Btn_EnterLobby.Size = new Size(284, 51);
             Btn_EnterLobby.TabIndex = 2;
-            Btn_EnterLobby.Text = "Vào sảnh";
+            Btn_EnterLobby.Text = "lobby ";
             Btn_EnterLobby.UseVisualStyleBackColor = false;
             Btn_EnterLobby.Click += Btn_EnterLobby_Click;
             // 
@@ -72,15 +72,15 @@
             // 
             Btn_Friends.BackColor = SystemColors.ActiveCaption;
             Btn_Friends.BackgroundImageLayout = ImageLayout.Center;
-            Btn_Friends.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_Friends.Font = new Font("Stencil", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_Friends.ForeColor = Color.Goldenrod;
             Btn_Friends.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_Friends.Location = new Point(267, 410);
+            Btn_Friends.Location = new Point(350, 379);
             Btn_Friends.Margin = new Padding(4);
             Btn_Friends.Name = "Btn_Friends";
-            Btn_Friends.Size = new Size(182, 51);
+            Btn_Friends.Size = new Size(284, 51);
             Btn_Friends.TabIndex = 3;
-            Btn_Friends.Text = "Bạn bè";
+            Btn_Friends.Text = "friends";
             Btn_Friends.UseVisualStyleBackColor = false;
             // 
             // Pb_anhUser
@@ -98,13 +98,13 @@
             // 
             Btn_user.BackColor = SystemColors.ActiveCaption;
             Btn_user.BackgroundImageLayout = ImageLayout.Center;
-            Btn_user.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold | FontStyle.Italic);
+            Btn_user.Font = new Font("Stencil", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_user.ForeColor = Color.Goldenrod;
             Btn_user.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
             Btn_user.Location = new Point(16, 79);
             Btn_user.Margin = new Padding(4);
             Btn_user.Name = "Btn_user";
-            Btn_user.Size = new Size(93, 44);
+            Btn_user.Size = new Size(106, 38);
             Btn_user.TabIndex = 6;
             Btn_user.Text = "User";
             Btn_user.UseVisualStyleBackColor = false;
