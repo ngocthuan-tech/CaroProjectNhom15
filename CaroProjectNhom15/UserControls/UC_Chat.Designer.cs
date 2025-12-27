@@ -37,10 +37,11 @@
             Rtb_Log.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Rtb_Log.BackColor = SystemColors.ControlLightLight;
             Rtb_Log.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Rtb_Log.Location = new Point(21, 22);
+            Rtb_Log.Location = new Point(26, 28);
+            Rtb_Log.Margin = new Padding(4, 4, 4, 4);
             Rtb_Log.Name = "Rtb_Log";
             Rtb_Log.ReadOnly = true;
-            Rtb_Log.Size = new Size(480, 173);
+            Rtb_Log.Size = new Size(599, 215);
             Rtb_Log.TabIndex = 0;
             Rtb_Log.Text = "";
             // 
@@ -48,19 +49,22 @@
             // 
             Tb_Msg.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Tb_Msg.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Tb_Msg.Location = new Point(21, 229);
+            Tb_Msg.Location = new Point(26, 286);
+            Tb_Msg.Margin = new Padding(4, 4, 4, 4);
             Tb_Msg.Name = "Tb_Msg";
-            Tb_Msg.Size = new Size(480, 38);
+            Tb_Msg.Size = new Size(599, 44);
             Tb_Msg.TabIndex = 1;
             // 
             // UC_Chat
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.Tan;
             Controls.Add(Tb_Msg);
             Controls.Add(Rtb_Log);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "UC_Chat";
-            Size = new Size(520, 298);
+            Size = new Size(650, 372);
             ResumeLayout(false);
             PerformLayout();
         }

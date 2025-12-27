@@ -62,7 +62,7 @@
             Btn_Start.Font = new Font("Snap ITC", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Btn_Start.ForeColor = Color.Yellow;
             Btn_Start.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Btn_Start.Location = new Point(419, 502);
+            Btn_Start.Location = new Point(394, 496);
             Btn_Start.Margin = new Padding(4);
             Btn_Start.Name = "Btn_Start";
             Btn_Start.Size = new Size(181, 66);
@@ -92,7 +92,7 @@
             // 
             // Pb_Player02
             // 
-            Pb_Player02.Location = new Point(715, 163);
+            Pb_Player02.Location = new Point(688, 164);
             Pb_Player02.Margin = new Padding(4);
             Pb_Player02.Name = "Pb_Player02";
             Pb_Player02.Size = new Size(218, 202);
@@ -116,7 +116,7 @@
             Lbl_VS.Font = new Font("Snap ITC", 36F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Lbl_VS.ForeColor = Color.Yellow;
             Lbl_VS.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_VS.Location = new Point(445, 238);
+            Lbl_VS.Location = new Point(419, 239);
             Lbl_VS.Margin = new Padding(4, 0, 4, 0);
             Lbl_VS.Name = "Lbl_VS";
             Lbl_VS.Size = new Size(155, 93);
@@ -141,13 +141,13 @@
             // 
             Lbl_Player01.AutoSize = true;
             Lbl_Player01.BackColor = Color.ForestGreen;
-            Lbl_Player01.Font = new Font("Snap ITC", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Player01.Font = new Font("Stencil", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Lbl_Player01.ForeColor = Color.Yellow;
             Lbl_Player01.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_Player01.Location = new Point(66, 369);
+            Lbl_Player01.Location = new Point(106, 369);
             Lbl_Player01.Margin = new Padding(4, 0, 4, 0);
             Lbl_Player01.Name = "Lbl_Player01";
-            Lbl_Player01.Size = new Size(250, 63);
+            Lbl_Player01.Size = new Size(168, 38);
             Lbl_Player01.TabIndex = 10;
             Lbl_Player01.Text = "Player 1";
             // 
@@ -155,18 +155,19 @@
             // 
             Lbl_Player02.AutoSize = true;
             Lbl_Player02.BackColor = Color.ForestGreen;
-            Lbl_Player02.Font = new Font("Snap ITC", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_Player02.Font = new Font("Stencil", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Lbl_Player02.ForeColor = Color.Yellow;
             Lbl_Player02.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_Player02.Location = new Point(691, 372);
+            Lbl_Player02.Location = new Point(711, 369);
             Lbl_Player02.Margin = new Padding(4, 0, 4, 0);
             Lbl_Player02.Name = "Lbl_Player02";
-            Lbl_Player02.Size = new Size(262, 63);
+            Lbl_Player02.Size = new Size(168, 38);
             Lbl_Player02.TabIndex = 11;
             Lbl_Player02.Text = "Player 2";
             // 
             // uC_Chat1
             // 
+            uC_Chat1.BackColor = Color.Tan;
             uC_Chat1.BackgroundImage = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
             uC_Chat1.Location = new Point(1024, 1);
             uC_Chat1.Margin = new Padding(5);
