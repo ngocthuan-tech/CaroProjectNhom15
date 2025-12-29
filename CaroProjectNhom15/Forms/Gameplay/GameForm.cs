@@ -114,7 +114,7 @@ namespace CaroProjectNhom15.Forms
         {
             _gameBoardManager.CurrentPlayer = _myRole;
             Pnl_BoardContainer.Enabled = isMyTurn;
-            Lbl_CurrentTurn.Text = isMyTurn ? "Lượt của bạn" : "Đợi đối thủ...";
+            Lbl_CurrentTurn.Text = isMyTurn ? "YOUR TURN" : "OPPONENT'S TURN";
             Lbl_CurrentTurn.ForeColor = isMyTurn ? Color.Green : Color.Red;
         }
 
@@ -127,11 +127,8 @@ namespace CaroProjectNhom15.Forms
             Pnl_BoardContainer.Enabled = false;
 
             bool isMeWinner = (winnerId == _currentUser.Uid);
-            string winnerName = (winnerId == _currentRoom.Host.Uid)
-                ? _currentRoom.Host.UserName
-                : _currentRoom.Guest.UserName;
 
-            using (var endGameForm = new EndGameForm(winnerName, isMeWinner))
+            using (var endGameForm = new EndGameForm(isMeWinner))
             {
                 endGameForm.ShowDialog();
             }

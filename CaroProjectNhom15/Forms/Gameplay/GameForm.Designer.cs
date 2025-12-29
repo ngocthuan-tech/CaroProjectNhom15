@@ -67,6 +67,7 @@ namespace CaroProjectNhom15.Forms
             // 
             // Grp_GameInfo
             // 
+            Grp_GameInfo.BackgroundImage = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
             Grp_GameInfo.Controls.Add(Btn_Exit);
             Grp_GameInfo.Controls.Add(Lbl_CurrentTurn);
             Grp_GameInfo.Controls.Add(Lbl_TurnTitle);
@@ -75,81 +76,103 @@ namespace CaroProjectNhom15.Forms
             Grp_GameInfo.Controls.Add(Lbl_PlayerX_Name);
             Grp_GameInfo.Controls.Add(Lbl_PlayerX_Title);
             Grp_GameInfo.Dock = DockStyle.Top;
+            Grp_GameInfo.Font = new Font("Stencil", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Grp_GameInfo.ForeColor = Color.Gold;
             Grp_GameInfo.Location = new Point(0, 0);
             Grp_GameInfo.Margin = new Padding(3, 4, 3, 4);
             Grp_GameInfo.Name = "Grp_GameInfo";
             Grp_GameInfo.Padding = new Padding(3, 4, 3, 4);
-            Grp_GameInfo.Size = new Size(343, 267);
+            Grp_GameInfo.Size = new Size(343, 699);
             Grp_GameInfo.TabIndex = 0;
             Grp_GameInfo.TabStop = false;
-            Grp_GameInfo.Text = "Thông Tin Ván Đấu";
+            Grp_GameInfo.Text = "Game Information";
             // 
             // Btn_Exit
             // 
-            Btn_Exit.Location = new Point(97, 200);
+            Btn_Exit.BackColor = Color.FromArgb(192, 192, 0);
+            Btn_Exit.Font = new Font("Stencil", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Btn_Exit.ForeColor = Color.Gold;
+            Btn_Exit.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Btn_Exit.Location = new Point(191, 616);
             Btn_Exit.Margin = new Padding(3, 4, 3, 4);
             Btn_Exit.Name = "Btn_Exit";
-            Btn_Exit.Size = new Size(149, 47);
+            Btn_Exit.Size = new Size(126, 58);
             Btn_Exit.TabIndex = 6;
-            Btn_Exit.Text = "Thoát Phòng";
-            Btn_Exit.UseVisualStyleBackColor = true;
+            Btn_Exit.Text = "EXIT";
+            Btn_Exit.UseVisualStyleBackColor = false;
             Btn_Exit.Click += Btn_Exit_Click;
             // 
             // Lbl_CurrentTurn
             // 
             Lbl_CurrentTurn.AutoSize = true;
-            Lbl_CurrentTurn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            Lbl_CurrentTurn.ForeColor = Color.Red;
-            Lbl_CurrentTurn.Location = new Point(160, 112);
+            Lbl_CurrentTurn.BackColor = Color.FromArgb(192, 192, 0);
+            Lbl_CurrentTurn.Font = new Font("Stencil", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_CurrentTurn.ForeColor = Color.GhostWhite;
+            Lbl_CurrentTurn.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Lbl_CurrentTurn.Location = new Point(17, 157);
             Lbl_CurrentTurn.Name = "Lbl_CurrentTurn";
-            Lbl_CurrentTurn.Size = new Size(100, 28);
+            Lbl_CurrentTurn.Size = new Size(107, 24);
             Lbl_CurrentTurn.TabIndex = 5;
-            Lbl_CurrentTurn.Text = "(Chưa rõ)";
+            Lbl_CurrentTurn.Text = "unknown";
             // 
             // Lbl_TurnTitle
             // 
             Lbl_TurnTitle.AutoSize = true;
+            Lbl_TurnTitle.BackColor = Color.FromArgb(192, 192, 0);
             Lbl_TurnTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            Lbl_TurnTitle.Location = new Point(17, 117);
+            Lbl_TurnTitle.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Lbl_TurnTitle.Location = new Point(17, 118);
             Lbl_TurnTitle.Name = "Lbl_TurnTitle";
-            Lbl_TurnTitle.Size = new Size(137, 23);
+            Lbl_TurnTitle.Size = new Size(143, 23);
             Lbl_TurnTitle.TabIndex = 4;
-            Lbl_TurnTitle.Text = "LƯỢT HIỆN TẠI:";
+            Lbl_TurnTitle.Text = "CURRENT TURN:";
             // 
             // Lbl_PlayerO_Name
             // 
             Lbl_PlayerO_Name.AutoSize = true;
-            Lbl_PlayerO_Name.Location = new Point(160, 67);
+            Lbl_PlayerO_Name.BackColor = Color.FromArgb(192, 192, 0);
+            Lbl_PlayerO_Name.Font = new Font("Stencil", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_PlayerO_Name.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Lbl_PlayerO_Name.Location = new Point(153, 67);
             Lbl_PlayerO_Name.Name = "Lbl_PlayerO_Name";
-            Lbl_PlayerO_Name.Size = new Size(100, 20);
+            Lbl_PlayerO_Name.Size = new Size(126, 27);
             Lbl_PlayerO_Name.TabIndex = 3;
-            Lbl_PlayerO_Name.Text = "Người Chơi O";
+            Lbl_PlayerO_Name.Text = "PLAYING O";
             // 
             // Lbl_PlayerO_Title
             // 
             Lbl_PlayerO_Title.AutoSize = true;
+            Lbl_PlayerO_Title.BackColor = Color.FromArgb(192, 192, 0);
+            Lbl_PlayerO_Title.Font = new Font("Stencil", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_PlayerO_Title.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
             Lbl_PlayerO_Title.Location = new Point(17, 67);
             Lbl_PlayerO_Title.Name = "Lbl_PlayerO_Title";
-            Lbl_PlayerO_Title.Size = new Size(116, 20);
+            Lbl_PlayerO_Title.Size = new Size(130, 27);
             Lbl_PlayerO_Title.TabIndex = 2;
-            Lbl_PlayerO_Title.Text = "Khách (Quân O):";
+            Lbl_PlayerO_Title.Text = "Guest (O):";
             // 
             // Lbl_PlayerX_Name
             // 
             Lbl_PlayerX_Name.AutoSize = true;
-            Lbl_PlayerX_Name.Location = new Point(160, 36);
+            Lbl_PlayerX_Name.BackColor = Color.FromArgb(192, 192, 0);
+            Lbl_PlayerX_Name.Font = new Font("Stencil", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_PlayerX_Name.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Lbl_PlayerX_Name.Location = new Point(153, 29);
             Lbl_PlayerX_Name.Name = "Lbl_PlayerX_Name";
-            Lbl_PlayerX_Name.Size = new Size(98, 20);
+            Lbl_PlayerX_Name.Size = new Size(125, 27);
             Lbl_PlayerX_Name.TabIndex = 3;
-            Lbl_PlayerX_Name.Text = "Người Chơi X";
+            Lbl_PlayerX_Name.Text = "PLAYING X";
             // 
             // Lbl_PlayerX_Title
             // 
-            Lbl_PlayerX_Title.Location = new Point(17, 36);
+            Lbl_PlayerX_Title.BackColor = Color.FromArgb(192, 192, 0);
+            Lbl_PlayerX_Title.Font = new Font("Stencil", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Lbl_PlayerX_Title.Image = Properties.Resources.giờ_hãy_tạo_một_nền_màu_nâu_đất__đồ_hoạ_2đ;
+            Lbl_PlayerX_Title.Location = new Point(17, 29);
             Lbl_PlayerX_Title.Name = "Lbl_PlayerX_Title";
-            Lbl_PlayerX_Title.Size = new Size(114, 31);
+            Lbl_PlayerX_Title.Size = new Size(130, 27);
             Lbl_PlayerX_Title.TabIndex = 7;
-            Lbl_PlayerX_Title.Text = "Chủ phòng (X):";
+            Lbl_PlayerX_Title.Text = "Host (X):";
             // 
             // GameForm
             // 
