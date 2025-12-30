@@ -69,7 +69,6 @@
             Btn_Start.TabIndex = 1;
             Btn_Start.Text = "Start";
             Btn_Start.UseVisualStyleBackColor = true;
-            Btn_Start.Click += Btn_Start_Click;
             // 
             // Lb_UserName1
             // 
@@ -87,6 +86,7 @@
             Pb_Player01.Margin = new Padding(4);
             Pb_Player01.Name = "Pb_Player01";
             Pb_Player01.Size = new Size(218, 202);
+            Pb_Player01.SizeMode = PictureBoxSizeMode.StretchImage;
             Pb_Player01.TabIndex = 3;
             Pb_Player01.TabStop = false;
             // 
@@ -96,6 +96,7 @@
             Pb_Player02.Margin = new Padding(4);
             Pb_Player02.Name = "Pb_Player02";
             Pb_Player02.Size = new Size(218, 202);
+            Pb_Player02.SizeMode = PictureBoxSizeMode.StretchImage;
             Pb_Player02.TabIndex = 5;
             Pb_Player02.TabStop = false;
             // 
@@ -144,7 +145,7 @@
             Lbl_Player01.Font = new Font("Stencil", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Lbl_Player01.ForeColor = Color.Yellow;
             Lbl_Player01.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_Player01.Location = new Point(106, 369);
+            Lbl_Player01.Location = new Point(102, 369);
             Lbl_Player01.Margin = new Padding(4, 0, 4, 0);
             Lbl_Player01.Name = "Lbl_Player01";
             Lbl_Player01.Size = new Size(168, 38);
@@ -158,7 +159,7 @@
             Lbl_Player02.Font = new Font("Stencil", 16F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Lbl_Player02.ForeColor = Color.Yellow;
             Lbl_Player02.Image = Properties.Resources.tạo_cho_tôi_một_cái_nền_trò_chơi__kiểu_cổ_điển_gạch_rêu_này_kia_á__nhìn_nó_đồ_hoạ_2d_thôi_hoạt_tình_tí;
-            Lbl_Player02.Location = new Point(711, 369);
+            Lbl_Player02.Location = new Point(706, 370);
             Lbl_Player02.Margin = new Padding(4, 0, 4, 0);
             Lbl_Player02.Name = "Lbl_Player02";
             Lbl_Player02.Size = new Size(168, 38);

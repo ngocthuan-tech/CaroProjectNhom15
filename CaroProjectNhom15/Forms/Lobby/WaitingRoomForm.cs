@@ -3,6 +3,9 @@ using CaroProjectNhom15.Models;
 using CaroProjectNhom15.Services;
 using System;
 using System.Drawing;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CaroProjectNhom15.Forms
@@ -19,27 +22,24 @@ namespace CaroProjectNhom15.Forms
         public Frm_WaitingRoomForm(RoomModel room, UserModel user, RoomService service)
         {
             InitializeComponent();
-            _currentRoom = room;
-            _currentUser = user;
-            _roomService = service;
-
-            _isHost = (_currentRoom.Host?.Uid == _currentUser.Uid);
+            _currentRoom = room; //
+            _currentUser = user; //
+            _roomService = service; //
+            _isHost = (_currentRoom.Host?.Uid == _currentUser.Uid); //
         }
 
-        private void Frm_WaitingRoomForm_Load(object sender, EventArgs e)
+        private async void Frm_WaitingRoomForm_Load(object sender, EventArgs e)
         {
-            UpdateUI(_currentRoom);
-
-            _roomService.ListenToRoom(_currentRoom.ID, OnRoomUpdate);
-
-            uC_Chat1.Init(_roomService, _currentRoom.ID, _currentUser);
+            await UpdateUI(_currentRoom); //
+            _roomService.ListenToRoom(_currentRoom.ID, OnRoomUpdate); //
+            uC_Chat1.Init(_roomService, _currentRoom.ID, _currentUser); //
         }
 
         private void OnRoomUpdate(RoomModel updatedRoom)
         {
-            if (this.IsDisposed) return;
+            if (this.IsDisposed) return; //
 
-            this.Invoke((MethodInvoker)async delegate // Chuyển thành async để gọi hàm await
+            this.Invoke((MethodInvoker)async delegate
             {
                 if (updatedRoom == null)
                 {
@@ -48,140 +48,141 @@ namespace CaroProjectNhom15.Forms
                     return;
                 }
 
-                _currentRoom = updatedRoom;
+                _currentRoom = updatedRoom; //
 
-                // --- LOGIC TỰ ỨNG CỬ (SELF-PROMOTION) ---
-                // Nếu phát hiện Host bị null (trống) MÀ mình đang là Guest
-                // -> Tự động chiếm quyền Host ngay lập tức
+                // Logic tự ứng cử Host nếu Host thoát
                 if (_currentRoom.Host == null && _currentRoom.Guest?.Uid == _currentUser.Uid)
                 {
                     try
                     {
-                        // Gọi Service để update lại: Host = Mình, Guest = Null
-                        // (Bạn cần đảm bảo logic này có trong JoinRoom hoặc viết hàm Update mới, 
-                        // nhưng cách nhanh nhất là dùng lại JoinRoomAsync vì nó có logic chiếm phòng trống)
                         var newRoom = await _roomService.JoinRoomAsync(_currentRoom, _currentUser);
-
-                        // Sau khi Join xong, nó sẽ trả về room mới, cập nhật lại luôn
                         _currentRoom = newRoom;
                     }
-                    catch { /* Lỗi mạng thì bỏ qua, đợi lần update sau */ }
+                    catch { }
                 }
-                // ----------------------------------------
 
-                // Tính toán lại quyền Host
-                _isHost = (_currentRoom.Host?.Uid == _currentUser.Uid);
+                _isHost = (_currentRoom.Host?.Uid == _currentUser.Uid); //
 
-                UpdateUI(_currentRoom);
+                // Chỉ gọi cập nhật giao diện 1 lần duy nhất và dùng await
+                await UpdateUI(_currentRoom);
 
                 if (updatedRoom.Status == "Playing" && !_gameStarted)
                 {
-                    _gameStarted = true; // Đánh dấu là đã vào game
-                    StartGame();         // Gọi chỉ 1 lần
+                    _gameStarted = true;
+                    StartGame();
                 }
-
-                UpdateUI(updatedRoom);
             });
         }
 
-        private void UpdateUI(RoomModel room)
+        // --- HÀM TẢI AVATAR (Hỗ trợ cả URL và BASE64) ---
+        private async Task LoadAvatarAsync(PictureBox pb, string avatarData)
         {
-            Tb_RoomId.Text = room.ID;
-            // 1. Hiển thị Host (Player 1 - Bên Trái)
+            pb.Image = null; // Reset ảnh
+
+            if (string.IsNullOrWhiteSpace(avatarData))
+            {
+                pb.BackColor = Color.Gray;
+                return;
+            }
+
+            try
+            {
+                // TH1: Nếu là chuỗi Base64 (data:image/...)
+                if (avatarData.StartsWith("data:image"))
+                {
+                    string base64String = avatarData.Substring(avatarData.IndexOf(",") + 1);
+                    byte[] imageBytes = Convert.FromBase64String(base64String);
+                    using (var ms = new MemoryStream(imageBytes))
+                    {
+                        pb.Image = Image.FromStream(ms);
+                    }
+                }
+                // TH2: Nếu là URL thông thường
+                else
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                        var bytes = await client.GetByteArrayAsync(avatarData);
+                        using (var ms = new MemoryStream(bytes))
+                        {
+                            pb.Image = Image.FromStream(ms);
+                        }
+                    }
+                }
+                pb.BackColor = Color.Transparent; // Thành công
+            }
+            catch
+            {
+                pb.BackColor = Color.Maroon; // Thất bại (Lỗi link hoặc lỗi Base64)
+            }
+        }
+
+        private async Task UpdateUI(RoomModel room)
+        {
+            Tb_RoomId.Text = room.ID; //
+
+            // 1. Hiển thị Host (Bên Trái)
             if (room.Host != null)
             {
                 Lbl_Player01.Text = room.Host.UserName;
+                await LoadAvatarAsync(Pb_Player01, room.Host.AvatarUrl); //
             }
             else
             {
-                Lbl_Player01.Text = "(Đang chờ Host...)";
+                Lbl_Player01.Text = "(Trống)";
+                Pb_Player01.Image = null;
             }
 
-            // 2. Hiển thị Guest (Player 2 - Bên Phải)
+            // 2. Hiển thị Guest (Bên Phải)
             if (room.Guest != null)
             {
                 Lbl_Player02.Text = room.Guest.UserName;
                 Lbl_Player02.ForeColor = Color.Yellow;
+                await LoadAvatarAsync(Pb_Player02, room.Guest.AvatarUrl); //
             }
             else
             {
-                // QUAN TRỌNG: Phải reset về text mặc định khi không có Guest
                 Lbl_Player02.Text = "Waiting...";
                 Lbl_Player02.ForeColor = Color.WhiteSmoke;
+                Pb_Player02.Image = null;
             }
 
-            // 3. Xử lý nút Start
+            // 3. Nút Start
             if (_isHost)
             {
-                Btn_Start.Text = "Start Game";
-                // Chỉ cho phép Start khi đã có đối thủ (Guest khác null)
                 Btn_Start.Enabled = (room.Guest != null);
                 Btn_Start.Visible = true;
             }
             else
             {
-                Btn_Start.Text = "Ready";
-                Btn_Start.Enabled = false;
-                // Hoặc ẩn luôn nút nếu là Guest cho đỡ rối
-                // Btn_Start.Visible = false; 
-            }
-        }
-
-        private async void Btn_Start_Click(object sender, EventArgs e)
-        {
-            if (_isHost)
-            {
-                // 1. Host gửi lệnh Start Game lên Firebase (cập nhật Status = 'Playing')
-                await _roomService.StartGameAsync(_currentRoom);
-
-                // 2. KHÔNG TỰ GỌI StartGame() ở đây nữa.
-                // Host sẽ chờ Listener kích hoạt, giống như Guest.
+                Btn_Start.Visible = false;
             }
         }
 
         private void StartGame()
         {
-            _roomService.StopListenRoom();
+            _roomService.StopListenRoom(); //
             uC_Chat1.StopListening();
-
-            // 1. Tạo GameForm mới
-            // Truyền các thông tin cần thiết:
-            // - _currentRoom: Dữ liệu phòng (Host, Guest, ID)
-            // - _currentUser: Dữ liệu người chơi hiện tại
-            // - _roomService: Để GameForm có thể gọi các hàm như UpdateMoveAsync (sẽ viết sau)
-            var gameForm = new GameForm(_currentRoom, _currentUser, _roomService);
-
-            // 2. Ẩn phòng chờ và hiển thị GameForm
+            var gameForm = new GameForm(_currentRoom, _currentUser, _roomService); //
             this.Hide();
             gameForm.ShowDialog();
-                this.Close();
+            this.Close();
         }
+
         private async void Btn_ExitRoom_Click(object sender, EventArgs e)
         {
-            _isClosing = true; // Đánh dấu để không kích hoạt FormClosing lần nữa
-
-            try
-            {
-                // Gọi hàm xử lý thông minh mới viết
-                await _roomService.ExitRoomAsync(_currentRoom, _currentUser);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi thoát: " + ex.Message);
-            }
+            _isClosing = true;
+            try { await _roomService.ExitRoomAsync(_currentRoom, _currentUser); } //
+            catch { }
             finally
             {
-                // Dừng lắng nghe và đóng form
                 _roomService.StopListenRoom();
                 uC_Chat1.StopListening();
                 this.Close();
             }
         }
 
-        private void CloseSafely()
-        {
-            _isClosing = true;
-            this.Close();
-        }
+        private void CloseSafely() { _isClosing = true; this.Close(); } //
     }
 }
