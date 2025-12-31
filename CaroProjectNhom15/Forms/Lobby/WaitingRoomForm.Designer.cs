@@ -69,6 +69,7 @@
             Btn_Start.TabIndex = 1;
             Btn_Start.Text = "Start";
             Btn_Start.UseVisualStyleBackColor = true;
+            Btn_Start.Click += Btn_Start_Click;
             // 
             // Lb_UserName1
             // 

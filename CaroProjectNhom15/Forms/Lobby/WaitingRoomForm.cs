@@ -160,6 +160,15 @@ namespace CaroProjectNhom15.Forms
             }
         }
 
+        private async void Btn_Start_Click(object sender, EventArgs e)
+        {
+            if (_isHost)
+            {
+                await _roomService.StartGameAsync(_currentRoom);
+
+            }
+        }
+
         private void StartGame()
         {
             _roomService.StopListenRoom(); //
