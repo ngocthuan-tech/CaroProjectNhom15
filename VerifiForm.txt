@@ -1,0 +1,47 @@
+csharp CaroProjectNhom15\Forms\Auth\VerificationForm.cs
+using System;
+using System.Windows.Forms;
+using CaroProjectNhom15.Services;
+
+namespace CaroProjectNhom15.Forms.Auth
+{
+    public partial class VerificationForm : Form
+    {
+        private readonly FirebaseAuthService _auth = new();
+
+        public VerificationForm()
+        {
+            InitializeComponent();
+            // Assume controls: Tb_OobCode, Tb_NewPassword, Btn_Apply
+            Btn_Apply.Click += Btn_Apply_Click;
+        }
+
+        private async void Btn_Apply_Click(object? sender, EventArgs e)
+        {
+            var oob = Tb_OobCode.Text.Trim();
+            var newPwd = Tb_NewPassword.Text;
+
+            if (string.IsNullOrEmpty(oob))
+            {
+                MessageBox.Show("Nhập oobCode (mã trong URL xác thực).", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Btn_Apply.Enabled = false;
+                await _auth.ApplyOobCodeAsync(oob, string.IsNullOrEmpty(newPwd) ? null : newPwd);
+                MessageBox.Show("Thao tác thành công. Nếu là xác thực email, email đã được xác thực.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Btn_Apply.Enabled = true;
+            }
+        }
+    }
+}

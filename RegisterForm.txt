@@ -1,0 +1,50 @@
+csharp CaroProjectNhom15\Forms\Auth\RegisterForm.cs
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using CaroProjectNhom15.Services;
+
+namespace CaroProjectNhom15.Forms.Auth
+{
+    public partial class RegisterForm : Form
+    {
+        private readonly FirebaseAuthService _auth = new();
+
+        public RegisterForm()
+        {
+            InitializeComponent();
+            // Assume control names: Btn_Register, Tb_Email, Tb_Password
+            Btn_Register.Click += Btn_Register_Click;
+        }
+
+        private async void Btn_Register_Click(object? sender, EventArgs e)
+        {
+            var email = Tb_Email.Text.Trim();
+            var password = Tb_Password.Text;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Nhập email và mật khẩu.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Btn_Register.Enabled = false;
+                var res = await _auth.RegisterAsync(email, password);
+                // Send verification
+                await _auth.SendEmailVerificationAsync(res.IdToken);
+                MessageBox.Show("Tạo tài khoản thành công. Một email xác thực đã được gửi.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi đăng ký: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Btn_Register.Enabled = true;
+            }
+        }
+    }
+}

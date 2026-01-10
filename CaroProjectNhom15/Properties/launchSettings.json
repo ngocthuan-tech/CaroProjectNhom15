@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CaroProjectNhom15": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "FIREBASE_API_KEY": "AIzaSyBfW24uSxwCyHeWUOeaqL51XjqbNTJo-IA"
+      }
+    }
+  }
+}

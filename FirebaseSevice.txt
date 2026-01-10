@@ -1,0 +1,107 @@
+csharp CaroProjectNhom15\Services\FirebaseAuthService.cs
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace CaroProjectNhom15.Services
+{
+    public sealed class FirebaseAuthService
+    {
+        private readonly HttpClient _http = new();
+        private readonly string _apiKey;
+        private const string BaseUrl = "https://identitytoolkit.googleapis.com/v1";
+
+        public FirebaseAuthService()
+        {
+            _apiKey = Environment.GetEnvironmentVariable("FIREBASE_API_KEY")
+                ?? throw new InvalidOperationException("Set FIREBASE_API_KEY environment variable (Firebase Web API Key).");
+        }
+
+        private async Task<T> PostAsync<T>(string path, object payload)
+        {
+            var url = $"{BaseUrl}/{path}?key={_apiKey}";
+            var json = JsonSerializer.Serialize(payload);
+            using var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var res = await _http.PostAsync(url, content).ConfigureAwait(false);
+            var resJson = await res.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (!res.IsSuccessStatusCode)
+            {
+                // Try extract Firebase error message
+                try
+                {
+                    var err = JsonSerializer.Deserialize<ErrorWrapper>(resJson,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var message = err?.Error?.Message ?? resJson;
+                    throw new InvalidOperationException(message);
+                }
+                catch
+                {
+                    throw new InvalidOperationException(resJson);
+                }
+            }
+
+            return JsonSerializer.Deserialize<T>(resJson,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+        }
+
+        // Minimal DTOs
+        private record ErrorWrapper(ErrorDetail Error);
+        private record ErrorDetail(string Message);
+
+        public record AuthResponse(string IdToken, string RefreshToken, string LocalId, string Email, bool Registered);
+        public record SignupRequest(string Email, string Password, bool ReturnSecureToken = true);
+        public record SigninRequest(string Email, string Password, bool ReturnSecureToken = true);
+        public record OobRequest(string RequestType, string Email = null, string IdToken = null);
+        public record LookupRequest(string IdToken);
+        public record UpdateOobRequest(string OobCode, string NewPassword = null);
+
+        public record LookupResponse(User[] Users);
+        public record User(string LocalId, string Email, bool EmailVerified);
+
+        // Register
+        public async Task<AuthResponse> RegisterAsync(string email, string password)
+        {
+            var payload = new SignupRequest(email, password);
+            return await PostAsync<AuthResponse>("accounts:signUp", payload).ConfigureAwait(false);
+        }
+
+        // Login
+        public async Task<AuthResponse> LoginAsync(string email, string password)
+        {
+            var payload = new SigninRequest(email, password);
+            return await PostAsync<AuthResponse>("accounts:signInWithPassword", payload).ConfigureAwait(false);
+        }
+
+        // Send password reset email (user provides email)
+        public async Task SendPasswordResetEmailAsync(string email)
+        {
+            var payload = new OobRequest("PASSWORD_RESET", Email: email);
+            await PostAsync<object>("accounts:sendOobCode", payload).ConfigureAwait(false);
+        }
+
+        // Send verification email (requires idToken from a signed-in user)
+        public async Task SendEmailVerificationAsync(string idToken)
+        {
+            var payload = new OobRequest("VERIFY_EMAIL", IdToken: idToken);
+            await PostAsync<object>("accounts:sendOobCode", payload).ConfigureAwait(false);
+        }
+
+        // Check user info (emailVerified)
+        public async Task<User[]> LookupByIdTokenAsync(string idToken)
+        {
+            var payload = new LookupRequest(idToken);
+            var res = await PostAsync<LookupResponse>("accounts:lookup", payload).ConfigureAwait(false);
+            return res.Users ?? Array.Empty<User>();
+        }
+
+        // Apply oobCode (used for verifying email or resetting password with newPassword)
+        public async Task<object> ApplyOobCodeAsync(string oobCode, string? newPassword = null)
+        {
+            var payload = new UpdateOobRequest(oobCode, newPassword);
+            return await PostAsync<object>("accounts:update", payload).ConfigureAwait(false);
+        }
+    }
+}

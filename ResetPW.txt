@@ -1,0 +1,45 @@
+csharp CaroProjectNhom15\Forms\Auth\ResetPasswordForm.cs
+using System;
+using System.Windows.Forms;
+using CaroProjectNhom15.Services;
+
+namespace CaroProjectNhom15.Forms.Auth
+{
+    public partial class ResetPasswordForm : Form
+    {
+        private readonly FirebaseAuthService _auth = new();
+
+        public ResetPasswordForm()
+        {
+            InitializeComponent();
+            // Assume control names: Tb_Email, Btn_SendReset
+            Btn_SendReset.Click += Btn_SendReset_Click;
+        }
+
+        private async void Btn_SendReset_Click(object? sender, EventArgs e)
+        {
+            var email = Tb_Email.Text.Trim();
+            if (string.IsNullOrEmpty(email))
+            {
+                MessageBox.Show("Nhập email.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Btn_SendReset.Enabled = false;
+                await _auth.SendPasswordResetEmailAsync(email);
+                MessageBox.Show("Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư.", "Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể gửi email đặt lại: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Btn_SendReset.Enabled = true;
+            }
+        }
+    }
+}
